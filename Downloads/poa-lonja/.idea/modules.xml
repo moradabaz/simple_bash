@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/poa-lonja.iml" filepath="$PROJECT_DIR$/poa-lonja.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/poa-lonja.main.iml" filepath="$PROJECT_DIR$/.idea/modules/poa-lonja.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/poa-lonja.test.iml" filepath="$PROJECT_DIR$/.idea/modules/poa-lonja.test.iml" />
+    </modules>
+  </component>
+</project>
