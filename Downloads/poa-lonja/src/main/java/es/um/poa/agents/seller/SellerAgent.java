@@ -1,13 +1,11 @@
 package es.um.poa.agents.seller;
 
+import es.um.poa.agents.TimePOAAgent;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import org.yaml.snakeyaml.Yaml;
-
-import es.um.poa.agents.TimePOAAgent;
-import jade.core.AID;
 
 public class SellerAgent extends TimePOAAgent {
 		

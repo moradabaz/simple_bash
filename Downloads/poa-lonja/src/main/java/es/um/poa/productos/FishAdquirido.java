@@ -1,4 +1,4 @@
-package es.um.poa.agents.objetos;
+package es.um.poa.productos;
 
 public class FishAdquirido {
 

@@ -1,27 +1,28 @@
 package es.um.poa.scenarios;
 
+import es.um.poa.agents.clock.ClockAgentConfig;
+import es.um.poa.utils.AgentLoggingHTMLFormatter;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.util.Logger;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import jade.util.Logger;
-
-import org.yaml.snakeyaml.Yaml;
-
-import es.um.poa.agents.clock.ClockAgentConfig;
-import es.um.poa.utils.AgentLoggingHTMLFormatter;
-import jade.core.Runtime;
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.wrapper.*;
 
 public class ScenarioLauncher {
 	
 	public static void main(String[] args) throws SecurityException, IOException {
+		System.out.println("WELCOME REFUGEES");
+
 		if(args.length == 1) {
 			String config_file = args[0];
 			Yaml yaml = new Yaml();
@@ -32,7 +33,6 @@ public class ScenarioLauncher {
 			
 			System.out.println(scenario);
 			try {
-
 				// Obtenemos una instancia del entorno runtime de Jade
 				Runtime rt = Runtime.instance();
 				// Terminamos la máquinq virtual si no hubiera ningún contenedor de agentes activo

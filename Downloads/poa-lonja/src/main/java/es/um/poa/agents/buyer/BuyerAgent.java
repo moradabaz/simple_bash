@@ -9,7 +9,6 @@ import java.io.InputStream;
 
 public class BuyerAgent extends TimePOAAgent {
 
-
 	public void setup() {
 		super.setup();
 		
