@@ -1,17 +1,21 @@
 package es.um.poa.agents.fishmarket;
 
+import es.um.poa.agents.TimePOAAgent;
+import es.um.poa.productos.Fish;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import org.yaml.snakeyaml.Yaml;
-
-import es.um.poa.agents.TimePOAAgent;
-import es.um.poa.agents.clock.SimTimeOntology;
-import jade.core.AID;
+import java.util.LinkedList;
 
 public class FishMarketAgent extends TimePOAAgent {
-	
+
+	private LinkedList<Fish> pesacadoEnSubasta;
+	private LinkedList<Fish> pescadoVendido;
+	private double ingresos;
+	private double comisionPorLote;
+
 	public void setup() {
 		super.setup();
 		Object[] args = getArguments();
