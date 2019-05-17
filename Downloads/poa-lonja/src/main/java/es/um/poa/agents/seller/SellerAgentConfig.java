@@ -8,8 +8,7 @@ public class SellerAgentConfig {
 
 	private String cif;
 	private String nombre;
-	List<Fish> lots;
-
+	private List<Fish> lots;
 
 	@Override
 	public String toString() {

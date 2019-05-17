@@ -30,6 +30,11 @@ public class Fish implements Serializable {
 
     }
 
+    public Fish(String nombre, TipoProducto tipoProducto) {
+        this.tipoProducto = tipoProducto;
+        this.nombre = nombre;
+    }
+
     public EstadoVenta getEstadoVenta() {
         return estadoVenta;
     }

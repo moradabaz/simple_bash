@@ -3,9 +3,10 @@ cif: "SE004"
 nombre: "Pedro Sanchez"
 lots:
   - time: 2
+    nombre: "sarina"
     kg: 10.0
-    type: "sardina"
-
+    type: "pescado azul"
   - time: 4
+    nombre: "boqueron"
     kg: 6.0
-    type: "boquerón"
+    type: "marisco"

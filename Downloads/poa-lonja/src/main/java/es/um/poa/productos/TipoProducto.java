@@ -5,7 +5,8 @@ public enum TipoProducto {
     PESCADO_AZUL("pescado azul"),
     PESCADO_GRIS("pescado gris"),
     CEFALOPODO("cefalopodo"),
-    CRUSTACEO("crustaceo");
+    CRUSTACEO("crustaceo"),
+    MARISCO("marisco");
 
     private String name;
 
@@ -17,10 +18,12 @@ public enum TipoProducto {
         return name;
     }
 
-    public TipoProducto getType(String name) {
-        if (this.getName().equals(name))
-            return this;
-        return null;
+    public static TipoProducto getType(String name) {
+        for (int i = 0; i < values().length; i++) {
+            if (name.equals(values()[i].getName()))
+                return values()[i];
+        }
+        return DESCONOCIDO;
     }
 
     @Override
