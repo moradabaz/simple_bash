@@ -26,7 +26,7 @@ public class SellerBuyerDBTest {
         seller1 = new Seller(randomAlphaNumeric(12), "Pepe Andres");
         seller2 = new Seller(randomAlphaNumeric(12), "Carlos Tomas");
         seller3 = new Seller(randomAlphaNumeric(12), "Pedro Angel");
-        buyer1 = new Buyer(randomAlphaNumeric(12), 1300);
+        buyer1 = new Buyer(randomAlphaNumeric(12), "Jose miguel", 1300);
         database.registrarSeller(seller1);
         database.registrarSeller(seller2);
         database.registrarSeller(seller3);
@@ -72,8 +72,8 @@ public class SellerBuyerDBTest {
 
     @Test
     public void eliminarBuyer1() {
-        database.removerBuyerByID(buyer1.getIdentificador());
-        assertNull(database.getBuyer(buyer1.getIdentificador()));
+        database.removerBuyerByID(buyer1.getCif());
+        assertNull(database.getBuyer(buyer1.getCif()));
     }
 
 
@@ -82,7 +82,6 @@ public class SellerBuyerDBTest {
         for (String id : database.getSellerIDs()) {
             System.out.println(id);
         }
-       //sassertEquals(database.getBuyerIDs().size(), 3);
     }
 
 

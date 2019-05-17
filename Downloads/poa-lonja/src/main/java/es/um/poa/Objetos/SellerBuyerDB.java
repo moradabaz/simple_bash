@@ -53,7 +53,7 @@ public class SellerBuyerDB {
      * @param buyer Comprador a registrar
      */
     public void registrarBuyer(Buyer buyer){
-        buyers.put(buyer.getIdentificador(), buyer);
+        buyers.put(buyer.getCif(), buyer);
     }
 
     /**
@@ -111,9 +111,9 @@ public class SellerBuyerDB {
     }
 
     public void modificarBuyer(Buyer buyer) {
-       if (buyers.containsKey(buyer.getIdentificador())) {
-           buyers.remove(buyer.getIdentificador());
-           buyers.put(buyer.getIdentificador(), buyer);
+       if (buyers.containsKey(buyer.getCif())) {
+           buyers.remove(buyer.getCif());
+           buyers.put(buyer.getCif(), buyer);
        }
     }
 

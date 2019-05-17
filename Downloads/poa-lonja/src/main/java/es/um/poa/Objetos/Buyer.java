@@ -2,23 +2,26 @@ package es.um.poa.Objetos;
 
 import es.um.poa.productos.Fish;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Buyer {
+public class Buyer implements Serializable {
 
     private final String identificador;
+    private final String nombre;
     private double saldo;
     private double gastos;
     private LinkedList<Fish> articulosComprados;
 
 
     /**
-     *
-     * @param identificador
+     *  @param identificador
+     * @param nombre
      * @param saldo
      */
-    public Buyer(String identificador, double saldo) {
+    public Buyer(String identificador, String nombre, double saldo) {
         this.identificador = identificador;
+        this.nombre = nombre;
         this.saldo = saldo;
         this.gastos = 0;
         this.articulosComprados = new LinkedList<>();
@@ -28,7 +31,7 @@ public class Buyer {
     /*
      * Retorna el identificador del comprador
      */
-    public String getIdentificador() {
+    public String getCif() {
         return identificador;
     }
 
@@ -61,10 +64,17 @@ public class Buyer {
     public LinkedList<Fish> getArticulosComprados() {
         return articulosComprados;
     }
+    
+    public void comprarArticulo(Fish fish) {
+        if (!articulosComprados.contains(fish))
+            articulosComprados.add(fish);
+    }
 
     public void setArticulosComprados(LinkedList<Fish> articulosComprados) {
         this.articulosComprados = articulosComprados;
     }
 
-
+    public String getNombre() {
+        return nombre;
+    }
 }

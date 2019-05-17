@@ -1,7 +1,9 @@
 package es.um.poa.agents.fishmarket;
 
 import es.um.poa.agents.TimePOAAgent;
+import es.um.poa.agents.fishmarket.behaviours.RegistroCompradorResp;
 import es.um.poa.productos.Fish;
+import jade.lang.acl.MessageTemplate;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -24,7 +26,8 @@ public class FishMarketAgent extends TimePOAAgent {
 			FishMarketAgentConfig config = initAgentFromConfigFile(configFile);
 			
 			if(config != null) {
-				
+				MessageTemplate messageTemplate = MessageTemplate.MatchConversationId("buyer-register");
+				addBehaviour(new RegistroCompradorResp(this, messageTemplate));
 			}
 		} else {
 			this.getLogger().info("ERROR", "Requiere fichero de cofiguración.");
@@ -45,4 +48,7 @@ public class FishMarketAgent extends TimePOAAgent {
 		}
 		return config;
 	}
+
+
+	private void parseBuyerConfig(String buyerFile) {}
 }
