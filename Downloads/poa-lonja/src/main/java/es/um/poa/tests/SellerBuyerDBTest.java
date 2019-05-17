@@ -46,7 +46,7 @@ public class SellerBuyerDBTest {
 
     @Test
     public void checkSeller1() {
-        System.out.println(database.checkBuyerByID(seller1.getIdentificador()));
+        System.out.println(database.checkBuyerByID(seller1.getCif()));
     }
 
 
@@ -58,15 +58,15 @@ public class SellerBuyerDBTest {
 
     @Test
     public void eliminarSeller1() {
-        database.removeSellerByID(seller1.getIdentificador());
-        assertNull(database.getSeller(seller1.getIdentificador()));
+        database.removeSellerByID(seller1.getCif());
+        assertNull(database.getSeller(seller1.getCif()));
     }
 
 
     @Test
     public void eliminarSeller1alt() {
         database.removeSeller(seller1);
-        assertNull(database.getSeller(seller1.getIdentificador()));
+        assertNull(database.getSeller(seller1.getCif()));
     }
 
 
@@ -87,8 +87,8 @@ public class SellerBuyerDBTest {
 
     @Test
     public void getSeller1() {
-        Seller seller = database.getSeller(seller1.getIdentificador());
-        assertEquals(seller.getIdentificador(), seller1.getIdentificador());
+        Seller seller = database.getSeller(seller1.getCif());
+        assertEquals(seller.getCif(), seller1.getCif());
         System.out.println("OK");
     }
 

@@ -4,7 +4,7 @@ public class Lot {
 	private int time;
     private float kg;
     private String type;
-        
+
 	@Override
 	public String toString() {
 		return "Lot [time=" + time + ", kg=" + kg + ", type=" + type + "]";

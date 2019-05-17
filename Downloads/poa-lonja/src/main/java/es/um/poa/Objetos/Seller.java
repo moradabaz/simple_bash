@@ -3,36 +3,45 @@ package es.um.poa.Objetos;
 import es.um.poa.productos.Fish;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
  * La clase Seller representa un vendedor
  * Sus atributos son:
- * - identificador: Numero de identificacion del vendedor
+ * - cif: Numero de identificacion del vendedor
  * - nombre: Nombre del vendedor
  * - numeroVentas: Numero de ventas realizadas
  */
 public class Seller {
 
-    private final String identificador;
+    private final String cif;
     private String nombre;
     private LinkedList<Fish> listaPescado;
     private LinkedList<Fish> pescadoVendido;
 
 
-    public Seller(String identificador, String nombre) {
-        this.identificador = identificador;
+    public Seller(String cif, String nombre) {
+        this.cif = cif;
         this.nombre = nombre;
         this.listaPescado = new LinkedList<>();
         this.pescadoVendido = new LinkedList<>();
     }
 
+    public Seller(String cif, String nombre, List<Fish> listaPescado) {
+        this.cif = cif;
+        this.nombre = nombre;
+        this.listaPescado = new LinkedList<Fish>(listaPescado);
+        this.pescadoVendido = new LinkedList<>();
+    }
+
+
     /**
      *
      * @return Retorna el numero de identificacion del vendedor
      */
-    public String getIdentificador() {
-        return identificador;
+    public String getCif() {
+        return cif;
     }
 
 
