@@ -9,30 +9,38 @@ public class Fish implements Serializable {
     private EstadoVenta estadoVenta;
     private final TipoProducto tipoProducto;
     private final String nombre;
-    private int calidad;
     private double peso;
     private double precioReserva;
     private double precioSalida;
     private double precioFinal;
     private Tiempo horaRegistro;
     private Tiempo horaVenta;
-    private int idComprador;
-    private int idVendedor;
+    private String idComprador;
+    private String idVendedor;
 
     public Fish() {
         nombre = null;
         tipoProducto = TipoProducto.DESCONOCIDO;
     }
 
-    public Fish(String nombre, String tipoProducto) {
-        this.tipoProducto = TipoProducto.DESCONOCIDO;
+    public Fish(String nombre, String tipoProducto, double peso, double precioReserva) {
+        TipoProducto tipo = TipoProducto.getType(tipoProducto);
+        this.tipoProducto = tipo;
         this.nombre = nombre;
-
+        this.peso = peso;
+        this.precioReserva = precioReserva;
+        this.precioFinal = NO_ASIGNADO;
+        this.precioSalida = NO_ASIGNADO;
+        this.estadoVenta = EstadoVenta.REGISTRADO;
+        this.idVendedor = "";
+        this.idComprador = "";
     }
 
     public Fish(String nombre, TipoProducto tipoProducto) {
         this.tipoProducto = tipoProducto;
         this.nombre = nombre;
+        this.peso = 0;
+        this.estadoVenta = EstadoVenta.REGISTRADO;
     }
 
     public EstadoVenta getEstadoVenta() {
@@ -51,13 +59,6 @@ public class Fish implements Serializable {
         return nombre;
     }
 
-    public int getCalidad() {
-        return calidad;
-    }
-
-    public void setCalidad(int calidad) {
-        this.calidad = calidad;
-    }
 
     public double getPeso() {
         return peso;
@@ -107,19 +108,19 @@ public class Fish implements Serializable {
         this.horaVenta = horaVenta;
     }
 
-    public int getIdComprador() {
+    public String getIdComprador() {
         return idComprador;
     }
 
-    public void setIdComprador(int idComprador) {
+    public void setIdComprador(String idComprador) {
         this.idComprador = idComprador;
     }
 
-    public int getIdVendedor() {
+    public String getIdVendedor() {
         return idVendedor;
     }
 
-    public void setIdVendedor(int idVendedor) {
+    public void setIdVendedor(String idVendedor) {
         this.idVendedor = idVendedor;
     }
 }

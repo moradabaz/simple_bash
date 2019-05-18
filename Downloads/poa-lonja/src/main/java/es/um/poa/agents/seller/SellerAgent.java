@@ -1,17 +1,27 @@
 package es.um.poa.agents.seller;
 
+import es.um.poa.Objetos.Seller;
 import es.um.poa.agents.TimePOAAgent;
+import es.um.poa.agents.seller.protocolos.DepositoPescado;
+import es.um.poa.agents.seller.protocolos.RegistroVendedor;
+import es.um.poa.productos.Fish;
+import es.um.poa.productos.FishConfig;
 import jade.core.AID;
+import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SellerAgent extends TimePOAAgent {
+
+
+	private String cif;
+	private List<FishConfig> pescados;
 		
 	public void setup() {
 		super.setup();
@@ -23,18 +33,44 @@ public class SellerAgent extends TimePOAAgent {
 			
 			if(config != null) {
 
+				// REGISTRAMOS EL VENDEDOR XD
 				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 				request.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
 				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
 				request.setConversationId("seller-register");
 
-			/*	try {
-
-					//Seller seller = new Seller(config.getCif(), config.getNombre(), );
+				try {
+					this.cif = config.getCif();
+					this.pescados = config.getListaPescado();
+					Seller seller = new Seller(config.getCif(), config.getNombre());
+					request.setContentObject((Serializable) seller);
 				} catch (IOException e) {
 
-				}*/
+				}
+
+				SequentialBehaviour sequentialBehaviour = new SequentialBehaviour();
+				sequentialBehaviour.addSubBehaviour(new RegistroVendedor(this, request));
+
+
+				// AQUI PRESENTO MIS PECES XD
+
+				ACLMessage requestFish = new ACLMessage(ACLMessage.REQUEST);
+				requestFish.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+				requestFish.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
+				requestFish.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+				requestFish.setConversationId("seller-fish");
+
+				try {
+					LinkedList<Fish> listaFish = parseFish(pescados);
+					requestFish.setContentObject((Serializable) listaFish);
+				} catch (IOException e ) {
+
+				}
+
+				sequentialBehaviour.addSubBehaviour(new DepositoPescado(this, requestFish));
+
+				addBehaviour(sequentialBehaviour);
 
 			} else {
 				doDelete();
@@ -44,6 +80,20 @@ public class SellerAgent extends TimePOAAgent {
 			doDelete();
 		}
 	}
+
+	public String getCif() {
+		return cif;
+	}
+
+	public LinkedList<Fish> parseFish(List<FishConfig> fishConfig) {
+		LinkedList<Fish> lista = new LinkedList<>();
+		for (FishConfig fConfig : fishConfig) {
+			Fish fish = new Fish(fConfig.getNombre(), fConfig.getTipoProducto(), fConfig.getPeso(), fConfig.getPrecioReserva());
+			lista.add(fish);
+		}
+		return lista;
+	}
+
 	
 	private SellerAgentConfig initAgentFromConfigFile(String fileName) {
 		SellerAgentConfig config = null;

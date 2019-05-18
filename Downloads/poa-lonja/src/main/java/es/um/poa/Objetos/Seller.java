@@ -2,6 +2,7 @@ package es.um.poa.Objetos;
 
 import es.um.poa.productos.Fish;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * - nombre: Nombre del vendedor
  * - numeroVentas: Numero de ventas realizadas
  */
-public class Seller {
+public class Seller implements Serializable {
 
     private final String cif;
     private String nombre;
@@ -64,6 +65,10 @@ public class Seller {
      */
     public LinkedList<Fish> getListaPescado() {
         return listaPescado;
+    }
+
+    public void setListaPescado(List<Fish> listaPescado) {
+        this.listaPescado = new LinkedList<>(listaPescado);
     }
 
     /**

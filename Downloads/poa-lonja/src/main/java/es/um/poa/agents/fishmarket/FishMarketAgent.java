@@ -2,6 +2,7 @@ package es.um.poa.agents.fishmarket;
 
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.fishmarket.behaviours.RegistroCompradorResp;
+import es.um.poa.agents.fishmarket.behaviours.RegistroVendedorResp;
 import es.um.poa.productos.Fish;
 import jade.lang.acl.MessageTemplate;
 import org.yaml.snakeyaml.Yaml;
@@ -22,13 +23,23 @@ public class FishMarketAgent extends TimePOAAgent {
 		super.setup();
 		Object[] args = getArguments();
 		if (args != null && args.length == 1) {
+
 			String configFile = (String) args[0];
 			FishMarketAgentConfig config = initAgentFromConfigFile(configFile);
 			
 			if(config != null) {
 				MessageTemplate messageTemplate = MessageTemplate.MatchConversationId("buyer-register");
 				addBehaviour(new RegistroCompradorResp(this, messageTemplate));
+
+
+				MessageTemplate messageTemplateRV = MessageTemplate.MatchConversationId("seller-register");
+				addBehaviour(new RegistroVendedorResp(this, messageTemplateRV));
+
+
+				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("seller-fish");
+				addBehaviour(new RegistroVendedorResp(this, messageTemplateDP));
 			}
+
 		} else {
 			this.getLogger().info("ERROR", "Requiere fichero de cofiguración.");
 			doDelete();

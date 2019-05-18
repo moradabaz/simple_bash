@@ -1,6 +1,8 @@
 package es.um.poa.agents.buyer;
 
 public class BuyerAgentConfig {
+
+
 	private String nombre;
 	private String cif;
 	private double budget;

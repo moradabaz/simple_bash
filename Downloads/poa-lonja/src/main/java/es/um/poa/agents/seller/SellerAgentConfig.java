@@ -1,26 +1,26 @@
 package es.um.poa.agents.seller;
 
-import es.um.poa.productos.Fish;
+import es.um.poa.productos.FishConfig;
 
 import java.util.List;
 
 public class SellerAgentConfig {
 
-	private String cif;
-	private String nombre;
-	private List<Fish> lots;
+	public String cif;
+	public String nombre;
+	public List<FishConfig> listaPescado;
 
 	@Override
 	public String toString() {
-		return "SellerAgentConfig [lots=" + lots + "]";
+		return "SellerAgentConfig [lots=" + listaPescado + "]";
 	}
 
-	public List<Fish> getLots() {
-		return lots;
+	public List<FishConfig> getListaPescado() {
+		return listaPescado;
 	}
 
-	public void setLots(List<Fish> lots) {
-		this.lots = lots;
+	public void setListaPescado(List<FishConfig> catchs) {
+		this.listaPescado = catchs;
 	}
 
 	public String getCif() {
