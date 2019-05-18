@@ -24,9 +24,8 @@ public class RegistroVendedorResp extends AchieveREResponder {
         System.out.println("Agente " + agente.getLocalName() + ": Iniciador: " + request.getSender().getLocalName());
 
         try {
-            Seller seller = (Seller) request.getContentObject();
-
-            if (!database.checkSellerByID(seller.getCif())) {
+            Seller seller = (Seller) request.getContentObject();        // Recoje el objeto Seller (ERROR DE CAST: le llega la lista de pescado)
+            if (!database.checkSellerByID(seller.getCif())) {           // Comprueba que NO si esta en la BBDD para registrarlo
                 database.registrarSeller(seller);
                 ACLMessage agreeReply = request.createReply();
                 agreeReply.setPerformative(ACLMessage.AGREE);

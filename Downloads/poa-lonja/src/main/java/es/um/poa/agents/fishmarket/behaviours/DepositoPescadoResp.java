@@ -2,25 +2,21 @@ package es.um.poa.agents.fishmarket.behaviours;
 
 import es.um.poa.Objetos.Seller;
 import es.um.poa.Objetos.SellerBuyerDB;
-import es.um.poa.agents.seller.SellerAgent;
-import es.um.poa.productos.Fish;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
 
-import java.util.LinkedList;
-
 public class DepositoPescadoResp extends AchieveREResponder {
 
-    private SellerAgent agent;
+    private Agent agent;
     private MessageTemplate mt;
     private SellerBuyerDB database = SellerBuyerDB.getInstance();
 
     public DepositoPescadoResp(Agent a, MessageTemplate mt) {
         super(a, mt);
-        this.agent = (SellerAgent) a;
+        this.agent = a;
         this.mt = mt;
     }
 
@@ -39,14 +35,10 @@ public class DepositoPescadoResp extends AchieveREResponder {
             System.out.println(" " +   request.getContentObject().toString());
             System.out.println(">>>>>>> Estamos preparando la respuesta " + request.getContentObject());
 
-            if (database.checkSellerByID(agent.getCif())) {
+            Seller seller = (Seller) request.getContentObject();
 
-                LinkedList<Fish> listaPeces = (LinkedList<Fish>) request.getContentObject();
-                Seller seller = database.getSeller(agent.getCif());
-                for (Fish f : listaPeces)
-                    seller.anadirPescadoALista(f);
+            if (database.checkSellerByID(seller.getCif())) {
                 database.registrarSeller(seller);
-
 
                 // RESPUESTA
                 ACLMessage agreeReply = request.createReply();
@@ -67,5 +59,12 @@ public class DepositoPescadoResp extends AchieveREResponder {
             reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
             return reply;
         }
+    }
+
+    @Override
+    public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
+        ACLMessage informMessage = request.createReply();
+        informMessage.setPerformative(ACLMessage.INFORM);
+        return informMessage;
     }
 }
