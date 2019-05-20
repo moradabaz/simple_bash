@@ -2,6 +2,16 @@ package es.um.poa.productos;
 
 import java.io.Serializable;
 
+/**
+ * La Clase fish representa el lote articulo que se va a subastar.
+ * Esta caracterizado:
+ * - un estado de venta
+ * - El tipo de producto
+ * - el peso
+ * - el precio
+ * - Los precio de salida y final
+ * - Los ID's de sus vendedores y compradores.
+ */
 public class Fish implements Serializable {
 
     private static final int NO_ASIGNADO = -100;

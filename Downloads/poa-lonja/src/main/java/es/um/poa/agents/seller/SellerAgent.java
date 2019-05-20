@@ -2,8 +2,8 @@ package es.um.poa.agents.seller;
 
 import es.um.poa.Objetos.Seller;
 import es.um.poa.agents.TimePOAAgent;
-import es.um.poa.agents.seller.protocolos.DepositoPescado;
-import es.um.poa.agents.seller.protocolos.RegistroVendedor;
+import es.um.poa.agents.seller.behaviours.DepositoPescado;
+import es.um.poa.agents.seller.behaviours.RegistroVendedor;
 import es.um.poa.productos.Fish;
 import es.um.poa.productos.FishConfig;
 import jade.core.AID;

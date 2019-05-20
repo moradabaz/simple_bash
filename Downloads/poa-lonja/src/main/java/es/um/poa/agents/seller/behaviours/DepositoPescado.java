@@ -1,4 +1,4 @@
-package es.um.poa.agents.seller.protocolos;
+package es.um.poa.agents.seller.behaviours;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;

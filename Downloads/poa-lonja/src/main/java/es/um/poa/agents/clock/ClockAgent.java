@@ -1,26 +1,20 @@
 package es.um.poa.agents.clock;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import es.um.poa.agents.POAAgent;
 import es.um.poa.utils.OntologyFactory;
 import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
-import jade.core.behaviours.WakerBehaviour;
 import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.SubscriptionResponder;
 import jade.proto.SubscriptionResponder.Subscription;
 import jade.proto.SubscriptionResponder.SubscriptionManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Agente que controla la tiempo de la simulación

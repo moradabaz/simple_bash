@@ -1,7 +1,12 @@
 package es.um.poa.Objetos;
 
+
+/**
+ * El enumerado concepto presenta los distintos conceptos/motivos por los que
+ * se hace el registro del movimiento
+ */
 public enum Concepto {
-    REGISTRO("Registro en Longja"),
+    REGISTRO("Registro en Lonja"),
     REGISTRAR_LOTE("Registrar Lote"),
     PUJA("Puja por lote"),
     ADJUDICACION("Adjudicacion de lote");

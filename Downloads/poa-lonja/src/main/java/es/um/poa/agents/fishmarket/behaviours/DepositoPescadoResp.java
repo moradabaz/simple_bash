@@ -38,6 +38,7 @@ public class DepositoPescadoResp extends AchieveREResponder {
             Seller seller = (Seller) request.getContentObject();
 
             if (database.checkSellerByID(seller.getCif())) {
+                registrarLotes(seller);
                 database.registrarSeller(seller);
 
                 // RESPUESTA
@@ -66,5 +67,10 @@ public class DepositoPescadoResp extends AchieveREResponder {
         ACLMessage informMessage = request.createReply();
         informMessage.setPerformative(ACLMessage.INFORM);
         return informMessage;
+    }
+
+
+    public void registrarLotes(Seller seller) {
+        seller.registrarLotes();
     }
 }

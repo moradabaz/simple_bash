@@ -1,5 +1,6 @@
 package es.um.poa.Objetos;
 
+import es.um.poa.productos.EstadoVenta;
 import es.um.poa.productos.Fish;
 
 import java.io.Serializable;
@@ -69,6 +70,15 @@ public class Seller implements Serializable {
 
     public void setListaPescado(List<Fish> listaPescado) {
         this.listaPescado = new LinkedList<>(listaPescado);
+        for (Fish fish : this.listaPescado) {
+            fish.setIdComprador(cif);
+        }
+    }
+
+    public void registrarLotes() {
+        for (Fish fish : this.listaPescado) {
+            fish.setEstadoVenta(EstadoVenta.REGISTRADO);
+        }
     }
 
     /**
