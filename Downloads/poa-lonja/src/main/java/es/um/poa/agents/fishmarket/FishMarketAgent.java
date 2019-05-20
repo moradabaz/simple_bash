@@ -16,7 +16,11 @@ import java.io.InputStream;
 import static jade.lang.acl.MessageTemplate.MatchConversationId;
 
 /**
- * El Agente FishMarket representa la lonja de pescado.
+ * El Agente FishMarket representa la lonja de pescado. Este agente va a tener:
+ * - Un contador de ingresos
+ * - Un porcentaje de comision
+ * Tambien tendrá una base de datos (@SellerBuyerDB) para almecenar los vendedores y compradores
+ *
  */
 public class FishMarketAgent extends TimePOAAgent {
 
@@ -32,13 +36,24 @@ public class FishMarketAgent extends TimePOAAgent {
 			FishMarketAgentConfig config = initAgentFromConfigFile(configFile);
 			
 			if(config != null) {
+
+				/**
+				 * Mensaje para crear una respuesta la solicitud de registro de un agente comprador
+				 */
 				MessageTemplate messageTemplate = MatchConversationId("buyer-register");
+				// aniadimos el comportamiento del registro de comprrador
 				addBehaviour(new RegistroCompradorResp(this, messageTemplate));
 
+				/**
+				 * Mensaje para crear una respuesta de solicitud de registro de un comprador
+				 */
 				MessageTemplate messageTemplateRV = MessageTemplate.and(AchieveREResponder.createMessageTemplate(FIPANames.InteractionProtocol.FIPA_REQUEST), MatchConversationId("seller-register"));
+				// Aniadimos un comportamiento de registro de vendedor
 				addBehaviour(new RegistroVendedorResp(this, messageTemplateRV));
 
+				// Mensaje para crear una respuesta para el deposito de la lonja por parte del vendedor
 				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("deposito-fish");
+				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
 			}
 

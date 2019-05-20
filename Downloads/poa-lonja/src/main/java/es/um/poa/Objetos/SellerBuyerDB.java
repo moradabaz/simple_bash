@@ -1,6 +1,7 @@
 package es.um.poa.Objetos;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +20,8 @@ public class SellerBuyerDB {
     private static SellerBuyerDB ourInstance;
     private Map<String, Seller> sellers;
     private Map<String, Buyer> buyers;
-
+    private Map<String, ListaMovimientos> movimientosSeller;
+    private Map<String, ListaMovimientos> movimientosBuyer;
 
 
 
@@ -37,6 +39,8 @@ public class SellerBuyerDB {
     private SellerBuyerDB() {
         this.sellers = new HashMap<String, Seller>();
         this.buyers = new HashMap<String, Buyer>();
+        this.movimientosBuyer = new HashMap<String, ListaMovimientos>();
+        this.movimientosSeller = new HashMap<String, ListaMovimientos>();
     }
 
     /**
@@ -82,10 +86,18 @@ public class SellerBuyerDB {
         sellers.remove(sellerID);
     }
 
+    /**
+     *
+     * @param seller
+     */
     public void removeSeller(Seller seller) {
         sellers.remove(seller.getCif(), seller);
     }
 
+    /**
+     *
+     * @param seller
+     */
     public void modificarSeller(Seller seller) {
         if (checkBuyerByID(seller.getCif())) {
             sellers.remove(seller.getCif());
@@ -93,23 +105,45 @@ public class SellerBuyerDB {
         }
     }
 
+    /**
+     *
+     * @param sellerID
+     * @return
+     */
     public Seller getSeller(String sellerID) {
         return sellers.getOrDefault(sellerID, null);
     }
 
-
+    /**
+     *
+     * @param buyer
+     * @return
+     */
     public boolean existeBuyer(Buyer buyer) {
         return buyers.containsValue(buyer);
     }
 
+    /**
+     *
+     * @param buyerID
+     * @return
+     */
     public boolean checkBuyerByID(String buyerID) {
         return buyers.containsKey(buyerID);
     }
 
+    /**
+     *
+     * @param buyerID
+     */
     public void removerBuyerByID(String buyerID) {
         buyers.remove(buyerID);
     }
 
+    /**
+     *
+     * @param buyer
+     */
     public void modificarBuyer(Buyer buyer) {
        if (buyers.containsKey(buyer.getCif())) {
            buyers.remove(buyer.getCif());
@@ -117,18 +151,95 @@ public class SellerBuyerDB {
        }
     }
 
+    /**
+     *
+     * @param buyerID
+     * @return
+     */
     public Buyer getBuyer(String buyerID) {
         return buyers.getOrDefault(buyerID, null);
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<String> getBuyerIDs() {
         return buyers.keySet();
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<String> getSellerIDs() {
         return sellers.keySet();
     }
 
+    /**
+     *
+     * @param cifSeller
+     * @param movimiento
+     */
+    public void registarMovimientoSeller(String cifSeller, Movimiento movimiento) {
+        if (movimientosSeller.containsKey(cifSeller)) {
+            ListaMovimientos listaMovimientos = getListaMovimientoSeller(cifSeller);
+            listaMovimientos.anadirMovimiento(movimiento);
+            this.movimientosSeller.put(cifSeller, listaMovimientos);
+        } else {
+            ListaMovimientos listaMovimientos = new ListaMovimientos(cifSeller);
+            listaMovimientos.anadirMovimiento(movimiento);
+            this.movimientosSeller.put(cifSeller, listaMovimientos);
+        }
+    }
 
+    /**
+     *
+     * @param cifBuyer
+     * @param movimiento
+     */
+    public void registrarMovimientoBuyer(String cifBuyer, Movimiento movimiento) {
+        if (movimientosBuyer.containsKey(cifBuyer)) {
+            ListaMovimientos listaMovimientos = getListaMovimientosBuyer(cifBuyer);
+            listaMovimientos.anadirMovimiento(movimiento);
+            this.movimientosBuyer.put(cifBuyer, listaMovimientos);
+        } else {
+            ListaMovimientos listaMovimientos = new ListaMovimientos(cifBuyer);
+            listaMovimientos.anadirMovimiento(movimiento);
+            this.movimientosBuyer.put(cifBuyer, listaMovimientos);
+        }
+    }
+
+    /**
+     *
+     * @param cif
+     * @return
+     */
+    public ListaMovimientos getListaMovimientoSeller(String cif) {
+        if (movimientosSeller.containsKey(cif))
+            return movimientosSeller.get(cif);
+        return null;
+    }
+
+    public ListaMovimientos getListaMovimientosBuyer(String cif) {
+        if (movimientosBuyer.containsKey(cif))
+            return movimientosBuyer.get(cif);
+        return null;
+    }
+
+
+    public LinkedList<Movimiento> getSellerMovimientos(String sellerCif) {
+        if (movimientosSeller.containsKey(sellerCif)) {
+            return movimientosSeller.get(sellerCif).getMovimientos();
+        }
+        return null;
+    }
+
+    public LinkedList<Movimiento> getBuyerMovimientos(String buyerCif) {
+        if (movimientosSeller.containsKey(buyerCif)) {
+            return movimientosSeller.get(buyerCif).getMovimientos();
+        }
+        return null;
+    }
 
 }
