@@ -1,9 +1,7 @@
 package es.um.poa.agents.fishmarket;
 
 import es.um.poa.agents.TimePOAAgent;
-import es.um.poa.agents.fishmarket.behaviours.DepositoPescadoResp;
-import es.um.poa.agents.fishmarket.behaviours.RegistroCompradorResp;
-import es.um.poa.agents.fishmarket.behaviours.RegistroVendedorResp;
+import es.um.poa.agents.fishmarket.behaviours.*;
 import jade.domain.FIPANames;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
@@ -55,6 +53,13 @@ public class FishMarketAgent extends TimePOAAgent {
 				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("deposito-fish");
 				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
+
+				MessageTemplate messageTemplateAddCredit = MessageTemplate.MatchConversationId("buyer-addCredit");
+				addBehaviour(new InicioCreditoResp(this, messageTemplateAddCredit));
+
+				MessageTemplate messageTemplateRetiraCompra= MessageTemplate.MatchConversationId("buyer-Retire");
+				addBehaviour(new RetiroCompraResp(this, messageTemplateRetiraCompra));
+
 			}
 
 		} else {

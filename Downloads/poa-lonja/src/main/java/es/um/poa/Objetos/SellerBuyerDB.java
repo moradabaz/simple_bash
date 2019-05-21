@@ -1,5 +1,8 @@
 package es.um.poa.Objetos;
 
+import es.um.poa.productos.EstadoVenta;
+import es.um.poa.productos.Fish;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -242,4 +245,24 @@ public class SellerBuyerDB {
         return null;
     }
 
+    /**
+     * Le inicia el credito a un comprador
+     * @param buyerCif Comprador a Iniciar Credito
+     * @param credito a poner Credito
+     */
+    public void iniciarCreditoBuyer(String buyerCif, double credito) {
+        Buyer buyerAddCredit = buyers.get(buyerCif);    // Aqui hay un NULL_POINTER_EXCEPTION
+        buyerAddCredit.setSaldo(credito);
+        buyers.put(buyerAddCredit.getCif(), buyerAddCredit);
+    }
+
+    public void retirarCompra(String buyerCif) {
+        Buyer buyer = buyers.get(buyerCif);
+        LinkedList<Fish> productoComprados = buyer.getArticulosComprados();
+        for (Fish fish : productoComprados) {
+            if (fish.getEstadoVenta() != EstadoVenta.ENTREGADO) {
+                fish.setEstadoVenta(EstadoVenta.ENTREGADO);
+            }
+        }
+    }
 }

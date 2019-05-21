@@ -20,7 +20,7 @@ public class InicioCredito extends AchieveREInitiator {
     }
 
     public void handleRefuse(ACLMessage refuse) {
-        System.out.println("El agente " + refuse.getSender().getLocalName() + " ha rechazado la solicitud del agente "
+        System.out.println("El agente " + refuse.getSender().getLocalName() + " ha rechazado el deposito de credito agente "
                 + agente.getLocalName());
     }
 

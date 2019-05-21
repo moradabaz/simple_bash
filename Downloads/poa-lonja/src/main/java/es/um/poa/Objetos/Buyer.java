@@ -25,7 +25,14 @@ public class Buyer implements Serializable {
         this.saldo = saldo;
         this.gastos = 0;
         this.articulosComprados = new LinkedList<>();
+    }
 
+    public Buyer(String cif, String nombre) {
+        this.identificador = cif;
+        this.nombre = nombre;
+        this.saldo = 0;
+        this.gastos = 0;
+        this.articulosComprados = new LinkedList<>();
     }
 
     /*

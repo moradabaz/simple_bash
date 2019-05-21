@@ -4,48 +4,52 @@ import es.um.poa.Objetos.Buyer;
 import es.um.poa.Objetos.SellerBuyerDB;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
 
-public class RegistroCompradorResp extends AchieveREResponder {
-
+public class RetiroCompraResp extends AchieveREResponder {
 
     private Agent agente;
     private MessageTemplate mensaje;
     private SellerBuyerDB dataBase = SellerBuyerDB.getInstance();
 
-    public RegistroCompradorResp(Agent a, MessageTemplate mt) {
+    public RetiroCompraResp(Agent a, MessageTemplate mt) {
         super(a, mt);
         this.agente = a;
         this.mensaje = mt;
     }
 
     @Override
-    public ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
+    public ACLMessage prepareResponse(ACLMessage request)  {
 
         try {
 
-            System.out.println(">>>>>>> Estamos preparando la respuesta " + request.getContentObject());
             Buyer buyer = ((Buyer) request.getContentObject());
+
             String cif = buyer.getCif();
             String nombre = buyer.getNombre();
-            dataBase.registrarBuyer(buyer);
-            System.out.println("Mensaje recibido √");
-            System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " }");
 
-            // RESPUESTA
+            System.out.println("Mensaje recibido de Retiro de Compra");
+
+            /*
+             * en la subasta habria que buscar con el cif lo que no se ha retirado y ponerlo
+             * a entregado
+             * */
+
+            dataBase.retirarCompra(cif);
+
             ACLMessage reply = request.createReply();
             reply.setPerformative(ACLMessage.AGREE);
             return reply;
 
+
         } catch (UnreadableException e) {
+
             e.printStackTrace();
             ACLMessage reply = request.createReply();
-            reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+            reply.setPerformative(ACLMessage.REFUSE);
             return reply;
         }
 
@@ -53,7 +57,7 @@ public class RegistroCompradorResp extends AchieveREResponder {
 
     @Override
     public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
-
+        //Esta funcion es para decir que hemos enviado esto por pantalla
         System.out.println(
                 "Agente " + agente.getLocalName() + ": completado con exito: " + request.getSender().getLocalName());
 
@@ -77,4 +81,13 @@ public class RegistroCompradorResp extends AchieveREResponder {
     public void setMsg(MessageTemplate msg) {
         this.mensaje = msg;
     }
+
+
 }
+
+
+
+
+
+
+
