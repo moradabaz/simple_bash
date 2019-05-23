@@ -2,6 +2,7 @@ package es.um.poa.agents.fishmarket;
 
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.fishmarket.behaviours.*;
+import es.um.poa.productos.Fish;
 import jade.domain.FIPANames;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
@@ -10,6 +11,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.LinkedList;
 
 import static jade.lang.acl.MessageTemplate.MatchConversationId;
 
@@ -24,6 +26,9 @@ public class FishMarketAgent extends TimePOAAgent {
 
 	private double ingresos = 0;
 	private double comisionPorLote = 0.2;
+	private boolean subastando = false;
+
+	private LinkedList<Fish> lotesASubastar = new LinkedList<Fish>();
 
 	public void setup() {
 		super.setup();
@@ -83,5 +88,31 @@ public class FishMarketAgent extends TimePOAAgent {
 	}
 
 
+	public void anadirLoteASubasta(Fish fish) {
+		lotesASubastar.add(fish);
+	}
+
+	public void removeLoteFromSubasta(Fish fish) {
+		if (lotesASubastar.contains(fish))
+			lotesASubastar.add(fish);
+	}
+
+	public void removeFirstLote() {
+		if (!lotesASubastar.isEmpty())
+			lotesASubastar.removeFirst();
+	}
+
+	public LinkedList<Fish> getLotesASubastar() {
+		return lotesASubastar;
+	}
+
 	private void parseBuyerConfig(String buyerFile) {}
+
+	public void setSubastando(boolean subastando) {
+		this.subastando = subastando;
+	}
+
+	public boolean isSubastando() {
+		return subastando;
+	}
 }

@@ -84,4 +84,8 @@ public class Buyer implements Serializable {
     public String getNombre() {
         return nombre;
     }
+
+    public void registrarLote(Fish fish) {
+        this.articulosComprados.add(fish);
+    }
 }

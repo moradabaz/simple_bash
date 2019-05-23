@@ -1,12 +1,17 @@
 package es.um.poa.agents.fishmarket.behaviours;
 
+import es.um.poa.Objetos.Movimiento;
 import es.um.poa.Objetos.Seller;
 import es.um.poa.Objetos.SellerBuyerDB;
+import es.um.poa.agents.fishmarket.FishMarketAgent;
+import es.um.poa.productos.Fish;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
+
+import java.util.LinkedList;
 
 public class DepositoPescadoResp extends AchieveREResponder {
 
@@ -38,8 +43,12 @@ public class DepositoPescadoResp extends AchieveREResponder {
             Seller seller = (Seller) request.getContentObject();
 
             if (database.checkSellerByID(seller.getCif())) {
-                registrarLotes(seller);
+                LinkedList<Movimiento> movimientos = registrarLotes(seller);
+                for (Fish fish : seller.getListaPescado())
+                    ((FishMarketAgent) agent).anadirLoteASubasta(fish);
                 database.registrarSeller(seller);
+                for (Movimiento movimiento : movimientos)
+                    database.registarMovimientoSeller(seller.getCif(), movimiento);
 
                 // RESPUESTA
                 ACLMessage agreeReply = request.createReply();
@@ -70,7 +79,7 @@ public class DepositoPescadoResp extends AchieveREResponder {
     }
 
 
-    public void registrarLotes(Seller seller) {
-        seller.registrarLotes();
+    public LinkedList<Movimiento> registrarLotes(Seller seller) {
+       return seller.registrarLotes();
     }
 }

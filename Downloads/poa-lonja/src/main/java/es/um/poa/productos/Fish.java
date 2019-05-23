@@ -133,4 +133,11 @@ public class Fish implements Serializable {
     public void setIdVendedor(String idVendedor) {
         this.idVendedor = idVendedor;
     }
+
+    @Override
+    public String toString() {
+        String cadena = "[ ";
+        cadena += "Tipo = " + tipoProducto.getName() + ", Nombre: " + nombre + ", peso = " + peso + " ]";
+        return cadena;
+    }
 }

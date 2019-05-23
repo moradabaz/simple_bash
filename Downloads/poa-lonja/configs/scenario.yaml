@@ -9,10 +9,10 @@ fishMarket:
   name: "Lonja"
   config: "configs/fishMarket.yaml"
 buyers:
-  - name: "Comprador1"
+  - name: "BY500"
     config: "configs/buyerType1.yaml"
-  - name: "Comprador2"
+  - name: "BY235"
     config: "configs/buyerType1.yaml"
 sellers:
-  - name: "Vendedor1"
+  - name: "SE004"
     config: "configs/sellerType1.yaml"

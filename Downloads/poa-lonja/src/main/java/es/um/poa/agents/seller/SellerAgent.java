@@ -43,7 +43,6 @@ public class SellerAgent extends TimePOAAgent {
 			
 			if(config != null) {
 
-
 				AID lonjaAid = new AID("Lonja", AID.ISLOCALNAME);							// Creamos el AID de la lonja
 
 				// REGISTRAMOS EL VENDEDOR XD

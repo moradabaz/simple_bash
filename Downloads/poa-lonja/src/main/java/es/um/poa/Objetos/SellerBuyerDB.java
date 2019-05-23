@@ -181,6 +181,22 @@ public class SellerBuyerDB {
 
     /**
      *
+     * @return
+     */
+    public LinkedList<Seller> getAllSellers() {
+        return new LinkedList<>(sellers.values());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public LinkedList<Buyer> getAllBuyers() {
+        return new LinkedList<>(buyers.values());
+    }
+
+    /**
+     *
      * @param cifSeller
      * @param movimiento
      */
@@ -263,6 +279,21 @@ public class SellerBuyerDB {
             if (fish.getEstadoVenta() != EstadoVenta.ENTREGADO) {
                 fish.setEstadoVenta(EstadoVenta.ENTREGADO);
             }
+        }
+    }
+
+
+    public void registrarVenta(String buyercif, Fish articulo, double precioFinal) {
+        if (!buyers.containsKey(buyercif)) {
+            System.err.println("## ERROR ## -> El cif" + buyercif + "No está contenido");
+        } else {
+            Buyer buyer = buyers.get(buyercif);
+            articulo.setEstadoVenta(EstadoVenta.ADJUDICADO);
+            articulo.setIdComprador(buyercif);
+            articulo.setPrecioFinal(precioFinal);
+            buyer.registrarLote(articulo);
+            buyers.put(buyercif, buyer);
+
         }
     }
 }

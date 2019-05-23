@@ -75,10 +75,22 @@ public class Seller implements Serializable {
         }
     }
 
-    public void registrarLotes() {
+    /**
+     * Establece el estado de venta del lote a REGISTRADO y crea un
+     * movimiento con concetpo de REGISTRAR LOT
+     * Devuelve una lista de mvimientos
+     * @return
+     */
+    public LinkedList<Movimiento> registrarLotes() {
+        LinkedList<Movimiento> lista = new LinkedList<>();
         for (Fish fish : this.listaPescado) {
             fish.setEstadoVenta(EstadoVenta.REGISTRADO);
+            Movimiento m = new Movimiento(cif, Concepto.REGISTRAR_LOTE);
+            String descripcion = "Registro de Lote: " +  fish.toString();
+            m.setDescripcion(descripcion);
+            lista.add(m);
         }
+        return lista;
     }
 
     /**
