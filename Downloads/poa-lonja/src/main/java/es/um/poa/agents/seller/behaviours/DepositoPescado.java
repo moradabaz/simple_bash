@@ -4,6 +4,10 @@ import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+/**
+ * La clase DepositoPescado representa el comportamiento ejecutado por el vendedor para enviar
+ * una solicitud de deposito de sus lotes en la lonja
+ */
 public class DepositoPescado extends AchieveREInitiator {
 
     private Agent agente;

@@ -9,6 +9,12 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
 
+
+/**
+ * La clase RetiroCompraResp representa el comportamiento que ejecuta la lonja cuando recibe
+ * una peticion del comprador de retirar el lote adquirido en la subasta.
+ *
+ */
 public class RetiroCompraResp extends AchieveREResponder {
 
     private Agent agente;
@@ -21,6 +27,13 @@ public class RetiroCompraResp extends AchieveREResponder {
         this.mensaje = mt;
     }
 
+    /**
+     * Dada una peticion que ha sido enviada por el comprador que ha ganado al subasta,
+     * se recoge su CIF y su nombre, y se hace una llamada a la base de datos para
+     * retirar una compra
+     * @param request
+     * @return
+     */
     @Override
     public ACLMessage prepareResponse(ACLMessage request)  {
 

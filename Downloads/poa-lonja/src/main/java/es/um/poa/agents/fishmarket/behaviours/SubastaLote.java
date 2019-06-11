@@ -79,6 +79,12 @@ public class SubastaLote extends TickerBehaviour {
             /**
              * Este comportamiento ejecuta la gestion de las posibles respuestas a la
              * subasta.
+             * Si durante la subasta la lonja acepta recube una propuesta de puja por parte de varios compradores,
+             * eligirá el que haya pujado antes.
+             * El a ese comprador se le manda un mensaje de aceptacion y un mensaje de denegacion al resto.
+             *
+             * Si todos los compradores rechazan el lote, se baja el precio de este y se sigue una nueva ronda
+             * Si el precio rebajado es menor que el precio minimo fijado para venderse, se descarta el lote
              */
             agente.addBehaviour(new TickerBehaviour(agente, 80) {
                 @Override
@@ -102,25 +108,28 @@ public class SubastaLote extends TickerBehaviour {
                                 double cantidadPujada = 0;
                                 AID pujadorCandidato = null;
                                 ACLMessage respuesta = new ACLMessage();
-                                Enumeration e = responses.elements();
+                                Enumeration e = responses.elements();               // Lista de respuestas
                                 long ultimoTiempo = 0;
-                                while(e.hasMoreElements()) {
+                                while(e.hasMoreElements()) {                        // Mientras hayan mas elementos
                                     ACLMessage msg = (ACLMessage) e.nextElement();
-                                    long marcaTiempo = ((FishMarketAgent) agente).getSimTime().getTime();
+                                    long marcaTiempo = ((FishMarketAgent) agente).getSimTime().getTime();   //
 
-                                    if (msg.getPerformative() == ACLMessage.PROPOSE) {
+                                    if (msg.getPerformative() == ACLMessage.PROPOSE) {                      // Si un elemente puja
                                         //reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
-                                        respuesta.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                                        acceptances.addElement(respuesta);
-                                        double dineroPujado = Double.parseDouble(msg.getContent());
+                                        //
+                                        //  FALTA PONER EL CRITERIO DE ELECCION
+                                        //
+                                        respuesta.setPerformative(ACLMessage.ACCEPT_PROPOSAL);              // Se acepta la puja
+                                        acceptances.addElement(respuesta);                                  // Se anyade ese elemento a las respuestas
+                                        double dineroPujado = Double.parseDouble(msg.getContent());         // Se extrae el dinero pujado
                                         cantidadPujada = dineroPujado;
-                                        pujadorCandidato = msg.getSender();
-                                        if (((FishMarketAgent) agente).isSubastando()) {
-                                            ((FishMarketAgent) agente).setSubastando(false);
+                                        pujadorCandidato = msg.getSender();                                 // Se toma el candidato pujador
+                                        if (((FishMarketAgent) agente).isSubastando()) {                    // Si se esta subastando
+                                            ((FishMarketAgent) agente).setSubastando(false);                //      Se cierra la puja
                                             System.out.println("Se acepta la puja por " + cantidadPujada
                                                     + " del comprador " + pujadorCandidato.getLocalName());
 
-                                            database.registrarVenta(pujadorCandidato.getLocalName(), fish, cantidadPujada);
+                                            database.registrarVenta(pujadorCandidato.getLocalName(), fish, cantidadPujada);         //  Se registra la venta del lote
 
                                             try {
                                                 respuesta.setContentObject((double) cantidadPujada);
@@ -133,17 +142,17 @@ public class SubastaLote extends TickerBehaviour {
 
                                     } else if (msg.getPerformative() == ACLMessage.REFUSE) {
                                         rechazosPuja++;
-                                        if (rechazosPuja == responses.size()) {
+                                        if (rechazosPuja == responses.size()) {                             // Si todos los compradores rechazan la puja
                                             rechazosPuja = 0;
-                                            double precio = precioPescado - precioPescado * 0.2;
-                                            if (precio <= precioPescado * 0.15) {
-                                                ((FishMarketAgent) agente).setSubastando(false);
-                                                if (((FishMarketAgent)agente).getLotesASubastar().size() > 0) {
+                                            double precio = precioPescado - precioPescado * 0.2;            // Se reduce el precio
+                                            if (precio <= precioPescado * 0.15) {                           // Si su precio actual es menor que el 15% del precio inicial
+                                                ((FishMarketAgent) agente).setSubastando(false);            // Se descarta
+                                                if (((FishMarketAgent)agente).getLotesASubastar().size() > 0) {     //  Se descarta el lote
                                                     ((FishMarketAgent)agente).removeFirstLote();
                                                     System.out.println("Numero de lotes en espera: " + ((FishMarketAgent)agente).getLotesASubastar().size());
                                                     System.out.println("El lote " + fish.getNombre() + " ha sido eliminado de la subasta");
                                                 }
-                                            } else {
+                                            } else {                                                        // Se actualiza la ronda
                                                 rondas++;
                                                 System.out.println("RONDA -> " + rondas);
                                                 System.out.println("HORA DE SUBASTA:");

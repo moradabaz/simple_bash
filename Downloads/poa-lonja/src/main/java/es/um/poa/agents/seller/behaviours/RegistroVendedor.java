@@ -4,6 +4,11 @@ import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+
+/**
+ * La clase RegistroVendedor representa el comportamiento ejecutado por el vendedor para enviar
+ * una solicitud de registro.
+ */
 public class RegistroVendedor extends AchieveREInitiator {
 
     private Agent agente;
