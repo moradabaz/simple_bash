@@ -41,6 +41,7 @@ public class SubastaLote extends TickerBehaviour {
      * - Recoge todos los lotes que tiene para subastar y los mete en una lista
      * Recoge el primero lote y establece un precio de salida dado su precio de reserva y peso mas una
      * comision.
+     * Luego envia un mensaje a todos los compradores notificandoles la subasta del lote.
      */
     @Override
     protected void onTick() {
@@ -75,7 +76,10 @@ public class SubastaLote extends TickerBehaviour {
             }
 
 
-
+            /**
+             * Este comportamiento ejecuta la gestion de las posibles respuestas a la
+             * subasta.
+             */
             agente.addBehaviour(new TickerBehaviour(agente, 80) {
                 @Override
                 protected void onTick() {
