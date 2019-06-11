@@ -9,6 +9,13 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.AchieveREResponder;
 
+
+/**
+ * La clase InicioCreditoResp corresponde con el comportamiento que tiene la lonja cuando
+ * recibe una peticion de inicio de credito por parte de un comprador
+ * La lonja envia una respuesta afirmativa en caso de haber registrado el credito del comprdor solicitante
+ * y una respuesta negativa en caso contrario
+ */
 public class InicioCreditoResp extends AchieveREResponder {
 
     private Agent agente;

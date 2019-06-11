@@ -4,6 +4,11 @@ import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+/**
+ * La clase BuyerRegister representa el comportamiento que ejecuta un comprador cuando se quiere
+ * registrar en la lonja enviandole una peticion de registro.
+ *
+ */
 public class RegistroComprador extends AchieveREInitiator {
 
     private Agent agente;
@@ -15,14 +20,26 @@ public class RegistroComprador extends AchieveREInitiator {
         this.mensaje = msg;
     }
 
+    /**
+     * Manejador de mensaje de informacion
+     * @param inform
+     */
     public void handleInform(ACLMessage inform) {
         System.out.println(" >> El mensaje " + inform.getConversationId() + " ha sido notificado correctamente");
     }
 
+    /**
+     * Manejador de mensaje de denegacion o rechazo
+     * @param refuse
+     */
     public void handleRefuse(ACLMessage refuse) {
         System.out.println(" ! >> (Registro Comprador)El mensaje enviado ha sido por rechazado por el agente " + refuse.getSender().getLocalName());
     }
 
+    /**
+     * Manejador de mensaje de fallo
+     * @param failure
+     */
     public void handleFailure(ACLMessage failure) {
         if (agente.getAMS().equals(failure.getSender())) {
             System.out.println(" X: Ha habido un fallo en el envío");

@@ -4,6 +4,10 @@ import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+/**
+ * Comportamiento para el inicio del credito, es decir, la declaración del credito por
+ * parte del comprador.
+ */
 public class InicioCredito extends AchieveREInitiator {
 
     private Agent agente;

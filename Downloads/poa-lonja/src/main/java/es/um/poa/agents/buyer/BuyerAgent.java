@@ -5,7 +5,6 @@ import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.behaviours.InicioCredito;
 import es.um.poa.agents.buyer.behaviours.RegistroComprador;
 import es.um.poa.agents.buyer.behaviours.RetiroCompra;
-import es.um.poa.productos.Fish;
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -13,22 +12,30 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.Date;
-import java.util.LinkedList;
 
+
+/**
+ * El Agente BuyerAgente representa al agente comprador y sus comportamientos
+ * Tiene un atributo booleano ppara saber si ha declarado su saldo en la lonja
+ */
 public class BuyerAgent extends TimePOAAgent {
 
-	private LinkedList<Fish> listaFavoritos = new LinkedList<Fish>();
-	private LinkedList<Fish> productosAdquiridos = new LinkedList<>();
-	private boolean productoAdquirido = true;
-	private boolean peticionRegistroEnviada=false;
 	private boolean peticionInicioCreditoEnviada=false;
 
-
-
+	/**
+	 * Dentro de la funcion, se incluyen los comportamientos que el agente
+	 * comprador va a realizar
+	 *
+	 * Primeramente extrae los datos a partir del fichero de configuracion.
+	 * Los comportamientos que implementa son:
+	 *	- Registro del comprador (FIPA REQUEST)
+	 *	- Declaracion o inicio de credito si ya se ha registrado (FIPA REQUEST)
+	 *  - Puja por lote
+	 *  -
+	 */
 	public void setup() {
 
 		super.setup();
-
 
 		Object[] args = getArguments();
 		if (args != null && args.length == 1) {
@@ -96,8 +103,6 @@ public class BuyerAgent extends TimePOAAgent {
 			///PROTOCOLO RETIRADA DE LO COMPRADO
 			//**********************************************************
 
-
-			//		PONERLE INICIO DE LA PETICION
 
 			ACLMessage requestRetire = new ACLMessage(ACLMessage.PROPOSE);
 			requestRetire.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);

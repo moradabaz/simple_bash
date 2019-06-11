@@ -4,7 +4,11 @@ import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
 
-public class RetiroCompra  extends AchieveREInitiator{
+/**
+ *  La clase retiro compra representa el comportamiento que ejecuta un comprador cuando quiere retirar un producto
+ *  adquirdo
+ */
+public class RetiroCompra extends AchieveREInitiator{
 
     private Agent agente;
     private ACLMessage mensaje;

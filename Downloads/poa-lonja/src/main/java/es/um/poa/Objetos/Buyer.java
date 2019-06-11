@@ -5,6 +5,16 @@ import es.um.poa.productos.Fish;
 import java.io.Serializable;
 import java.util.LinkedList;
 
+
+/**
+ *  La clase buyer representa un comprador.
+ *  Contiene:
+ *  - Un identificador que será el CIF
+ *  - El nombre del comprador
+ *  - El saldo
+ *  - El gasto que tiene
+ *  - Una lista con los articulos comprados
+ */
 public class Buyer implements Serializable {
 
     private final String identificador;
@@ -71,11 +81,7 @@ public class Buyer implements Serializable {
     public LinkedList<Fish> getArticulosComprados() {
         return articulosComprados;
     }
-    
-    public void comprarArticulo(Fish fish) {
-        if (!articulosComprados.contains(fish))
-            articulosComprados.add(fish);
-    }
+
 
     public void setArticulosComprados(LinkedList<Fish> articulosComprados) {
         this.articulosComprados = articulosComprados;
@@ -85,7 +91,9 @@ public class Buyer implements Serializable {
         return nombre;
     }
 
-    public void registrarLote(Fish fish) {
-        this.articulosComprados.add(fish);
+
+    public void comprarLote(Fish fish) {
+        if (!articulosComprados.contains(fish))
+            this.articulosComprados.add(fish);
     }
 }

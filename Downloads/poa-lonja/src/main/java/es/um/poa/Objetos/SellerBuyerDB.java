@@ -291,7 +291,7 @@ public class SellerBuyerDB {
             articulo.setEstadoVenta(EstadoVenta.ADJUDICADO);
             articulo.setIdComprador(buyercif);
             articulo.setPrecioFinal(precioFinal);
-            buyer.registrarLote(articulo);
+            buyer.comprarLote(articulo);
             buyers.put(buyercif, buyer);
 
         }

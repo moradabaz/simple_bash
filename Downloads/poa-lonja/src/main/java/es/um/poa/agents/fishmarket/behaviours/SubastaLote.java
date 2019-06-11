@@ -15,6 +15,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
+
+/**
+ * La clase SubastaLote representa el comportamiento que ejecuta la lonja cuando va a
+ * subastar un lote.
+ */
 public class SubastaLote extends TickerBehaviour {
 
     private Agent agente;
@@ -32,7 +37,10 @@ public class SubastaLote extends TickerBehaviour {
     }
 
     /**
-     *
+     * El proceso que ejecuta la lonja es sencillo:
+     * - Recoge todos los lotes que tiene para subastar y los mete en una lista
+     * Recoge el primero lote y establece un precio de salida dado su precio de reserva y peso mas una
+     * comision.
      */
     @Override
     protected void onTick() {

@@ -13,6 +13,10 @@ import jade.proto.AchieveREResponder;
 
 import java.util.LinkedList;
 
+/**
+ * Este es un comportamiento del vendedor que se usa para responder
+ * a una solicitud de deposito de pescado por parte del vendedor
+ */
 public class DepositoPescadoResp extends AchieveREResponder {
 
     private Agent agent;
@@ -25,6 +29,16 @@ public class DepositoPescadoResp extends AchieveREResponder {
         this.mt = mt;
     }
 
+    /**
+     * La funcion comprueba que el vendedor existe en la base de datos.
+     * En caso de que el vendedor esté registrado, el vendedor registra todos sus lotes y genera
+     * una serie de movimientos. Luego, aniade los lotes a la subasta y registra la lista de
+     * movimientos en la BBDD. Despues manda una respuesta de aceptacion
+     * En caso de que no este registrado en la lonja, manda un mensaje de rechazo.
+     *
+     * @param request
+     * @return
+     */
     public ACLMessage prepareResponse(ACLMessage request) {
         System.out.println("Mensaje recibido √");
 
