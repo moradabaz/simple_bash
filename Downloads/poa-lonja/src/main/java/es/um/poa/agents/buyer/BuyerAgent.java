@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.Date;
+import java.util.LinkedList;
 
 
 /**
@@ -21,6 +22,11 @@ import java.util.Date;
 public class BuyerAgent extends TimePOAAgent {
 
 	private boolean peticionInicioCreditoEnviada=false;
+	private LinkedList<String> listaDeseos = new LinkedList<>();
+
+	public BuyerAgent() {
+
+	}
 
 	/**
 	 * Dentro de la funcion, se incluyen los comportamientos que el agente
@@ -52,7 +58,8 @@ public class BuyerAgent extends TimePOAAgent {
 
 				try {
 					 Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
-					 request.setContentObject((Serializable) buyer);
+					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());
+					request.setContentObject((Serializable) buyer);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -142,7 +149,6 @@ public class BuyerAgent extends TimePOAAgent {
 		}
 		return config;
 	}
-
 
 
 }

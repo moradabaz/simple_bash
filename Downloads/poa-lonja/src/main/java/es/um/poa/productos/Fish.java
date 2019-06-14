@@ -23,8 +23,6 @@ public class Fish implements Serializable {
     private double precioReserva;
     private double precioSalida;
     private double precioFinal;
-    private Tiempo horaRegistro;
-    private Tiempo horaVenta;
     private String idComprador;
     private String idVendedor;
 
@@ -102,21 +100,6 @@ public class Fish implements Serializable {
         this.precioFinal = precioFinal;
     }
 
-    public Tiempo getHoraRegistro() {
-        return horaRegistro;
-    }
-
-    public void setHoraRegistro(Tiempo horaRegistro) {
-        this.horaRegistro = horaRegistro;
-    }
-
-    public Tiempo getHoraVenta() {
-        return horaVenta;
-    }
-
-    public void setHoraVenta(Tiempo horaVenta) {
-        this.horaVenta = horaVenta;
-    }
 
     public String getIdComprador() {
         return idComprador;

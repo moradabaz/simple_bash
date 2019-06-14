@@ -21,7 +21,7 @@ import java.util.logging.LogManager;
 public class ScenarioLauncher {
 	
 	public static void main(String[] args) throws SecurityException, IOException {
-		System.out.println("WELCOME REFUGEES");
+		System.out.println("WELCOME FISHES");
 
 		if(args.length == 1) {
 			String config_file = args[0];

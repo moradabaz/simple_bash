@@ -22,6 +22,7 @@ public class Buyer implements Serializable {
     private double saldo;
     private double gastos;
     private LinkedList<Fish> articulosComprados;
+    private LinkedList<String> listaDeseos;
 
 
     /**
@@ -44,6 +45,7 @@ public class Buyer implements Serializable {
         this.gastos = 0;
         this.articulosComprados = new LinkedList<>();
     }
+
 
     /*
      * Retorna el identificador del comprador
@@ -91,6 +93,13 @@ public class Buyer implements Serializable {
         return nombre;
     }
 
+    public LinkedList<String> getListaDeseos() {
+        return listaDeseos;
+    }
+
+    public void setListaDeseos(LinkedList<String> listaDeseos) {
+        this.listaDeseos = listaDeseos;
+    }
 
     public void comprarLote(Fish fish) {
         if (!articulosComprados.contains(fish))
