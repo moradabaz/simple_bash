@@ -10,6 +10,8 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 
+import java.io.IOException;
+
 public class Pujar extends ContractNetResponder {
 
     private Agent agent;
@@ -57,11 +59,48 @@ public class Pujar extends ContractNetResponder {
         }
     }
 
+
+    public ACLMessage prepareResultNotificaction(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
+        System.out.println("El agente " + agent.getLocalName() + ": adjudicada con éxito");
+        int valor = 0;
+        try {
+            valor = (int) accept.getContentObject();
+
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+        }
+
+        ACLMessage inform = accept.createReply();
+        try {
+            inform.setContentObject(valor);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inform.setPerformative(ACLMessage.INFORM);
+        return inform;
+    }
+
+    /**
+     * Esta funcion calcula si una subasta es favorable para pujar o no.
+     * Se compara el saldo actual con el precio que esta dispuesto a pagar, así como el
+     * precio actual que tiene el lote
+     * @param fishEnSubasta
+     * @param propuesta
+     * @param saldo
+     * @return
+     */
     public boolean esFavorable(Fish fishEnSubasta, double propuesta, double saldo) {
        return (fishEnSubasta.getPrecioFinal() <= propuesta && saldo > propuesta);
 
     }
 
+    /**
+     * Calcula el precio que esta dispuesto el comprador a pagar por un determinado lote.
+     * El calculo se hace mediante una variable aleatoria.
+     * @param fish  El lote que se esta subastando
+     * @return  Devuelve el precio que esta dispuesto a pagar.
+     */
     public double calcularPrecioPuja(Fish fish) {
         double precio = Math.floor(Math.random() * (fish.getPrecioMinimo() - fish.getPrecioFinal() + 1) + fish.getPrecioFinal());
         return precio;
