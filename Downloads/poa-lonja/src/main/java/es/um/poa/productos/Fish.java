@@ -100,6 +100,9 @@ public class Fish implements Serializable {
         this.precioFinal = precioFinal;
     }
 
+    public double getPrecioMinimo() {
+        return precioSalida * 0.15;
+    }
 
     public String getIdComprador() {
         return idComprador;

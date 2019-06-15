@@ -152,7 +152,8 @@ public class SubastaLote extends TickerBehaviour {
                                                     System.out.println("Numero de lotes en espera: " + ((FishMarketAgent)agente).getLotesASubastar().size());
                                                     System.out.println("El lote " + fish.getNombre() + " ha sido eliminado de la subasta");
                                                 }
-                                            } else {                                                        // Se actualiza la ronda
+                                            } else {
+                                                // Se actualiza la ronda
                                                 rondas++;
                                                 System.out.println("RONDA -> " + rondas);
                                                 System.out.println("HORA DE SUBASTA:");

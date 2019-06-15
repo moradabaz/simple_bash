@@ -23,6 +23,8 @@ public class BuyerAgent extends TimePOAAgent {
 
 	private boolean peticionInicioCreditoEnviada=false;
 	private LinkedList<String> listaDeseos = new LinkedList<>();
+	private double saldo = 0;
+	private double precioPropuesta = 0;
 
 	public BuyerAgent() {
 
@@ -59,6 +61,7 @@ public class BuyerAgent extends TimePOAAgent {
 				try {
 					 Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
 					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());
+					setSaldo(buyer.getSaldo());
 					request.setContentObject((Serializable) buyer);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -150,5 +153,37 @@ public class BuyerAgent extends TimePOAAgent {
 		return config;
 	}
 
+
+	public LinkedList<String> getListaDeseos() {
+		return 	listaDeseos;
+	}
+
+	public boolean estaInterasadoEn(String nombre) {
+		return listaDeseos.contains(nombre);
+	}
+
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+
+	public void decremetnarSaldo(double saldo) {
+		this.saldo -= saldo;
+	}
+
+	public void incrementarSaldo(double saldo) {
+		this.saldo += saldo;
+	}
+
+	public double getSaldo() {
+		return saldo;
+	}
+
+	public void setPrecioPropuesta(double precioPropuesta) {
+		this.precioPropuesta = precioPropuesta;
+	}
+
+	public double getPrecioPropuesta() {
+		return precioPropuesta;
+	}
 
 }
