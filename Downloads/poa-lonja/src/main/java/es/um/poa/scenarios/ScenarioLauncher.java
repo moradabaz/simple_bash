@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 public class ScenarioLauncher {
+
+	public static int FASE = 0;
 	
 	public static void main(String[] args) throws SecurityException, IOException {
 		System.out.println("WELCOME FISHES");

@@ -4,8 +4,9 @@ import es.um.poa.Objetos.Buyer;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.behaviours.InicioCredito;
 import es.um.poa.agents.buyer.behaviours.RegistroComprador;
-import es.um.poa.agents.buyer.behaviours.RetiroCompra;
 import jade.core.AID;
+import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import org.yaml.snakeyaml.Yaml;
@@ -22,9 +23,11 @@ import java.util.LinkedList;
 public class BuyerAgent extends TimePOAAgent {
 
 	private boolean peticionInicioCreditoEnviada=false;
-	private LinkedList<String> listaDeseos = new LinkedList<>();
+	private LinkedList<String> listaDeseos = new LinkedList<String>();
 	private double saldo = 0;
 	private double precioPropuesta = 0;
+
+	SequentialBehaviour seq;
 
 	public BuyerAgent() {
 
@@ -50,69 +53,46 @@ public class BuyerAgent extends TimePOAAgent {
 			String configFile = (String) args[0];
 			BuyerAgentConfig config = initAgentFromConfigFile(configFile);
 
+
 			if(config != null) {
 				// Aqui tiene que registrarse
-				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-				request.addReceiver(new AID( "Lonja", AID.ISLOCALNAME));
-				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-				request.setConversationId("buyer-register");
 
-				try {
-					 Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
-					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());
-					setSaldo(buyer.getSaldo());
-					request.setContentObject((Serializable) buyer);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				//this.send(request);
-				addBehaviour(new RegistroComprador(this, request));
-
-			} else {
-				doDelete();
-			}
+				//if (getSimTime() != null) {
 
 
-			/*
-			 A trav�s del protocolo Fipa-Request vamos a manejar la situaci�n en la cual el
-			  comprador va a a�adir cr�dito a su cuenta. Dicho comprador manda un mensaje con
-			  su cif,nombre(los dos?) y el cr�dito a a�adir al agente Lonja, que a�adira el
-			  cr�dito a dicho comprador y le mandar� un mensaje Agree.
-
-			 * */
-
-			if(config != null & !peticionInicioCreditoEnviada) {
-
-				peticionInicioCreditoEnviada = true;
-				//******************* A�ADIR CREDITO A SU CUENTA*******************************//
-				ACLMessage requestAddCredit = new ACLMessage(ACLMessage.REQUEST);
-				requestAddCredit.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-				requestAddCredit.addReceiver(new AID( "Lonja", AID.ISLOCALNAME));
-				requestAddCredit.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-				requestAddCredit.setConversationId("buyer-addCredit");
 
 
-				try {
-					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
-					requestAddCredit.setContentObject(buyer);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
-				addBehaviour(new InicioCredito(this, requestAddCredit));
+addBehaviour(new Comportamiento(config));
+					//this.send(request);
 
+
+					/*
+					 A trav�s del protocolo Fipa-Request vamos a manejar la situaci�n en la cual el
+					  comprador va a a�adir cr�dito a su cuenta. Dicho comprador manda un mensaje con
+					  su cif,nombre(los dos?) y el cr�dito a a�adir al agente Lonja, que a�adira el
+					  cr�dito a dicho comprador y le mandar� un mensaje Agree.
+
+					 * */
+
+
+					/*MessageTemplate template = MessageTemplate.and(
+							MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+							MessageTemplate.MatchPerformative(ACLMessage.CFP));
+
+					addBehaviour(new Pujar(this, template));*/
+
+				//}
 			}else if (config==null){
 				doDelete();
 			}
 
 
+
 			///*******************************************************
 			///PROTOCOLO RETIRADA DE LO COMPRADO
 			//**********************************************************
-
+/**
 
 			ACLMessage requestRetire = new ACLMessage(ACLMessage.PROPOSE);
 			requestRetire.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -130,7 +110,7 @@ public class BuyerAgent extends TimePOAAgent {
 			}
 
 			addBehaviour(new RetiroCompra(this, requestRetire));
-
+**/
 
 
 		} else {
@@ -186,4 +166,66 @@ public class BuyerAgent extends TimePOAAgent {
 		return precioPropuesta;
 	}
 
+	class Comportamiento extends Behaviour {
+
+
+		private BuyerAgentConfig config;
+		private boolean done = false;
+
+		public Comportamiento(BuyerAgentConfig config) {
+			this.config = config;
+		}
+
+		@Override
+		public void action() {
+			if (getSimTime() != null) {
+				System.out.println("El timepo no es nulo");
+				seq = new SequentialBehaviour();
+
+				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+				request.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
+				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+				request.setConversationId("buyer-register");
+				try {
+					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
+					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());                            /// NULLPOINTEREXCEPTCION
+					setSaldo(buyer.getSaldo());
+					request.setContentObject((Serializable) buyer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				seq.addSubBehaviour(new RegistroComprador(getAgent(), request));
+
+				peticionInicioCreditoEnviada = true;
+				//******************* A�ADIR CREDITO A SU CUENTA*******************************//
+				ACLMessage requestAddCredit = new ACLMessage(ACLMessage.REQUEST);
+				requestAddCredit.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+				requestAddCredit.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
+				requestAddCredit.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+				requestAddCredit.setConversationId("buyer-addCredit");
+
+				try {
+					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
+					requestAddCredit.setContentObject(buyer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				seq.addSubBehaviour(new InicioCredito(getAgent(), requestAddCredit));
+
+				addBehaviour(seq);
+
+				done = true;
+			}
+
+		}
+
+		@Override
+		public boolean done() {
+			return done;
+		}
+	}
 }

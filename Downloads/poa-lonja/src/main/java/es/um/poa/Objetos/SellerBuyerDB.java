@@ -267,9 +267,14 @@ public class SellerBuyerDB {
      * @param credito a poner Credito
      */
     public void iniciarCreditoBuyer(String buyerCif, double credito) {
-        Buyer buyerAddCredit = buyers.get(buyerCif);    // Aqui hay un NULL_POINTER_EXCEPTION
-        buyerAddCredit.setSaldo(credito);
-        buyers.put(buyerAddCredit.getCif(), buyerAddCredit);
+
+        if (this.checkBuyerByID(buyerCif)) {
+            Buyer buyerAddCredit = this.getBuyer(buyerCif);    // Aqui hay un NULL_POINTER_EXCEPTION
+            buyerAddCredit.setSaldo(credito);
+            buyers.put(buyerAddCredit.getCif(), buyerAddCredit);
+        } else {
+            System.err.println("########## El comprador " + buyerCif + " No existe");
+        }
     }
 
     public void retirarCompra(String buyerCif) {

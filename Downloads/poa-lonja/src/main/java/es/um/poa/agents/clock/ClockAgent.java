@@ -32,10 +32,10 @@ public class ClockAgent extends POAAgent {
 			int unitTimeMillis = (Integer) args[0];
 			int numUnitDay = (Integer) args[1];
 			int numSimDays = (Integer) args[2];
-			this.getLogger().info("setup()", "setup ("+
-					"unitTimeMillis="+unitTimeMillis+", "+
-					"numUnitDay="+numUnitDay+", "+
-					"numSimDays="+numSimDays);
+			this.getLogger().info("setup()", "setup (" +
+					"unitTimeMillis=" + unitTimeMillis+", "+
+					"numUnitDay=" + numUnitDay+", "+
+					"numSimDays=" + numSimDays);
 			
 			ClockTickerBehaviour clockBehaviour = new ClockTickerBehaviour(this, unitTimeMillis, numUnitDay, numSimDays);
 			addBehaviour(clockBehaviour);

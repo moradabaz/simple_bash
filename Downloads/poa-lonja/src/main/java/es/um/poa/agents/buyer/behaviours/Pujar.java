@@ -69,14 +69,12 @@ public class Pujar extends ContractNetResponder {
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
-
         ACLMessage inform = accept.createReply();
         try {
             inform.setContentObject(valor);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         inform.setPerformative(ACLMessage.INFORM);
         return inform;
     }

@@ -9,11 +9,13 @@ import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetInitiator;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -75,6 +77,7 @@ public class SubastaLote extends TickerBehaviour {
 
             }
 
+            enEjecucion = true;
 
             /**
              * Este comportamiento ejecuta la gestion de las posibles respuestas a la
@@ -104,40 +107,52 @@ public class SubastaLote extends TickerBehaviour {
                             if (((FishMarketAgent) agente).isSubastando()) {
                                 ////    ATENCION -> NOS FALTA PONER LA MARCA DE TIEMPO
 
-                                LinkedList<AID> candidados = new LinkedList<>();
+                                HashMap<Integer, ACLMessage> candidados = new HashMap<Integer, ACLMessage>();
                                 double cantidadPujada = 0;
-                                AID pujadorCandidato = null;
+                                AID mejorCandidato = null;
                                 ACLMessage respuesta = new ACLMessage();
                                 Enumeration e = responses.elements();               // Lista de respuestas
                                 long ultimoTiempo = 0;
-                                while(e.hasMoreElements()) {                        // Mientras hayan mas elementos
+                                while(e.hasMoreElements() && enEjecucion) {                        // Mientras hayan mas elementos
                                     ACLMessage msg = (ACLMessage) e.nextElement();
                                     long marcaTiempo = ((FishMarketAgent) agente).getSimTime().getTime();   //
 
                                     if (msg.getPerformative() == ACLMessage.PROPOSE) {                      // Si un elemente puja
-                                        //reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
-                                        //
-                                        //  FALTA PONER EL CRITERIO DE ELECCION
-                                        //
-                                        respuesta.setPerformative(ACLMessage.ACCEPT_PROPOSAL);              // Se acepta la puja
-                                        acceptances.addElement(respuesta);                                  // Se anyade ese elemento a las respuestas
-                                        double dineroPujado = Double.parseDouble(msg.getContent());         // Se extrae el dinero pujado
-                                        cantidadPujada = dineroPujado;
-                                        pujadorCandidato = msg.getSender();                                 // Se toma el candidato pujador
-                                        if (((FishMarketAgent) agente).isSubastando()) {                    // Si se esta subastando
-                                            ((FishMarketAgent) agente).setSubastando(false);                //      Se cierra la puja
-                                            System.out.println("Se acepta la puja por " + cantidadPujada
-                                                    + " del comprador " + pujadorCandidato.getLocalName());
+                                        Buyer buyer = database.getBuyer(msg.getSender().getLocalName());
+                                        candidados.put(((FishMarketAgent) agente).getSimTime().getTime(), msg);
 
-                                            database.registrarVenta(pujadorCandidato.getLocalName(), fish, cantidadPujada);         //  Se registra la venta del lote
+                                        if (candidados.size() > 0) {
+
+                                            int primero = candidados.keySet().stream().sorted(Integer::compareTo).collect(Collectors.toList()).get(0);
+                                            ACLMessage mensaje = candidados.get(primero);
+                                            mejorCandidato = mensaje.getSender();
 
                                             try {
-                                                respuesta.setContentObject((double) cantidadPujada);
-                                            } catch (IOException e1) {
+                                                cantidadPujada = Double.parseDouble((String) mensaje.getContentObject());
+                                            } catch (UnreadableException e1) {
                                                 e1.printStackTrace();
                                             }
-                                        } else {
-                                            respuesta.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                                            respuesta.setPerformative(ACLMessage.ACCEPT_PROPOSAL);              // Se acepta la puja
+                                            acceptances.addElement(respuesta);                                  // Se anyade ese elemento a las respuestas
+
+
+                                            candidados.remove(primero);
+
+                                            if (((FishMarketAgent) agente).isSubastando()) {                    // Si se esta subastando
+                                                ((FishMarketAgent) agente).setSubastando(false);                //      Se cierra la puja
+                                                System.out.println("Se acepta la puja por " + cantidadPujada
+                                                        + " del comprador " + mejorCandidato.getLocalName());
+
+                                                database.registrarVenta(mejorCandidato.getLocalName(), fish, cantidadPujada);         //  Se registra la venta del lote
+
+                                                try {
+                                                    respuesta.setContentObject((double) cantidadPujada);
+                                                } catch (IOException e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            } else {
+                                                respuesta.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                                            }
                                         }
 
                                     } else if (msg.getPerformative() == ACLMessage.REFUSE) {
@@ -162,6 +177,8 @@ public class SubastaLote extends TickerBehaviour {
                                             }
                                         }
                                     }
+
+
                                 }
 
                             }

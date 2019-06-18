@@ -4,8 +4,12 @@ package es.um.poa.tests;
 import es.um.poa.Objetos.Buyer;
 import es.um.poa.Objetos.Seller;
 import es.um.poa.Objetos.SellerBuyerDB;
+import jade.core.AID;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -27,7 +31,7 @@ public class SellerBuyerDBTest {
         seller1 = new Seller(randomAlphaNumeric(12), "Pepe Andres");
         seller2 = new Seller(randomAlphaNumeric(12), "Carlos Tomas");
         seller3 = new Seller(randomAlphaNumeric(12), "Pedro Angel");
-        buyer1 = new Buyer(randomAlphaNumeric(12), "Jose miguel", 1300);
+        buyer1 = new Buyer("BY500", "Jose miguel", 1300);
         database.registrarSeller(seller1);
         database.registrarSeller(seller2);
         database.registrarSeller(seller3);
@@ -102,5 +106,28 @@ public class SellerBuyerDBTest {
         String cadena2 = randomAlphaNumeric(12);
         System.out.println(cadena2);
         assertNotEquals(cadena1, cadena2);
+    }
+
+    @Test
+    public void getBuyer2() {
+        AID aid = new AID("BY500", true);
+        Buyer buyer = database.getBuyer(aid.getLocalName());
+        assertNotNull(buyer);
+        System.out.println(buyer.getCif());
+    }
+
+    @Test
+    public void comparar() {
+        LinkedList<Integer> lista = new LinkedList<>();
+        lista.add(15);
+        lista.add(3);
+        lista.add(6);
+        lista.add(7);
+        lista.add(22);
+        lista.add(10);
+        int num = lista.stream().sorted(Integer::compareTo).collect(Collectors.toList()).get(0);
+        assertEquals(3, num);
+        System.out.println(num);
+
     }
 }

@@ -62,7 +62,7 @@ public class DepositoPescadoResp extends AchieveREResponder {
                     ((FishMarketAgent) agent).anadirLoteASubasta(fish);
                 database.registrarSeller(seller);
                 for (Movimiento movimiento : movimientos)
-                    database.registarMovimientoSeller(seller.getCif(), movimiento);
+                    database.registarMovimientoSeller(seller.getCif(), movimiento); /// NULLPOINTEREXCEPTION
 
                 // RESPUESTA
                 ACLMessage agreeReply = request.createReply();

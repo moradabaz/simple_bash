@@ -20,6 +20,7 @@ public class ListaMovimientos {
      */
     public ListaMovimientos(String cif) {
         this.cif = cif;
+        this.movimientos = new LinkedList<>();
     }
 
     public String getCif() {

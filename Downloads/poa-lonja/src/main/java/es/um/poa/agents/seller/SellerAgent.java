@@ -7,6 +7,7 @@ import es.um.poa.agents.seller.behaviours.RegistroVendedor;
 import es.um.poa.productos.Fish;
 import es.um.poa.productos.FishConfig;
 import jade.core.AID;
+import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import org.yaml.snakeyaml.Yaml;
@@ -42,51 +43,56 @@ public class SellerAgent extends TimePOAAgent {
 			SellerAgentConfig config = initAgentFromConfigFile(configFile);
 			
 			if(config != null) {
+				if (getSimTime() != null) {
 
-				AID lonjaAid = new AID("Lonja", AID.ISLOCALNAME);							// Creamos el AID de la lonja
+					SequentialBehaviour seq = new SequentialBehaviour();
 
-				// REGISTRAMOS EL VENDEDOR XD
-				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);						// Creamos una solicitud tipo REQUEST
-				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-				request.addReceiver(lonjaAid);
-				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-				request.setConversationId("seller-register");									// el ID de la conversacion
+					AID lonjaAid = new AID("Lonja", AID.ISLOCALNAME);                            // Creamos el AID de la lonja
 
-				// Queremos enviar un objeto Seller con los parametros recogidos de la
+					// REGISTRAMOS EL VENDEDOR XD
+					ACLMessage request = new ACLMessage(ACLMessage.REQUEST);                        // Creamos una solicitud tipo REQUEST
+					request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+					request.addReceiver(lonjaAid);
+					request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+					request.setConversationId("seller-register");                                    // el ID de la conversacion
 
-				Seller seller = null;
+					// Queremos enviar un objeto Seller con los parametros recogidos de la
 
-				try {
-					this.cif = config.getCif();
-					this.pescados = config.getListaPescado();
-					seller = new Seller(config.getCif(), config.getNombre());
-					request.setContentObject((Serializable) seller);
-				} catch (IOException e) {
+					Seller seller = null;
 
+					try {
+						this.cif = config.getCif();
+						this.pescados = config.getListaPescado();
+						seller = new Seller(config.getCif(), config.getNombre());
+						request.setContentObject((Serializable) seller);
+					} catch (IOException e) {
+
+					}
+
+
+					seq.addSubBehaviour(new RegistroVendedor(this, request));                            // Aniadimos el comportamiento
+
+					//  MENSAJE PARA DEPOSITO DE PESCADO
+
+					ACLMessage requestFish = new ACLMessage(ACLMessage.REQUEST);                    // Crea una solicitud para el deposito de lotes
+					requestFish.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);            //
+					requestFish.setConversationId("deposito-fish");                                    //
+					requestFish.addReceiver(lonjaAid);                                                //
+					requestFish.setReplyByDate(new Date(System.currentTimeMillis() + 10000));        //
+
+
+					try {
+						LinkedList<Fish> listaFish = parseFish(pescados);                            // Sacamos la lista de lotes de las configuraciones
+						seller.setListaPescado(listaFish);                                            // insertamos los lotes en la lista de lotes del vendedr
+						requestFish.setContentObject((Serializable) seller);                        //
+					} catch (IOException e) {
+
+					}
+
+					seq.addSubBehaviour(new DepositoPescado(this, requestFish));                        // Añadimos el comporamiento de deposito de pescado
+
+					addBehaviour(seq);
 				}
-
-
-				addBehaviour(new RegistroVendedor(this, request));							// Aniadimos el comportamiento
-
-				//  MENSAJE PARA DEPOSITO DE PESCADO
-
-				ACLMessage requestFish = new ACLMessage(ACLMessage.REQUEST);					// Crea una solicitud para el deposito de lotes
-				requestFish.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);			//
-				requestFish.setConversationId("deposito-fish");									//
-				requestFish.addReceiver(lonjaAid);												//
-				requestFish.setReplyByDate(new Date(System.currentTimeMillis() + 10000));		//
-
-
-				try {
-					LinkedList<Fish> listaFish = parseFish(pescados);							// Sacamos la lista de lotes de las configuraciones
-					seller.setListaPescado(listaFish);											// insertamos los lotes en la lista de lotes del vendedr
-					requestFish.setContentObject((Serializable) seller);						//
-				} catch (IOException e ) {
-
-				}
-
-				addBehaviour(new DepositoPescado(this, requestFish));						// Añadimos el comporamiento de deposito de pescado
-
 			} else {
 				doDelete();
 			}
