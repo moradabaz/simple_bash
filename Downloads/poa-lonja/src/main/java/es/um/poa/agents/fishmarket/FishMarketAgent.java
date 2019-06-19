@@ -1,11 +1,12 @@
 package es.um.poa.agents.fishmarket;
 
 import es.um.poa.agents.TimePOAAgent;
-import es.um.poa.agents.fishmarket.behaviours.*;
+import es.um.poa.agents.fishmarket.behaviours.DepositoPescadoResp;
+import es.um.poa.agents.fishmarket.behaviours.InicioCreditoResp;
+import es.um.poa.agents.fishmarket.behaviours.RegistroCompradorResp;
+import es.um.poa.agents.fishmarket.behaviours.RegistroVendedorResp;
 import es.um.poa.productos.Fish;
-import jade.domain.FIPANames;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREResponder;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -37,8 +38,9 @@ public class FishMarketAgent extends TimePOAAgent {
 
 			String configFile = (String) args[0];
 			FishMarketAgentConfig config = initAgentFromConfigFile(configFile);
-			
+
 			if(config != null) {
+
 
 				/**
 				 * Mensaje para crear una respuesta la solicitud de registro de un agente comprador
@@ -47,10 +49,13 @@ public class FishMarketAgent extends TimePOAAgent {
 				// aniadimos el comportamiento del registro de comprrador
 				addBehaviour(new RegistroCompradorResp(this, messageTemplate));
 
+				MessageTemplate messageTemplateAddCredit = MessageTemplate.MatchConversationId("buyer-addCredit");
+				addBehaviour(new InicioCreditoResp(this, messageTemplateAddCredit));
+
 				/**
 				 * Mensaje para crear una respuesta de solicitud de registro de un comprador
 				 */
-				MessageTemplate messageTemplateRV = MessageTemplate.and(AchieveREResponder.createMessageTemplate(FIPANames.InteractionProtocol.FIPA_REQUEST), MatchConversationId("seller-register"));
+				MessageTemplate messageTemplateRV = MatchConversationId("seller-register");
 				// Aniadimos un comportamiento de registro de vendedor
 				addBehaviour(new RegistroVendedorResp(this, messageTemplateRV));
 
@@ -58,12 +63,6 @@ public class FishMarketAgent extends TimePOAAgent {
 				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("deposito-fish");
 				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
-
-				MessageTemplate messageTemplateAddCredit = MessageTemplate.MatchConversationId("buyer-addCredit");
-				addBehaviour(new InicioCreditoResp(this, messageTemplateAddCredit));
-
-				MessageTemplate messageTemplateRetiraCompra= MessageTemplate.MatchConversationId("buyer-Retire");
-				addBehaviour(new RetiroCompraResp(this, messageTemplateRetiraCompra));
 
 			}
 
@@ -79,7 +78,7 @@ public class FishMarketAgent extends TimePOAAgent {
 			Yaml yaml = new Yaml();
 			InputStream inputStream;
 			inputStream = new FileInputStream(fileName);
-			config = yaml.load(inputStream);
+			config = (FishMarketAgentConfig) yaml.load(inputStream);
 			getLogger().info("initAgentFromConfigFile", config.toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

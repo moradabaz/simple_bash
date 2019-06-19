@@ -2,27 +2,33 @@ package es.um.poa.agents.fishmarket.behaviours;
 
 import es.um.poa.Objetos.Seller;
 import es.um.poa.Objetos.SellerBuyerDB;
+import es.um.poa.agents.fishmarket.FishMarketAgent;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.AchieveREResponder;
+
+import static jade.lang.acl.MessageTemplate.MatchConversationId;
 
 
 /**
  * La clase RegistroVendedorResp representa el comportamiento que ejecuta la lonja cuando recibe una
  * peticion de registro por parte de un vendedor.
  */
-public class RegistroVendedorResp extends AchieveREResponder {
+public class RegistroVendedorResp extends Behaviour {
 
     private Agent agente;
     private MessageTemplate mensaje;
+    private int step;
+    private boolean done;
     private SellerBuyerDB database = SellerBuyerDB.getInstance();
 
     public RegistroVendedorResp(Agent a, MessageTemplate mt) {
-        super(a, mt);
         this.agente = a;
-        this.mensaje = mt;
+        this.mensaje = MatchConversationId("seller-register");
+        this.step = 0;
+        this.done = false;
     }
 
     /**
@@ -57,10 +63,34 @@ public class RegistroVendedorResp extends AchieveREResponder {
         }
     }
 
-    @Override
     public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
+        System.out.println("[TIEMPO_RESPUESTA] ++ " + ((FishMarketAgent) agente).getSimTime());
+
         ACLMessage informMessage = request.createReply();
         informMessage.setPerformative(ACLMessage.INFORM);
         return informMessage;
+    }
+
+    @Override
+    public void action() {
+        ACLMessage request = ((FishMarketAgent) agente).receive(mensaje);
+        if (request != null) {
+            if (request.getPerformative() == ACLMessage.REQUEST) {
+                ACLMessage response = null;
+                response = prepareResponse(request);
+                if (response != null) {
+                    agente.send(response);
+                    System.out.println("Vendedores -> ");
+                    database.mostrarVendedores();
+                }
+                step++;
+                done = true;
+            }
+        }
+    }
+
+    @Override
+    public boolean done() {
+        return false;
     }
 }

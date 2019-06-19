@@ -7,18 +7,23 @@
  */
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     id 'java-library'
 }
 
+task run (type: JavaExec){
+    description = "Lanzador de escenarios de la Lonja"
+    main = 'es.um.poa.scenarios.ScenarioLauncher'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
-    
+    mavenCentral()
+
+    /* Repositorio caido
     maven {
       	url "http://jade.tilab.com/maven/"
-   }
+   }*/
 }
 
 dependencies {
@@ -27,7 +32,9 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
-    implementation 'com.tilab.jade:jade:4.5.0'
+    // Se encuentra en el repositorio caido http://jade.tilab.com/maven/
+    // implementation 'com.tilab.jade:jade:4.5.0'
+    implementation 'net.sf.ingenias:jade:4.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     implementation 'org.yaml:snakeyaml:1.21'
 

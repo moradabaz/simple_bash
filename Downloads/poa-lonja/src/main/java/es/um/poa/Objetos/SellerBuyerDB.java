@@ -301,4 +301,17 @@ public class SellerBuyerDB {
 
         }
     }
+
+    public void mostrarCompradores() {
+        for (Buyer buyer : buyers.values()) {
+            System.out.println("[ " + buyer.getCif() + " - " + buyer.getNombre() + " ]");
+        }
+    }
+
+    public void mostrarVendedores() {
+        for (Seller seller : sellers.values()) {
+            System.out.println("[ " + seller.getCif() + " - " + seller.getNombre() + " ]");
+        }
+    }
+
 }

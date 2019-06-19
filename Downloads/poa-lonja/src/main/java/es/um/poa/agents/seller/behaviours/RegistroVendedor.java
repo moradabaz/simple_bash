@@ -1,23 +1,27 @@
 package es.um.poa.agents.seller.behaviours;
 
+import es.um.poa.agents.seller.SellerAgent;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
-import jade.proto.AchieveREInitiator;
 
 
 /**
  * La clase RegistroVendedor representa el comportamiento ejecutado por el vendedor para enviar
  * una solicitud de registro.
  */
-public class RegistroVendedor extends AchieveREInitiator {
+public class RegistroVendedor extends Behaviour {
 
     private Agent agente;
     private ACLMessage mensaje;
+    private int step;
+    private boolean done;
 
     public RegistroVendedor(Agent a, ACLMessage msg) {
-        super(a, msg);
         this.agente = a;
         this.mensaje = msg;
+        this.step = 0;
+        this.done = false;
     }
 
     public void handleInform(ACLMessage inform) {
@@ -38,6 +42,7 @@ public class RegistroVendedor extends AchieveREInitiator {
         }
     }
 
+
     public Agent getAgente() {
         return agente;
     }
@@ -54,4 +59,44 @@ public class RegistroVendedor extends AchieveREInitiator {
         this.mensaje = msg;
     }
 
+    @Override
+    public void action() {
+        if (((SellerAgent) agente).getSimTime() != null) {
+            switch (step) {
+                case 0:
+                    agente.send(mensaje);
+                    step++;
+                    break;
+                case 1:
+                    ACLMessage reply = agente.receive();
+                    if (reply != null) {
+                        switch (reply.getPerformative()) {
+                            case ACLMessage.AGREE:
+                                handleInform(reply);
+                                done = true;
+                                break;
+                            case ACLMessage.REFUSE:
+                                handleFailure(reply);
+                                break;
+                            case ACLMessage.FAILURE:
+                                handleFailure(reply);
+                                break;
+                            default:
+                                System.err.println("NO SE HA ENTENDIDO EL MENSAJE " + reply.getPerformative());
+                        }
+                        done = true;
+                    }
+                    break;
+                default:
+                    System.out.println("NO SE HA ENTENDIDO EL MENSAJE DE REGISTRO VENDEDOR ");
+                    break;
+            }
+        }
+
+    }
+
+    @Override
+    public boolean done() {
+        return done;
+    }
 }

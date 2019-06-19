@@ -5,21 +5,25 @@ import es.um.poa.utils.OntologyFactory;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.WakerBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
 
 public class TimePOAAgent  extends POAAgent {
 	private SimTimeOntology simTime;
-	
+
+	private static final int FASE_REGISTRO = 10;
+	private static final int FASE_SUBASTA = 20;
+	private static final int FASE_RETIRADA = 30;
+
+
 	public void setup() {
 		super.setup();
-		
+
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("simulated-time");
@@ -35,7 +39,7 @@ public class TimePOAAgent  extends POAAgent {
 						request.setProtocol(FIPANames.InteractionProtocol.FIPA_SUBSCRIBE);
 						request.setReplyWith(""+System.currentTimeMillis());
 						request.addReceiver(clockAgent);
-						
+
 						myAgent.addBehaviour(new TimerUpdaterBehaviour(getAgent(), request));
 					}
 				} catch (FIPAException fe) {
@@ -43,12 +47,12 @@ public class TimePOAAgent  extends POAAgent {
 				}
 			}
 		};
-		
+
 		addBehaviour(clockDFSub);
 	}
 
 	private class TimerUpdaterBehaviour extends SubscriptionInitiator {
-		
+
 		public TimerUpdaterBehaviour(Agent a, ACLMessage msg) {
 			super(a, msg);
 		}
@@ -57,7 +61,7 @@ public class TimePOAAgent  extends POAAgent {
 		protected void handleInform(ACLMessage inform) {
 			String content = inform.getContent();
 			SimTimeOntology sto = OntologyFactory.getSimTimeOntologyObject(content);
-			
+
 			((POAAgent)getAgent()).getLogger().info("TimerUpdaterBehaviour", sto.toString());
 			simTime = sto;
 			getLogger().info("TimerUpdaterBehaviour", simTime.toString());
@@ -65,13 +69,46 @@ public class TimePOAAgent  extends POAAgent {
 				ACLMessage cancel = inform.createReply();
 				cancel.setPerformative(ACLMessage.CANCEL);
 				getAgent().send(cancel);
-				
+
 				getAgent().doDelete();
 			}
 		}
 	}
-	
+
 	public SimTimeOntology getSimTime() {
 		return simTime;
+	}
+
+	public int getFaseActual() {
+		if (simTime.getTime() < FASE_REGISTRO)
+			return FASE_REGISTRO;
+		else if (simTime.getTime() < FASE_SUBASTA)
+			return FASE_SUBASTA;
+		else
+			return FASE_RETIRADA;
+	}
+
+
+	protected class CheckTimeNotNullBehav extends Behaviour {
+
+		private boolean done;
+
+		public CheckTimeNotNullBehav() {
+			done = false;
+		}
+
+		@Override
+		public void action() {
+			if (getSimTime() != null) {
+				System.out.println(" >>> EL tiempo no es nulo: " + getSimTime());
+				done = true;
+			}
+
+		}
+
+		@Override
+		public boolean done() {
+			return done;
+		}
 	}
 }

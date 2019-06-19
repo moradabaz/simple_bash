@@ -4,7 +4,8 @@ public class SimTimeOntology {
 	
 	public static String RUNNING = "RUNNING";
 	public static String END = "END";
-	
+
+
 	private String simState;
 	private int day;
 	private int time;
@@ -37,8 +38,10 @@ public class SimTimeOntology {
 	public void setTime(int time) {
 		this.time = time;
 	}
-	
+
+
 	public String toString() {
 		return "SimTimeOntology(day="+day+",time="+time+",simState="+simState+")";
 	}
+
 }

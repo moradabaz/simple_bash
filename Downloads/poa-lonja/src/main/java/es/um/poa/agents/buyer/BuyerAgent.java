@@ -5,7 +5,6 @@ import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.behaviours.InicioCredito;
 import es.um.poa.agents.buyer.behaviours.RegistroComprador;
 import jade.core.AID;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -58,14 +57,43 @@ public class BuyerAgent extends TimePOAAgent {
 				// Aqui tiene que registrarse
 
 				//if (getSimTime() != null) {
+				seq = new SequentialBehaviour();
+				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+				request.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
+				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+				request.setConversationId("buyer-register");
+				try {
+					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
+					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());                            /// NULLPOINTEREXCEPTCION
+					setSaldo(buyer.getSaldo());
+					request.setContentObject((Serializable) buyer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				seq.addSubBehaviour(new RegistroComprador(this, request));
+
+				ACLMessage requestAddCredit = new ACLMessage(ACLMessage.REQUEST);
+				requestAddCredit.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+				requestAddCredit.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
+				requestAddCredit.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+				requestAddCredit.setConversationId("buyer-addCredit");
+
+				try {
+					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
+					requestAddCredit.setContentObject(buyer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
 
+				seq.addSubBehaviour(new InicioCredito(this, requestAddCredit));
 
+				addBehaviour(seq);
 
-
-addBehaviour(new Comportamiento(config));
-					//this.send(request);
-
+				//addBehaviour(new Comportamiento(config));
+				//this.send(request);
 
 					/*
 					 A trav�s del protocolo Fipa-Request vamos a manejar la situaci�n en la cual el
@@ -94,23 +122,23 @@ addBehaviour(new Comportamiento(config));
 			//**********************************************************
 /**
 
-			ACLMessage requestRetire = new ACLMessage(ACLMessage.PROPOSE);
-			requestRetire.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-			requestRetire.addReceiver(new AID( "Lonja", AID.ISLOCALNAME));
-			requestRetire.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-			requestRetire.setConversationId("buyer-Retire");
+ ACLMessage requestRetire = new ACLMessage(ACLMessage.PROPOSE);
+ requestRetire.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+ requestRetire.addReceiver(new AID( "Lonja", AID.ISLOCALNAME));
+ requestRetire.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+ requestRetire.setConversationId("buyer-Retire");
 
 
-			try {
-				Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
-				requestRetire.setContentObject((Serializable) buyer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+ try {
+ Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
+ requestRetire.setContentObject((Serializable) buyer);
+ } catch (IOException e) {
+ // TODO Auto-generated catch block
+ e.printStackTrace();
+ }
 
-			addBehaviour(new RetiroCompra(this, requestRetire));
-**/
+ addBehaviour(new RetiroCompra(this, requestRetire));
+ **/
 
 
 		} else {
@@ -118,14 +146,14 @@ addBehaviour(new Comportamiento(config));
 			doDelete();
 		}
 	}
-	
+
 	private BuyerAgentConfig initAgentFromConfigFile(String fileName) {
 		BuyerAgentConfig config = null;
 		try {
 			Yaml yaml = new Yaml();
 			InputStream inputStream;
 			inputStream = new FileInputStream(fileName);
-			config = yaml.load(inputStream);
+			config = (BuyerAgentConfig) yaml.load(inputStream);
 			getLogger().info("initAgentFromConfigFile", config.toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -166,66 +194,5 @@ addBehaviour(new Comportamiento(config));
 		return precioPropuesta;
 	}
 
-	class Comportamiento extends Behaviour {
 
-
-		private BuyerAgentConfig config;
-		private boolean done = false;
-
-		public Comportamiento(BuyerAgentConfig config) {
-			this.config = config;
-		}
-
-		@Override
-		public void action() {
-			if (getSimTime() != null) {
-				System.out.println("El timepo no es nulo");
-				seq = new SequentialBehaviour();
-
-				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-				request.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
-				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-				request.setConversationId("buyer-register");
-				try {
-					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
-					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());                            /// NULLPOINTEREXCEPTCION
-					setSaldo(buyer.getSaldo());
-					request.setContentObject((Serializable) buyer);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				seq.addSubBehaviour(new RegistroComprador(getAgent(), request));
-
-				peticionInicioCreditoEnviada = true;
-				//******************* A�ADIR CREDITO A SU CUENTA*******************************//
-				ACLMessage requestAddCredit = new ACLMessage(ACLMessage.REQUEST);
-				requestAddCredit.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-				requestAddCredit.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
-				requestAddCredit.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-				requestAddCredit.setConversationId("buyer-addCredit");
-
-				try {
-					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
-					requestAddCredit.setContentObject(buyer);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				seq.addSubBehaviour(new InicioCredito(getAgent(), requestAddCredit));
-
-				addBehaviour(seq);
-
-				done = true;
-			}
-
-		}
-
-		@Override
-		public boolean done() {
-			return done;
-		}
-	}
 }

@@ -3,13 +3,12 @@ package es.um.poa.agents.fishmarket.behaviours;
 import es.um.poa.Objetos.Buyer;
 import es.um.poa.Objetos.SellerBuyerDB;
 import jade.core.Agent;
-import jade.domain.FIPAAgentManagement.FailureException;
+import jade.core.behaviours.Behaviour;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.AchieveREResponder;
 
 
 /**
@@ -17,17 +16,20 @@ import jade.proto.AchieveREResponder;
  * recibe una peticion de regitro por parte de un comprador
  *
  */
-public class RegistroCompradorResp extends AchieveREResponder {
+public class RegistroCompradorResp extends Behaviour {
 
 
     private Agent agente;
     private MessageTemplate mensaje;
     private SellerBuyerDB dataBase = SellerBuyerDB.getInstance();
+    private int step;
+    private boolean done;
 
     public RegistroCompradorResp(Agent a, MessageTemplate mt) {
-        super(a, mt);
         this.agente = a;
         this.mensaje = mt;
+        this.step = 0;
+        this.done = false;
     }
 
     /**
@@ -41,7 +43,7 @@ public class RegistroCompradorResp extends AchieveREResponder {
      * @throws NotUnderstoodException
      * @throws RefuseException
      */
-    @Override
+  //  @Override
     public ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 
         try {
@@ -69,24 +71,6 @@ public class RegistroCompradorResp extends AchieveREResponder {
 
     }
 
-    /**
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws FailureException
-     */
-    @Override
-    public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
-
-        System.out.println(
-                "Agente " + agente.getLocalName() + ": completado con exito: " + request.getSender().getLocalName());
-
-        ACLMessage inform = request.createReply();
-        inform.setPerformative(ACLMessage.INFORM);
-        return inform;
-    }
-
     public Agent getAgente() {
         return agente;
     }
@@ -101,5 +85,35 @@ public class RegistroCompradorResp extends AchieveREResponder {
 
     public void setMsg(MessageTemplate msg) {
         this.mensaje = msg;
+    }
+
+    @Override
+    public void action() {
+        ACLMessage request = agente.receive(mensaje);
+        if (request != null) {
+
+            if (request.getPerformative() == ACLMessage.REQUEST) {
+                    ACLMessage response = null;
+                    try {
+                        response = prepareResponse(request);
+                    } catch (NotUnderstoodException e) {
+                        e.printStackTrace();
+                    } catch (RefuseException e) {
+                        e.printStackTrace();
+                    }
+                    if (response != null) {
+                        agente.send(response);
+                        System.out.println("Compradores ");
+                        dataBase.mostrarCompradores();
+                    }
+                    step = 1;
+                    done = true;
+            }
+        }
+    }
+
+    @Override
+    public boolean done() {
+        return done;
     }
 }

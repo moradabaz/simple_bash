@@ -6,10 +6,10 @@ import es.um.poa.Objetos.SellerBuyerDB;
 import es.um.poa.agents.fishmarket.FishMarketAgent;
 import es.um.poa.productos.Fish;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.AchieveREResponder;
 
 import java.util.LinkedList;
 
@@ -17,16 +17,19 @@ import java.util.LinkedList;
  * Este es un comportamiento del vendedor que se usa para responder
  * a una solicitud de deposito de pescado por parte del vendedor
  */
-public class DepositoPescadoResp extends AchieveREResponder {
+public class DepositoPescadoResp extends Behaviour {
 
     private Agent agent;
     private MessageTemplate mt;
+    private int step;
+    private boolean done;
     private SellerBuyerDB database = SellerBuyerDB.getInstance();
 
     public DepositoPescadoResp(Agent a, MessageTemplate mt) {
-        super(a, mt);
         this.agent = a;
         this.mt = mt;
+        this.step = 0;
+        this.done = false;
     }
 
     /**
@@ -85,7 +88,6 @@ public class DepositoPescadoResp extends AchieveREResponder {
         }
     }
 
-    @Override
     public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
         ACLMessage informMessage = request.createReply();
         informMessage.setPerformative(ACLMessage.INFORM);
@@ -95,5 +97,27 @@ public class DepositoPescadoResp extends AchieveREResponder {
 
     public LinkedList<Movimiento> registrarLotes(Seller seller) {
        return seller.registrarLotes();
+    }
+
+    @Override
+    public void action() {
+        ACLMessage request = agent.receive(mt);
+        if (request != null) {
+            if (request.getPerformative() == ACLMessage.REQUEST) {
+                ACLMessage response = null;
+                response = prepareResponse(request);
+                if (response != null) {
+                    agent.send(response);
+                    database.mostrarVendedores();
+                    step++;
+                    done = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean done() {
+        return done;
     }
 }

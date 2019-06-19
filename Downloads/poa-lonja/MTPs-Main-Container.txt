@@ -1,1 +1,1 @@
-http://eduroam_alu-79-173.inf.um.es:7778/acc
+http://192.168.1.101:7778/acc

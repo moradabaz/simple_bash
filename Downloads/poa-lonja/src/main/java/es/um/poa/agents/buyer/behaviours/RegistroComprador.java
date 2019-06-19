@@ -1,24 +1,30 @@
 package es.um.poa.agents.buyer.behaviours;
 
+import es.um.poa.agents.buyer.BuyerAgent;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
-import jade.proto.AchieveREInitiator;
 
 /**
  * La clase BuyerRegister representa el comportamiento que ejecuta un comprador cuando se quiere
  * registrar en la lonja enviandole una peticion de registro.
  *
  */
-public class RegistroComprador extends AchieveREInitiator {
+public class RegistroComprador extends Behaviour {
 
     private Agent agente;
     private ACLMessage mensaje;
+    private boolean done;
+    private int step;
 
     public RegistroComprador(Agent a, ACLMessage msg) {
-        super(a, msg);
+       // super(a,msg);
         this.agente = a;
         this.mensaje = msg;
+        this.done = false;
+        this.step = 0;
     }
+
 
     /**
      * Manejador de mensaje de informacion
@@ -26,6 +32,7 @@ public class RegistroComprador extends AchieveREInitiator {
      */
     public void handleInform(ACLMessage inform) {
         System.out.println(" >> El mensaje " + inform.getConversationId() + " ha sido notificado correctamente");
+        System.out.println("[TIEMPO_REGISTRO] -> " + ((BuyerAgent) agente).getSimTime().toString());
     }
 
     /**
@@ -66,5 +73,39 @@ public class RegistroComprador extends AchieveREInitiator {
 
     public void setMensaje(ACLMessage mensaje) {
         this.mensaje = mensaje;
+    }
+
+    @Override
+    public void action() {
+        if (((BuyerAgent) agente).getSimTime() != null) {
+            switch (step) {
+                case 0:
+                    agente.send(mensaje);
+                    step = 1;
+                    break;
+                case 1:
+                    ACLMessage reply = agente.receive();
+                    if (reply != null) {
+                        switch (reply.getPerformative()) {
+                            case ACLMessage.AGREE:
+                                handleInform(reply);
+                                break;
+                            case ACLMessage.FAILURE:
+                                handleFailure(reply);
+                            case ACLMessage.REFUSE:
+                                handleRefuse(reply);
+                            default:
+                                System.err.println("NO SE HA ENTENDIDO EL MENSAJE");
+                        }
+                        done = true;
+                    }
+
+            }
+        }
+    }
+
+    @Override
+    public boolean done() {
+        return done;
     }
 }

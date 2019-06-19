@@ -1,5 +1,6 @@
 package es.um.poa.agents.seller;
 
+
 import es.um.poa.Objetos.Seller;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.seller.behaviours.DepositoPescado;
@@ -43,56 +44,47 @@ public class SellerAgent extends TimePOAAgent {
 			SellerAgentConfig config = initAgentFromConfigFile(configFile);
 			
 			if(config != null) {
-				if (getSimTime() != null) {
-
-					SequentialBehaviour seq = new SequentialBehaviour();
-
-					AID lonjaAid = new AID("Lonja", AID.ISLOCALNAME);                            // Creamos el AID de la lonja
-
-					// REGISTRAMOS EL VENDEDOR XD
-					ACLMessage request = new ACLMessage(ACLMessage.REQUEST);                        // Creamos una solicitud tipo REQUEST
-					request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-					request.addReceiver(lonjaAid);
-					request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-					request.setConversationId("seller-register");                                    // el ID de la conversacion
-
-					// Queremos enviar un objeto Seller con los parametros recogidos de la
-
-					Seller seller = null;
-
-					try {
-						this.cif = config.getCif();
-						this.pescados = config.getListaPescado();
-						seller = new Seller(config.getCif(), config.getNombre());
-						request.setContentObject((Serializable) seller);
-					} catch (IOException e) {
-
-					}
 
 
-					seq.addSubBehaviour(new RegistroVendedor(this, request));                            // Aniadimos el comportamiento
+				SequentialBehaviour seq = new SequentialBehaviour();
+				ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+				request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+				request.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
+				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+				request.setConversationId("seller-register");
 
-					//  MENSAJE PARA DEPOSITO DE PESCADO
+				Seller seller = null;
 
-					ACLMessage requestFish = new ACLMessage(ACLMessage.REQUEST);                    // Crea una solicitud para el deposito de lotes
-					requestFish.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);            //
-					requestFish.setConversationId("deposito-fish");                                    //
-					requestFish.addReceiver(lonjaAid);                                                //
-					requestFish.setReplyByDate(new Date(System.currentTimeMillis() + 10000));        //
+				try {
+					this.cif = config.getCif();
+					this.pescados = config.getListaPescado();
+					seller = new Seller(config.getCif(), config.getNombre());
+					request.setContentObject((Serializable) seller);
+				} catch (IOException e) {
 
-
-					try {
-						LinkedList<Fish> listaFish = parseFish(pescados);                            // Sacamos la lista de lotes de las configuraciones
-						seller.setListaPescado(listaFish);                                            // insertamos los lotes en la lista de lotes del vendedr
-						requestFish.setContentObject((Serializable) seller);                        //
-					} catch (IOException e) {
-
-					}
-
-					seq.addSubBehaviour(new DepositoPescado(this, requestFish));                        // Añadimos el comporamiento de deposito de pescado
-
-					addBehaviour(seq);
 				}
+
+				seq.addSubBehaviour(new RegistroVendedor(this, request));
+
+				ACLMessage requestFish = new ACLMessage(ACLMessage.REQUEST);                    // Crea una solicitud para el deposito de lotes
+				requestFish.setProtocol(jade.domain.FIPANames.InteractionProtocol.FIPA_REQUEST);            //
+				requestFish.setConversationId("deposito-fish");                                    //
+				requestFish.addReceiver(new AID("Lonja", AID.ISLOCALNAME));                                                //
+				requestFish.setReplyByDate(new Date(System.currentTimeMillis() + 10000));        //
+
+
+				try {
+					LinkedList<Fish> listaFish = parseFish(pescados);                            // Sacamos la lista de lotes de las configuraciones
+					seller.setListaPescado(listaFish);                                            // insertamos los lotes en la lista de lotes del vendedr
+						requestFish.setContentObject((Serializable) seller);                        //
+				} catch (IOException e) {
+
+				}
+
+				seq.addSubBehaviour(new DepositoPescado(this, requestFish));                        // Añadimos el comporamiento de deposito de pescado
+
+				addBehaviour(seq);
+
 			} else {
 				doDelete();
 			}
@@ -122,7 +114,7 @@ public class SellerAgent extends TimePOAAgent {
 			Yaml yaml = new Yaml();
 			InputStream inputStream;
 			inputStream = new FileInputStream(fileName);
-			config = yaml.load(inputStream);
+			config = (SellerAgentConfig) yaml.load(inputStream);
 			getLogger().info("initAgentFromConfigFile", config.toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
