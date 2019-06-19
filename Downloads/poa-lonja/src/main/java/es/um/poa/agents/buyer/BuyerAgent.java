@@ -3,11 +3,13 @@ package es.um.poa.agents.buyer;
 import es.um.poa.Objetos.Buyer;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.behaviours.InicioCredito;
+import es.um.poa.agents.buyer.behaviours.PujarLote;
 import es.um.poa.agents.buyer.behaviours.RegistroComprador;
 import jade.core.AID;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -104,11 +106,9 @@ public class BuyerAgent extends TimePOAAgent {
 					 * */
 
 
-					/*MessageTemplate template = MessageTemplate.and(
-							MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-							MessageTemplate.MatchPerformative(ACLMessage.CFP));
+					MessageTemplate template = MessageTemplate.MatchConversationId("subasta");
 
-					addBehaviour(new Pujar(this, template));*/
+					addBehaviour(new PujarLote(this, template));
 
 				//}
 			}else if (config==null){

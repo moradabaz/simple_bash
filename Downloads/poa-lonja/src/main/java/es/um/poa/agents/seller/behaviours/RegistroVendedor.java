@@ -1,5 +1,6 @@
 package es.um.poa.agents.seller.behaviours;
 
+import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.seller.SellerAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -62,34 +63,36 @@ public class RegistroVendedor extends Behaviour {
     @Override
     public void action() {
         if (((SellerAgent) agente).getSimTime() != null) {
-            switch (step) {
-                case 0:
-                    agente.send(mensaje);
-                    step++;
-                    break;
-                case 1:
-                    ACLMessage reply = agente.receive();
-                    if (reply != null) {
-                        switch (reply.getPerformative()) {
-                            case ACLMessage.AGREE:
-                                handleInform(reply);
-                                done = true;
-                                break;
-                            case ACLMessage.REFUSE:
-                                handleFailure(reply);
-                                break;
-                            case ACLMessage.FAILURE:
-                                handleFailure(reply);
-                                break;
-                            default:
-                                System.err.println("NO SE HA ENTENDIDO EL MENSAJE " + reply.getPerformative());
+            if (((SellerAgent) agente).getFaseActual() == TimePOAAgent.FASE_REGISTRO) {
+                switch (step) {
+                    case 0:
+                        agente.send(mensaje);
+                        step++;
+                        break;
+                    case 1:
+                        ACLMessage reply = agente.receive();
+                        if (reply != null) {
+                            switch (reply.getPerformative()) {
+                                case ACLMessage.AGREE:
+                                    handleInform(reply);
+                                    done = true;
+                                    break;
+                                case ACLMessage.REFUSE:
+                                    handleFailure(reply);
+                                    break;
+                                case ACLMessage.FAILURE:
+                                    handleFailure(reply);
+                                    break;
+                                default:
+                                    System.err.println("NO SE HA ENTENDIDO EL MENSAJE " + reply.getPerformative());
+                            }
+                            done = true;
                         }
-                        done = true;
-                    }
-                    break;
-                default:
-                    System.out.println("NO SE HA ENTENDIDO EL MENSAJE DE REGISTRO VENDEDOR ");
-                    break;
+                        break;
+                    default:
+                        System.out.println("NO SE HA ENTENDIDO EL MENSAJE DE REGISTRO VENDEDOR ");
+                        break;
+                }
             }
         }
 

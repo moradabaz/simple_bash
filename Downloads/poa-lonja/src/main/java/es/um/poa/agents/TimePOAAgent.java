@@ -16,9 +16,9 @@ import jade.proto.SubscriptionInitiator;
 public class TimePOAAgent  extends POAAgent {
 	private SimTimeOntology simTime;
 
-	private static final int FASE_REGISTRO = 10;
-	private static final int FASE_SUBASTA = 20;
-	private static final int FASE_RETIRADA = 30;
+	public static final int FASE_REGISTRO = 5;
+	public static final int FASE_SUBASTA = 9;
+	public static final int FASE_RETIRADA = 10;
 
 
 	public void setup() {

@@ -1,5 +1,6 @@
 package es.um.poa.agents.buyer.behaviours;
 
+import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.BuyerAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -78,28 +79,30 @@ public class RegistroComprador extends Behaviour {
     @Override
     public void action() {
         if (((BuyerAgent) agente).getSimTime() != null) {
-            switch (step) {
-                case 0:
-                    agente.send(mensaje);
-                    step = 1;
-                    break;
-                case 1:
-                    ACLMessage reply = agente.receive();
-                    if (reply != null) {
-                        switch (reply.getPerformative()) {
-                            case ACLMessage.AGREE:
-                                handleInform(reply);
-                                break;
-                            case ACLMessage.FAILURE:
-                                handleFailure(reply);
-                            case ACLMessage.REFUSE:
-                                handleRefuse(reply);
-                            default:
-                                System.err.println("NO SE HA ENTENDIDO EL MENSAJE");
+            if (((BuyerAgent) agente).getFaseActual() == TimePOAAgent.FASE_REGISTRO) {
+                switch (step) {
+                    case 0:
+                        agente.send(mensaje);
+                        step = 1;
+                        break;
+                    case 1:
+                        ACLMessage reply = agente.receive();
+                        if (reply != null) {
+                            switch (reply.getPerformative()) {
+                                case ACLMessage.AGREE:
+                                    handleInform(reply);
+                                    break;
+                                case ACLMessage.FAILURE:
+                                    handleFailure(reply);
+                                case ACLMessage.REFUSE:
+                                    handleRefuse(reply);
+                                default:
+                                    System.err.println("NO SE HA ENTENDIDO EL MENSAJE");
+                            }
+                            done = true;
                         }
-                        done = true;
-                    }
 
+                }
             }
         }
     }
