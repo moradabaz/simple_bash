@@ -3,7 +3,7 @@ name: "EscenarioEjemplo"
 description: "Ejemplo para hacer una configuración YAML"
 clock:
   unitTimeMillis: 1000
-  numUnitDay: 10
+  numUnitDay: 24
   numSimDays: 1
 fishMarket:
   name: "Lonja"

@@ -11,6 +11,9 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 public class PujarLote extends Behaviour {
     private Agent agent;
     private MessageTemplate cfp;
@@ -35,18 +38,26 @@ public class PujarLote extends Behaviour {
                 double saldo = ((BuyerAgent) agent).getSaldo();
                 double precioPropuesta = calcularPrecioPuja(objetoSubastado);
                 if (esFavorable(objetoSubastado, precioPropuesta, saldo)) {
+                    System.out.println("[NOTIFY_BUYER] Lo aceptamos");
                     ACLMessage propose = cfp.createReply();
                     propose.setPerformative(ACLMessage.PROPOSE);
-                    propose.setContent(String.valueOf(((BuyerAgent) agent).getPrecioPropuesta()));
+                    double precio = ((BuyerAgent) agent).getPrecioPropuesta();
+                    try {
+                        propose.setContentObject((Serializable) String.valueOf(precio));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     return propose;
                 } else {
+                    System.out.println("[NOTIFY_BUYER] Lo rechazamos porque no es favorable");
                     ACLMessage refuse = cfp.createReply();
-                    refuse.setPerformative(ACLMessage.REFUSE);
+                    refuse.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     return refuse;
                 }
             } else {
+                System.out.println("[NOTIFY_BUYER] Lo rechazamos porque no estamos interesados");
                 ACLMessage refuse = cfp.createReply();
-                refuse.setPerformative(ACLMessage.REFUSE);
+                refuse.setPerformative(ACLMessage.REJECT_PROPOSAL);
                 return refuse;
             }
 
@@ -87,8 +98,11 @@ public class PujarLote extends Behaviour {
     public void action() {
         ACLMessage subastaRequest = agent.receive(cfp);
         if (subastaRequest != null) {
+            System.out.println("[NOTIFY_BUYER] Me ha llegado un mensaje");
             if (subastaRequest.getPerformative() == ACLMessage.CFP) {
+                System.out.println("[NOTIFY_BUYER] Es CFP");
                 if (((BuyerAgent) agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
+                    System.out.println("[NOTIFY_BUYER] La fase actual es " + ((BuyerAgent) agent).getFaseActual());
                     ACLMessage propuesta = null;
                     try {
                         propuesta = prepareResponse(subastaRequest);
@@ -100,6 +114,7 @@ public class PujarLote extends Behaviour {
                         e.printStackTrace();
                     }
 
+                } else {
                 }
             }
         }

@@ -66,7 +66,7 @@ public class BuyerAgent extends TimePOAAgent {
 				request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
 				request.setConversationId("buyer-register");
 				try {
-					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
+					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget(), config.getlistaDeseos());
 					listaDeseos = new LinkedList<String>(buyer.getListaDeseos());                            /// NULLPOINTEREXCEPTCION
 					setSaldo(buyer.getSaldo());
 					request.setContentObject((Serializable) buyer);

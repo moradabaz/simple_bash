@@ -2,6 +2,7 @@ package es.um.poa.agents.buyer;
 
 import es.um.poa.productos.FishDeseoConfig;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class BuyerAgentConfig {
@@ -42,7 +43,11 @@ public class BuyerAgentConfig {
 		this.budget = budget;
 	}
 
-	public List<FishDeseoConfig> getlistaDeseos() {
-		return listaDeseos;
+	public LinkedList<String> getlistaDeseos() {
+		LinkedList<String> lista = new LinkedList<>();
+		for (FishDeseoConfig fishConfig : listaDeseos) {
+			lista.add(fishConfig.getNombre());
+		}
+		return lista;
 	}
 }

@@ -10,13 +10,12 @@ import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
-import jade.proto.ContractNetInitiator;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Random;
 
 
 /**
@@ -40,6 +39,8 @@ public class SubastaLote extends TickerBehaviour {
     }
 
 
+
+
     /**
      * El proceso que ejecuta la lonja es sencillo:
      * - Recoge todos los lotes que tiene para subastar y los mete en una lista
@@ -60,26 +61,8 @@ public class SubastaLote extends TickerBehaviour {
                     System.out.println("### COMIENZA LA SUBASTA SURMANOS ######");
                     rondas = 1;
                     Fish fish = lotesASubastar.getFirst();
-                    double precioPescado = (fish.getPrecioReserva() * fish.getPeso()) * 1.12;
-                    fish.setPrecioSalida(precioPescado);
-
-                    ACLMessage msg = new ACLMessage(ACLMessage.CFP);
                     LinkedList<Buyer> buyers = database.getAllBuyers();
-                    for (Buyer buyer : buyers) {
-                        msg.addReceiver(new AID(buyer.getCif(), AID.ISLOCALNAME));
-                    }
-
-                    // Aqui mando un mensaje a todos los agentes de que voy a subastar un producto
-                    msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-                    msg.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
-                    try {
-                        msg.setContentObject((Serializable) fish);
-                        ((FishMarketAgent) agente).setSubastando(true);
-                    } catch (IOException e) {
-                        System.err.println(" ## FALLO ## ");
-                        ((FishMarketAgent) agente).setSubastando(false);
-
-                    }
+                    ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
 
                     enEjecucion = true;
 
@@ -106,99 +89,37 @@ public class SubastaLote extends TickerBehaviour {
                             System.out.print("HORA DE SUBASTA:");
                             System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getTime());
 
-
-                            agente.addBehaviour(new ContractNetInitiator(agente, msg) {
-
-                                protected void handleAllResponses(Vector responses, Vector acceptances) {
-                                    if (((FishMarketAgent) agente).isSubastando()) {
-                                        ////    ATENCION -> NOS FALTA PONER LA MARCA DE TIEMPO
-
-                                        HashMap<Integer, ACLMessage> candidados = new HashMap<Integer, ACLMessage>();
-                                        double cantidadPujada = 0;
-                                        AID mejorCandidato = null;
-                                        ACLMessage respuesta = new ACLMessage();
-                                        Enumeration e = responses.elements();               // Lista de respuestas
-                                        long ultimoTiempo = 0;
-                                        while (e.hasMoreElements() && enEjecucion) {                        // Mientras hayan mas elementos
-                                            ACLMessage msg = (ACLMessage) e.nextElement();
-                                            long marcaTiempo = ((FishMarketAgent) agente).getSimTime().getTime();   //
-
-                                            if (msg.getPerformative() == ACLMessage.PROPOSE) {                      // Si un elemente puja
-                                                Buyer buyer = database.getBuyer(msg.getSender().getLocalName());
-
-                                                System.out.println(buyer.getCif() + " ha pujado");
-
-                                                candidados.put(((FishMarketAgent) agente).getSimTime().getTime(), msg);
-
-                                                if (candidados.size() > 0) {
-
-                                                    int primero = candidados.keySet().stream().sorted(Integer::compareTo).collect(Collectors.toList()).get(0);
-                                                    ACLMessage mensaje = candidados.get(primero);
-                                                    mejorCandidato = mensaje.getSender();
-
-                                                    try {
-                                                        cantidadPujada = Double.parseDouble((String) mensaje.getContentObject());
-                                                    } catch (UnreadableException e1) {
-                                                        e1.printStackTrace();
-                                                    }
-                                                    respuesta.setPerformative(ACLMessage.ACCEPT_PROPOSAL);              // Se acepta la puja
-                                                    acceptances.addElement(respuesta);                                  // Se anyade ese elemento a las respuestas
-
-
-                                                    candidados.remove(primero);
-
-                                                    if (((FishMarketAgent) agente).isSubastando()) {                    // Si se esta subastando
-                                                        ((FishMarketAgent) agente).setSubastando(false);                //      Se cierra la puja
-                                                        System.out.println("Se acepta la puja por " + cantidadPujada
-                                                                + " del comprador " + mejorCandidato.getLocalName());
-
-                                                        database.registrarVenta(mejorCandidato.getLocalName(), fish, cantidadPujada);         //  Se registra la venta del lote
-
-                                                        try {
-                                                            respuesta.setContentObject((double) cantidadPujada);
-                                                        } catch (IOException e1) {
-                                                            e1.printStackTrace();
-                                                        }
-                                                    } else {
-                                                        respuesta.setPerformative(ACLMessage.REJECT_PROPOSAL);
-                                                    }
-                                                }
-
-                                            } else if (msg.getPerformative() == ACLMessage.REFUSE) {
-                                                rechazosPuja++;
-                                                if (rechazosPuja == responses.size()) {                             // Si todos los compradores rechazan la puja
-                                                    rechazosPuja = 0;
-                                                    double precio = precioPescado - precioPescado * 0.2;            // Se reduce el precio
-                                                    if (precio <= precioPescado * 0.15) {                           // Si su precio actual es menor que el 15% del precio inicial
-                                                        ((FishMarketAgent) agente).setSubastando(false);            // Se descarta
-                                                        if (((FishMarketAgent) agente).getLotesASubastar().size() > 0) {     //  Se descarta el lote
-                                                            ((FishMarketAgent) agente).removeFirstLote();
-                                                            System.out.println("Numero de lotes en espera: " + ((FishMarketAgent) agente).getLotesASubastar().size());
-                                                            System.out.println("El lote " + fish.getNombre() + " ha sido eliminado de la subasta");
-                                                        }
-                                                    } else {
-                                                        // Se actualiza la ronda
-                                                        rondas++;
-                                                        System.out.println("RONDA -> " + rondas);
-                                                        System.out.print("HORA DE SUBASTA:");
-                                                        System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getTime());
-                                                        System.out.println("PRECIO ACTUAL: " + precio);
-                                                    }
-                                                }
-                                            }
-
-
-                                        }
-
-                                    }
-                                }
-
-                            });
+                            agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
                         }
                     });
                 }
             }
         }
+    }
+
+
+    public ACLMessage prepareRequest(LinkedList<Buyer> buyers, Fish fish) {
+
+        double precioPescado = (fish.getPrecioReserva() * fish.getPeso()) * 1.12;
+        fish.setPrecioSalida(precioPescado);
+        ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+        for (Buyer buyer : buyers) {
+            msg.addReceiver(new AID(buyer.getCif(), AID.ISLOCALNAME));
+        }
+        msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+        msg.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
+        msg.setConversationId("subasta");
+
+        try {
+            msg.setContentObject((Serializable) fish);
+            ((FishMarketAgent) agente).setSubastando(true);
+        } catch (IOException e) {
+            System.err.println(" ## FALLO ## ");
+            ((FishMarketAgent) agente).setSubastando(false);
+
+        }
+
+        return msg;
     }
 
 

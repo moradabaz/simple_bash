@@ -30,7 +30,7 @@ public class BuyerAgentConfigTest {
             InputStream inputStream;
             inputStream = new FileInputStream("/Users/morad/Downloads/poa-lonja/configs/buyerType1.yaml");
             config = yaml.load(inputStream);
-            fishDeseoConfigs = new LinkedList<>(config.getlistaDeseos());
+           // fishDeseoConfigs = new LinkedList<>(config.getlistaDeseos());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

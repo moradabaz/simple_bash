@@ -48,6 +48,14 @@ public class Buyer implements Serializable {
         this.listaDeseos = new LinkedList<>();
     }
 
+    public Buyer(String identificador, String nombre, double saldo, LinkedList<String> listaDeseos) {
+        this.identificador = identificador;
+        this.nombre = nombre;
+        this.saldo = saldo;
+        this.gastos = 0;
+        this.articulosComprados = new LinkedList<>();
+        this.listaDeseos = new LinkedList<String>(listaDeseos);
+    }
 
     /*
      * Retorna el identificador del comprador

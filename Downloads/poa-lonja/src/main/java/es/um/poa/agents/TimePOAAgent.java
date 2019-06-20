@@ -18,7 +18,7 @@ public class TimePOAAgent  extends POAAgent {
 
 	public static final int FASE_REGISTRO = 5;
 	public static final int FASE_SUBASTA = 9;
-	public static final int FASE_RETIRADA = 10;
+	public static final int FASE_RETIRADA = 20;
 
 
 	public void setup() {

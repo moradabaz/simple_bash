@@ -2,3 +2,6 @@
 cif: "BY235"
 nombre: "Juan Lopez"
 budget: 1299.0
+listaDeseos:
+  - nombre: "boqueron"
+  - nombre: "lubina"
