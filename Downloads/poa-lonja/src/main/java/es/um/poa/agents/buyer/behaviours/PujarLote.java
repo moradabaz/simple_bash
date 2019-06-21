@@ -12,7 +12,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 public class PujarLote extends Behaviour {
     private Agent agent;
@@ -35,27 +34,25 @@ public class PujarLote extends Behaviour {
 
         if (objetoSubastado != null) {
             if (((BuyerAgent) agent).estaInterasadoEn(objetoSubastado.getNombre())) {
+                double precioObjetoSubastado = objetoSubastado.getPrecioFinal();
                 double saldo = ((BuyerAgent) agent).getSaldo();
                 double precioPropuesta = calcularPrecioPuja(objetoSubastado);
                 if (esFavorable(objetoSubastado, precioPropuesta, saldo)) {
-                    System.out.println("[NOTIFY_BUYER] Lo aceptamos");
                     ACLMessage propose = cfp.createReply();
                     propose.setPerformative(ACLMessage.PROPOSE);
                     double precio = ((BuyerAgent) agent).getPrecioPropuesta();
                     try {
-                        propose.setContentObject((Serializable) String.valueOf(precio));
+                        propose.setContentObject(String.valueOf(precioObjetoSubastado));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     return propose;
                 } else {
-                    System.out.println("[NOTIFY_BUYER] Lo rechazamos porque no es favorable");
                     ACLMessage refuse = cfp.createReply();
                     refuse.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     return refuse;
                 }
             } else {
-                System.out.println("[NOTIFY_BUYER] Lo rechazamos porque no estamos interesados");
                 ACLMessage refuse = cfp.createReply();
                 refuse.setPerformative(ACLMessage.REJECT_PROPOSAL);
                 return refuse;
@@ -90,27 +87,32 @@ public class PujarLote extends Behaviour {
      * @return  Devuelve el precio que esta dispuesto a pagar.
      */
     public double calcularPrecioPuja(Fish fish) {
-        double precio = Math.floor(Math.random() * (fish.getPrecioMinimo() - fish.getPrecioFinal() + 1) + fish.getPrecioFinal());
+        double precio = Math.abs(Math.random() * (fish.getPrecioMinimo() - fish.getPrecioFinal() + 1) + fish.getPrecioFinal());
         return precio;
     }
 
     @Override
     public void action() {
+
         ACLMessage subastaRequest = agent.receive(cfp);
         if (subastaRequest != null) {
-            System.out.println("[NOTIFY_BUYER] Me ha llegado un mensaje");
             if (subastaRequest.getPerformative() == ACLMessage.CFP) {
-                System.out.println("[NOTIFY_BUYER] Es CFP");
                 if (((BuyerAgent) agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
-                    System.out.println("[NOTIFY_BUYER] La fase actual es " + ((BuyerAgent) agent).getFaseActual());
                     ACLMessage propuesta = null;
                     try {
+                        if (!((Fish)subastaRequest.getContentObject()).getNombre().equals("sardina")) {
+                            System.out.println("HEMOS RECIBIDO EL BOQUERON");
+                        }
                         propuesta = prepareResponse(subastaRequest);
                         agent.send(propuesta);
-                        done = false;
+                        if (!((Fish)subastaRequest.getContentObject()).getNombre().equals("sardina")) {
+                            System.out.println("ENVIAMOS LA RESPUESTA");
+                        }
                     } catch (NotUnderstoodException e) {
                         e.printStackTrace();
                     } catch (RefuseException e) {
+                        e.printStackTrace();
+                    } catch (UnreadableException e) {
                         e.printStackTrace();
                     }
 

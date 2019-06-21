@@ -61,7 +61,7 @@ public class FishMarketAgent extends TimePOAAgent {
 				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
 
-				addBehaviour(new SubastaLote(this, 300));
+				addBehaviour(new SubastaLote(this, 1000));
 
 			}
 

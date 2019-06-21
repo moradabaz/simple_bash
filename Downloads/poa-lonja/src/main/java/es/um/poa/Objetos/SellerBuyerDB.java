@@ -288,9 +288,9 @@ public class SellerBuyerDB {
     }
 
 
-    public void registrarVenta(String buyercif, Fish articulo, double precioFinal) {
+    public void registrarVenta(String buyercif, Fish articulo, double precioFinal) { // TODO: Aqui hay un fallo
         if (!buyers.containsKey(buyercif)) {
-            System.err.println("## ERROR ## -> El cif" + buyercif + "No está contenido");
+            System.err.println("## ERROR ## -> El cif " + buyercif + " No está contenido");
         } else {
             Buyer buyer = buyers.get(buyercif);
             articulo.setEstadoVenta(EstadoVenta.ADJUDICADO);

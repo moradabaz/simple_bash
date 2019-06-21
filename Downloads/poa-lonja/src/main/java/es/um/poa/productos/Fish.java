@@ -20,7 +20,7 @@ public class Fish implements Serializable {
     private final TipoProducto tipoProducto;
     private final String nombre;
     private double peso;
-    private double precioReserva;
+    private double precioPorKilo;
     private double precioSalida;
     private double precioFinal;
     private String idComprador;
@@ -36,7 +36,7 @@ public class Fish implements Serializable {
         this.tipoProducto = tipo;
         this.nombre = nombre;
         this.peso = peso;
-        this.precioReserva = precioReserva;
+        this.precioPorKilo = precioReserva;
         this.precioFinal = NO_ASIGNADO;
         this.precioSalida = NO_ASIGNADO;
         this.estadoVenta = EstadoVenta.REGISTRADO;
@@ -76,12 +76,12 @@ public class Fish implements Serializable {
         this.peso = peso;
     }
 
-    public double getPrecioReserva() {
-        return precioReserva;
+    public double getPrecioPorKilo() {
+        return precioPorKilo;
     }
 
-    public void setPrecioReserva(double precioReserva) {
-        this.precioReserva = precioReserva;
+    public void setPrecioPorKilo(double precioPorKilo) {
+        this.precioPorKilo = precioPorKilo;
     }
 
     public double getPrecioSalida() {
