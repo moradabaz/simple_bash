@@ -17,8 +17,8 @@ public class TimePOAAgent  extends POAAgent {
 	private SimTimeOntology simTime;
 
 	public static final int FASE_REGISTRO = 5;
-	public static final int FASE_SUBASTA = 15;
-	public static final int FASE_RETIRADA = 20;
+	public static final int FASE_SUBASTA = 20;
+	public static final int FASE_RETIRADA = 24;
 
 
 	public void setup() {

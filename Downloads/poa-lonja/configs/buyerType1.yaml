@@ -4,5 +4,4 @@ nombre: "Pepe Dominguez"
 budget: 1000.0
 listaDeseos:
   - nombre: "sardina"
-  - nombre: "boqueron"
   - nombre: "lubina"

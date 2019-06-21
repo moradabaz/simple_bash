@@ -29,7 +29,6 @@ public class SubastaLote extends Behaviour {
     private int rechazosPuja = 0;
     private int rondas = 0;
     private Long periodo;
-    private boolean enEjecucion;
     private SellerBuyerDB database = SellerBuyerDB.getInstance();
     private LinkedList<Fish> lotesASubastar;
     private boolean done;
@@ -37,7 +36,6 @@ public class SubastaLote extends Behaviour {
     public SubastaLote(Agent a, long period) {
         this.agente = a;
         this.periodo = period;
-        this.enEjecucion = false;
         this.lotesASubastar = ((FishMarketAgent) agente).getLotesASubastar();
         this.done = false;
     }
@@ -82,46 +80,47 @@ public class SubastaLote extends Behaviour {
         if (((FishMarketAgent) agente).getSimTime() != null) {
             if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
                 Random random = new Random();
-                System.out.println("### COMIENZA LA SUBASTA SURMANOS ######");
+                /**
+                 * Este comportamiento ejecuta la gestion de las posibles respuestas a la
+                 * subasta.
+                 * Si durante la subasta la lonja acepta recube una propuesta de puja por parte de varios compradores,
+                 * eligirá el que haya pujado antes.
+                 * El a ese comprador se le manda un mensaje de aceptacion y un mensaje de denegacion al resto.
+                 *
+                 * Si todos los compradores rechazan el lote, se baja el precio de este y se sigue una nueva ronda
+                 * Si el precio rebajado es menor que el precio minimo fijado para venderse, se descarta el lote
+                 */
 
-                    /**
-                     * Este comportamiento ejecuta la gestion de las posibles respuestas a la
-                     * subasta.
-                     * Si durante la subasta la lonja acepta recube una propuesta de puja por parte de varios compradores,
-                     * eligirá el que haya pujado antes.
-                     * El a ese comprador se le manda un mensaje de aceptacion y un mensaje de denegacion al resto.
-                     *
-                     * Si todos los compradores rechazan el lote, se baja el precio de este y se sigue una nueva ronda
-                     * Si el precio rebajado es menor que el precio minimo fijado para venderse, se descarta el lote
-                     */
                 agente.addBehaviour(new TickerBehaviour(agente, periodo) {
                     @Override
                     protected void onTick() {
-                        if (!lotesASubastar.isEmpty()) {
+
+                    if (!lotesASubastar.isEmpty()) {
+                        if (!((FishMarketAgent) agente).isSubastando()) {
+                            ((FishMarketAgent) agente).setSubastando(true);
                             rondas = 1;
                             Fish fish = lotesASubastar.getFirst();
                             lotesASubastar.removeFirst();
                             LinkedList<Buyer> buyers = database.getAllBuyers();
                             ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
 
-                            enEjecucion = true;
-                            System.out.println("LOTE " + fish.toString());
-                            System.out.println("PRECIO DE SALIDA: " + fish.getPrecioSalida());
+                                System.out.println("[ LOTE " + fish.toString() + " ]");
+                                System.out.println("[ PRECIO DE SALIDA: " + fish.getPrecioSalida() + " ]");
 
-                            System.out.print("DIA DE SUBASTA:");
-                            System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getDay());
+                                System.out.print("[ DIA DE SUBASTA:");
+                                System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + " ]");
 
-                            System.out.print("HORA DE SUBASTA:");
-                            System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getTime());
-                            agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
-                        } else {
-                          //  System.out.println("NO HAY MAS LOTES");
-                            done = true;
-                            enEjecucion = false;
+                                System.out.print("[ HORA DE SUBASTA:");
+                                System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + " ]");
+                                agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
+
+                            } else {
+                                done = true;
+                            }
+
                         }
                     }
                 });
-
             }
         }
     }
@@ -132,6 +131,8 @@ public class SubastaLote extends Behaviour {
 
     @Override
     public boolean done() {
+        if (done)
+            System.out.println("[FINALIZACION][CIERRE DE LA SUBASTA]");
         return done;
     }
 }

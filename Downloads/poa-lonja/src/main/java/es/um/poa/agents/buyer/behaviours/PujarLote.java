@@ -17,11 +17,13 @@ public class PujarLote extends Behaviour {
     private Agent agent;
     private MessageTemplate cfp;
     private boolean done;
+    private int step;
 
     public PujarLote(Agent a, MessageTemplate cfp) {
         this.agent = a;
         this.done = false;
         this.cfp = cfp;
+        this.step = 0;
     }
     public ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
 
@@ -93,33 +95,31 @@ public class PujarLote extends Behaviour {
 
     @Override
     public void action() {
+        switch (step) {
+            case 0:
+                ACLMessage subastaRequest = agent.receive(cfp);
+                if (subastaRequest != null) {
+                    if (subastaRequest.getPerformative() == ACLMessage.CFP) {
+                        if (((BuyerAgent) agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
+                            ACLMessage propuesta = null;
+                            try {
+                                propuesta = prepareResponse(subastaRequest);
+                                agent.send(propuesta);
+                              //  step++;
+                            } catch (NotUnderstoodException e) {
+                                e.printStackTrace();
+                            } catch (RefuseException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
 
-        ACLMessage subastaRequest = agent.receive(cfp);
-        if (subastaRequest != null) {
-            if (subastaRequest.getPerformative() == ACLMessage.CFP) {
-                if (((BuyerAgent) agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
-                    ACLMessage propuesta = null;
-                    try {
-                        if (!((Fish)subastaRequest.getContentObject()).getNombre().equals("sardina")) {
-                            System.out.println("HEMOS RECIBIDO EL BOQUERON");
+
                         }
-                        propuesta = prepareResponse(subastaRequest);
-                        agent.send(propuesta);
-                        if (!((Fish)subastaRequest.getContentObject()).getNombre().equals("sardina")) {
-                            System.out.println("ENVIAMOS LA RESPUESTA");
-                        }
-                    } catch (NotUnderstoodException e) {
-                        e.printStackTrace();
-                    } catch (RefuseException e) {
-                        e.printStackTrace();
-                    } catch (UnreadableException e) {
-                        e.printStackTrace();
                     }
-
-                } else {
                 }
-            }
+               break;
         }
+
     }
 
     @Override

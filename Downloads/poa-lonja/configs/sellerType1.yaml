@@ -3,10 +3,14 @@ cif: "SE004"
 nombre: "Pedro Sanchez"
 listaPescado:
   - nombre: "sardina"
-    tipoProducto: "pescado azul"
+    tipoProducto: "pescado gris"
     peso: 4.87
     precioReserva: 1.3
+  - nombre: "lubina"
+    tipoProducto: "pescado azul"
+    peso: 2.23
+    precioReserva: 7.97
   - nombre: "boqueron"
     tipoProducto: "marisco"
-    peso: 7.23
-    precioReserva: 8.97
+    peso: 2.23
+    precioReserva: 2.97
