@@ -3,8 +3,6 @@ package es.um.poa.agents.fishmarket.behaviours;
 import es.um.poa.Objetos.Movimiento;
 import es.um.poa.Objetos.Seller;
 import es.um.poa.Objetos.SellerBuyerDB;
-import es.um.poa.agents.fishmarket.FishMarketAgent;
-import es.um.poa.productos.Fish;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -61,8 +59,7 @@ public class DepositoPescadoResp extends Behaviour {
 
             if (database.checkSellerByID(seller.getCif())) {
                 LinkedList<Movimiento> movimientos = registrarLotes(seller);
-                for (Fish fish : seller.getListaPescado())
-                    ((FishMarketAgent) agent).anadirLoteASubasta(fish);
+               // database.anadirLotes(seller.getListaPescado());
                 database.registrarSeller(seller);
                 for (Movimiento movimiento : movimientos)
                     database.registarMovimientoSeller(seller.getCif(), movimiento); /// NULLPOINTEREXCEPTION

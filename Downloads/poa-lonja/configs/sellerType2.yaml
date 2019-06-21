@@ -1,0 +1,12 @@
+!!es.um.poa.agents.seller.SellerAgentConfig
+cif: "SE014"
+nombre: "Javi Morenazo"
+listaPescado:
+  - nombre: "boqueron"
+    tipoProducto: "marisco"
+    peso: 1.23
+    precioReserva: 2.97
+  - nombre: "lubina"
+    tipoProducto: "pescado azul"
+    peso: 0.23
+    precioReserva: 8.00

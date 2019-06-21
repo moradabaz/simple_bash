@@ -36,7 +36,7 @@ public class SubastaLote extends Behaviour {
     public SubastaLote(Agent a, long period) {
         this.agente = a;
         this.periodo = period;
-        this.lotesASubastar = ((FishMarketAgent) agente).getLotesASubastar();
+        this.lotesASubastar = database.getLotes();
         this.done = false;
     }
 
@@ -90,7 +90,6 @@ public class SubastaLote extends Behaviour {
                  * Si todos los compradores rechazan el lote, se baja el precio de este y se sigue una nueva ronda
                  * Si el precio rebajado es menor que el precio minimo fijado para venderse, se descarta el lote
                  */
-
                 agente.addBehaviour(new TickerBehaviour(agente, periodo) {
                     @Override
                     protected void onTick() {

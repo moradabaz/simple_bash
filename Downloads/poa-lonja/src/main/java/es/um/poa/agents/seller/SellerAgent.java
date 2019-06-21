@@ -2,6 +2,7 @@ package es.um.poa.agents.seller;
 
 
 import es.um.poa.Objetos.Seller;
+import es.um.poa.Objetos.SellerBuyerDB;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.seller.behaviours.DepositoPescado;
 import es.um.poa.agents.seller.behaviours.RegistroVendedor;
@@ -31,7 +32,7 @@ public class SellerAgent extends TimePOAAgent {
 
 	private String cif;
 	private List<FishConfig> pescados;
-
+	private SellerBuyerDB database = SellerBuyerDB.getInstance();
 	/**
 	 * La funcion setup es la que abarca los comportamientos.
 	 */
@@ -76,7 +77,8 @@ public class SellerAgent extends TimePOAAgent {
 				try {
 					LinkedList<Fish> listaFish = parseFish(pescados);                            // Sacamos la lista de lotes de las configuraciones
 					seller.setListaPescado(listaFish);                                            // insertamos los lotes en la lista de lotes del vendedr
-						requestFish.setContentObject((Serializable) seller);                        //
+					database.anadirLotes(listaFish);
+					requestFish.setContentObject((Serializable) seller);                        //
 				} catch (IOException e) {
 
 				}

@@ -25,7 +25,6 @@ public class FishMarketAgent extends TimePOAAgent {
 	private double ingresos = 0;
 	private double comisionPorLote = 0.2;
 	private boolean subastando = false;
-
 	private LinkedList<Fish> lotesASubastar = new LinkedList<Fish>();
 
 	public void setup() {
@@ -88,6 +87,10 @@ public class FishMarketAgent extends TimePOAAgent {
 
 	public void anadirLoteASubasta(Fish fish) {
 		lotesASubastar.add(fish);
+	}
+
+	public void anadirTodosLotes(LinkedList<Fish> lista) {
+		lotesASubastar.addAll(lista);
 	}
 
 	public void removeLoteFromSubasta(Fish fish) {

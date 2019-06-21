@@ -25,7 +25,7 @@ public class SellerBuyerDB {
     private Map<String, Buyer> buyers;
     private Map<String, ListaMovimientos> movimientosSeller;
     private Map<String, ListaMovimientos> movimientosBuyer;
-
+    private LinkedList<Fish> lotes;
 
 
     public static SellerBuyerDB getInstance() {
@@ -44,6 +44,7 @@ public class SellerBuyerDB {
         this.buyers = new HashMap<String, Buyer>();
         this.movimientosBuyer = new HashMap<String, ListaMovimientos>();
         this.movimientosSeller = new HashMap<String, ListaMovimientos>();
+        this.lotes = new LinkedList<>();
     }
 
     /**
@@ -314,4 +315,20 @@ public class SellerBuyerDB {
         }
     }
 
+    public void anadirLotes(LinkedList<Fish> listaPescado) {
+        lotes.addAll(listaPescado);
+    }
+
+
+    public void anadirLote(Fish fish) {
+        lotes.add(fish);
+    }
+
+    public void removeFirst() {
+        lotes.removeFirst();
+    }
+
+    public LinkedList<Fish> getLotes() {
+        return lotes;
+    }
 }
