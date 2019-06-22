@@ -113,9 +113,11 @@ public class SubastaLote extends Behaviour {
                                 agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
 
                             } else {
-                                done = true;
+                                //done = true;
                             }
 
+                        } else {
+                            done = true;
                         }
                     }
                 });
