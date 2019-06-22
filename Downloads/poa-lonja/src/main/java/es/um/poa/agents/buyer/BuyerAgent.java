@@ -85,6 +85,7 @@ public class BuyerAgent extends TimePOAAgent {
 				try {
 					Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
 					requestAddCredit.setContentObject(buyer);
+					this.setSaldo(config.getBudget());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -167,6 +168,7 @@ public class BuyerAgent extends TimePOAAgent {
 	}
 
 	public boolean estaInterasadoEn(String nombre) {
+		if (listaDeseos.isEmpty())	return false;
 		return listaDeseos.contains(nombre);
 	}
 
@@ -195,4 +197,7 @@ public class BuyerAgent extends TimePOAAgent {
 	}
 
 
+	public void eliminarDeListaDeseos(String nombre) {
+		listaDeseos.remove(nombre);
+	}
 }

@@ -36,8 +36,6 @@ public class FishMarketAgent extends TimePOAAgent {
 			FishMarketAgentConfig config = initAgentFromConfigFile(configFile);
 
 			if(config != null) {
-
-
 				/**
 				 * Mensaje para crear una respuesta la solicitud de registro de un agente comprador
 				 */
@@ -59,7 +57,6 @@ public class FishMarketAgent extends TimePOAAgent {
 				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("deposito-fish");
 				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
-
 				addBehaviour(new SubastaLote(this, 1000));
 
 			}

@@ -25,6 +25,11 @@ public class RegistroVendedor extends Behaviour {
         this.done = false;
     }
 
+
+    public void handleAgree(ACLMessage agree) {
+        System.out.println("El agente Lonja ha aceptado su peticion");
+    }
+
     public void handleInform(ACLMessage inform) {
         System.out.println("El agente vendedor" + agente.getLocalName() + " se ha registrado correctamente");
     }
@@ -74,7 +79,7 @@ public class RegistroVendedor extends Behaviour {
                         if (reply != null) {
                             switch (reply.getPerformative()) {
                                 case ACLMessage.AGREE:
-                                    handleInform(reply);
+                                    handleAgree(reply);
                                     done = true;
                                     break;
                                 case ACLMessage.REFUSE:
@@ -83,8 +88,8 @@ public class RegistroVendedor extends Behaviour {
                                 case ACLMessage.FAILURE:
                                     handleFailure(reply);
                                     break;
-                                default:
-                                    System.err.println("NO SE HA ENTENDIDO EL MENSAJE " + reply.getPerformative());
+                             //   case ACLMessage.INFORM:
+                             //       handleInform(reply);
                             }
                             done = true;
                         }

@@ -68,6 +68,10 @@ public class RegistroComprador extends Behaviour {
         this.agente = agente;
     }
 
+    public void handleAgree(ACLMessage agree) {
+        System.out.println("El agente Lonja ha aceptado su peticion");
+    }
+
     public ACLMessage getMensaje() {
         return mensaje;
     }
@@ -90,14 +94,16 @@ public class RegistroComprador extends Behaviour {
                         if (reply != null) {
                             switch (reply.getPerformative()) {
                                 case ACLMessage.AGREE:
-                                    handleInform(reply);
+                                    handleAgree(reply);
                                     break;
                                 case ACLMessage.FAILURE:
                                     handleFailure(reply);
                                 case ACLMessage.REFUSE:
                                     handleRefuse(reply);
-                                default:
-                                    System.err.println("NO SE HA ENTENDIDO EL MENSAJE");
+                                    break;
+                              //  case ACLMessage.INFORM:
+                              //      handleInform(reply);
+                              //      break;
                             }
                             done = true;
                         }

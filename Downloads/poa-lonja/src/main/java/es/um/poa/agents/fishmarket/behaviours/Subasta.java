@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class Subasta extends Behaviour {
 
-    private static final int TIEMPO_SUBASTA = 4;
+    private static final int TIEMPO_SUBASTA = 6;
     private static final int TIEMPO_RONDA = 2;
     private final int numBuyers;
     private FishMarketAgent agente;
@@ -72,13 +72,14 @@ public class Subasta extends Behaviour {
                         if (tiempoFinal - tiempoInicialRonda <= TIEMPO_RONDA) {
                             double cantidadPujada = 0;
                             AID mejorCandidato = null;
-                            ACLMessage mensajeAdjudicacion = new ACLMessage();
-                            mensajeAdjudicacion.setConversationId("subasta");
-                            mensajeAdjudicacion.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
+
 
                             ACLMessage propose = agente.receive(mt);
                             if (propose != null) {                                                 // TODO: Es NULO
                                 if (propose.getPerformative() == ACLMessage.PROPOSE) {                      // TODO: Hay un NULLPOINTEREXCEPTION
+                                    ACLMessage mensajeAdjudicacion = propose.createReply();
+                                    mensajeAdjudicacion.setConversationId("subasta");
+                                    mensajeAdjudicacion.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
 
                                     Buyer buyer = database.getBuyer(propose.getSender().getLocalName());       // TODO: Es LONJA ???
                                     System.out.println(buyer.getCif() + " ha pujado");
@@ -96,28 +97,39 @@ public class Subasta extends Behaviour {
                                         }
 
                                         mensajeAdjudicacion.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                                        if (((FishMarketAgent) agente).isSubastando()) {
-                                           // ((FishMarketAgent) agente).setSubastando(false);
-                                            System.out.println("[VENDIDO]: Se acepta la puja por " + cantidadPujada + " del comprador " + mejorCandidato.getLocalName());
-                                            System.out.println("Lote: " + fish.getNombre().toUpperCase());
 
-                                            database.registrarVenta(mejorCandidato.getLocalName(), fish, cantidadPujada);         //  Se registra la venta del lote
+                                       // ((FishMarketAgent) agente).setSubastando(false);
+                                        System.out.println("[VENDIDO]: Se acepta la puja por " + cantidadPujada + " del comprador " + mejorCandidato.getLocalName());
+                                        System.out.println("Lote: " + fish.getNombre().toUpperCase());
+                                        fish.setPrecioFinal(cantidadPujada);
+                                        database.registrarVenta(mejorCandidato.getLocalName(), fish, cantidadPujada);         //  Se registra la venta del lote
 
-                                            try {
-                                                mensajeAdjudicacion.setContentObject((double) cantidadPujada);
-                                            } catch (IOException e1) {
-                                                e1.printStackTrace();
-                                            }
-
-                                            //agente.send(mensajeAdjudicacion);
-                                            candidatos.clear();
-                                            step = 3;
-                                            done = true;
-                                        } else {
-                                            mensajeAdjudicacion.setPerformative(ACLMessage.REJECT_PROPOSAL);
-
+                                        try {
+                                            mensajeAdjudicacion.setContentObject((Fish) fish);
+                                            mensajeAdjudicacion.addReceiver(mejorCandidato);
+                                        } catch (IOException e1) {
+                                            e1.printStackTrace();
                                         }
 
+                                        System.out.println("SO FAR, SO GOOD");
+                                        agente.send(mensajeAdjudicacion);
+
+                                        ACLMessage mensajeDenegacion = new ACLMessage();
+                                        mensajeDenegacion.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                                        mensajeDenegacion.setConversationId("subasta");
+                                        mensajeAdjudicacion.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
+                                        java.util.Iterator<ACLMessage> it = candidatos.values().iterator();
+                                        while (it.hasNext()) {
+                                            ACLMessage msg = it.next();
+                                            if (!msg.equals(response)) {
+                                                mensajeDenegacion.addReceiver(msg.getSender());
+                                            }
+                                        }
+                                        agente.send(mensajeDenegacion);
+
+                                        candidatos.clear();
+                                        step = 3;
+                                        done = true;
                                     }
                                 } else {
                                     rechazosPuja++;
@@ -133,6 +145,7 @@ public class Subasta extends Behaviour {
                                         } else {
                                             // Se actualiza la ronda
                                             rondas++;
+                                            System.out.println("[EXPIRA EL TIEMPO DE RONDA]");
                                             System.out.println("[" + fish.getNombre().toUpperCase() + "]" + "CAMBIO DE RONDA -> " + rondas);
                                             System.out.print("HORA:");
                                             System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getTime());
@@ -193,6 +206,7 @@ public class Subasta extends Behaviour {
     public boolean done() {
         if (done) {
             ((FishMarketAgent) agente).setSubastando(false);
+
         }
         return done;
     }
@@ -215,7 +229,7 @@ public class Subasta extends Behaviour {
         } catch (IOException e) {
             System.err.println(" ## FALLO ## ");
             ((FishMarketAgent) agente).setSubastando(false);
-
+            ((FishMarketAgent) agente).removeFirstLote();
         }
 
         return msg;

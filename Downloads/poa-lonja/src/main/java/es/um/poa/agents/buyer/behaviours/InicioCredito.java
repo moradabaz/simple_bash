@@ -66,18 +66,24 @@ public class InicioCredito extends Behaviour {
                 if (reply != null) {
                     switch (reply.getPerformative()) {
                         case ACLMessage.AGREE:
-                            handleInform(reply);
+                            handleAgree(reply);
                             break;
                         case ACLMessage.FAILURE:
                             handleFailure(reply);
                         case ACLMessage.REFUSE:
                             handleRefuse(reply);
-                        default:
-                            System.err.println("NO SE HA ENTENDIDO EL MENSAJE");
+                            break;
+                       // case ACLMessage.INFORM:
+                       //     handleInform(reply);
+                       //     break;
                     }
                     done = true;
                 }
         }
+    }
+
+    private void handleAgree(ACLMessage reply) {
+        System.out.println("La lonja ha aceptado la solicitud de inicio de credito");
     }
 
     @Override

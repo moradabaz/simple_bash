@@ -77,8 +77,10 @@ public class DepositoPescado extends Behaviour {
                          case ACLMessage.FAILURE:
                              handleFailure(reply);
                              break;
-                         default:
-                             System.err.println("NO SE HA ENTENDIDO EL MENSAJE " + reply.getPerformative());;
+                        // case ACLMessage.INFORM:
+                        //     handleInform(reply);
+                        //     done = true;
+                        //     break;
                      }
                  }
          }

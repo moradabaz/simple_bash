@@ -92,7 +92,7 @@ public class PujarLote extends Behaviour {
         double precio = Math.abs(Math.random() * (fish.getPrecioMinimo() - fish.getPrecioFinal() + 1) + fish.getPrecioFinal());
         return precio;
     }
-
+/*
     @Override
     public void action() {
         switch (step) {
@@ -105,7 +105,7 @@ public class PujarLote extends Behaviour {
                             try {
                                 propuesta = prepareResponse(subastaRequest);
                                 agent.send(propuesta);
-                              //  step++;
+                                //  step++;
                             } catch (NotUnderstoodException e) {
                                 e.printStackTrace();
                             } catch (RefuseException e) {
@@ -117,7 +117,56 @@ public class PujarLote extends Behaviour {
                         }
                     }
                 }
-               break;
+                break;
+        }
+
+    }
+
+*/
+    @Override
+    public void action() {
+
+        ACLMessage subastaRequest = agent.receive(cfp);
+        if (subastaRequest != null) {
+            if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
+                System.out.println("[NOTIFY_BUYER] HE RECIBIDO UNA PROPUESTA");
+                ACLMessage propuesta = null;
+                try {
+                    propuesta = prepareResponse(subastaRequest);
+                    agent.send(propuesta);
+                    //done = true;
+                } catch (NotUnderstoodException e) {
+                    e.printStackTrace();
+                } catch (RefuseException e) {
+                    e.printStackTrace();
+                }
+
+                ACLMessage response = agent.receive(cfp);
+                if (response != null) {
+                    switch (response.getPerformative()) {
+                        case ACLMessage.ACCEPT_PROPOSAL:
+                            System.out.println("[NOTIFY_BUYER] PESCAICO PA MI");
+                            try {
+                                Fish fish = (Fish) response.getContentObject();
+                                System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
+                                ((BuyerAgent) agent).eliminarDeListaDeseos(fish.getNombre());
+                                ((BuyerAgent) agent).decremetnarSaldo(fish.getPrecioFinal());
+                                System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
+                            } catch (UnreadableException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case ACLMessage.REJECT_PROPOSAL:
+                            System.out.println("[NOTIFY_BUYER] ME LO HAN DENEGAOO, HIJOS DE PUTA");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA){
+                done = true;
+            }
+
         }
 
     }
