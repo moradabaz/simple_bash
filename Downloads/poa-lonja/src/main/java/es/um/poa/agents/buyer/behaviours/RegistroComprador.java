@@ -95,6 +95,7 @@ public class RegistroComprador extends Behaviour {
                             switch (reply.getPerformative()) {
                                 case ACLMessage.AGREE:
                                     handleAgree(reply);
+                                    done = true;
                                     break;
                                 case ACLMessage.FAILURE:
                                     handleFailure(reply);

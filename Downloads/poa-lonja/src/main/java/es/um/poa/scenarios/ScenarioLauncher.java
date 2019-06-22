@@ -73,6 +73,7 @@ public class ScenarioLauncher {
 
 				// Buyers
 				List<AgentRefConfig> buyers = scenario.getBuyers();
+				System.out.println("NUMERO DE COMPRADORES: "  + scenario.getBuyers().size());
 				for(AgentRefConfig buyer: buyers) {
 					System.out.println(buyer);
 					Object[] buyerConfigArg = {buyer.getConfig()};

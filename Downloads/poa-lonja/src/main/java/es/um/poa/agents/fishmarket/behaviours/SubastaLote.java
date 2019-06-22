@@ -57,10 +57,8 @@ public class SubastaLote extends Behaviour {
 
         try {
             msg.setContentObject((Serializable) fish);
-            ((FishMarketAgent) agente).setSubastando(true);
         } catch (IOException e) {
             System.err.println(" ## FALLO ## ");
-            ((FishMarketAgent) agente).setSubastando(false);
 
         }
 
@@ -95,33 +93,29 @@ public class SubastaLote extends Behaviour {
                     protected void onTick() {
 
                         if (!lotesASubastar.isEmpty()) {
+
                             if (!((FishMarketAgent) agente).isSubastando()) {
                                 ((FishMarketAgent) agente).setSubastando(true);
                                 rondas = 1;
-                                if (!lotesASubastar.isEmpty()) {
-                                    Fish fish = lotesASubastar.get(0);
-                                    LinkedList<Buyer> buyers = database.getAllBuyers();
-                                    ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
+                                Fish fish = lotesASubastar.getFirst();
+                                lotesASubastar.removeFirst();
+                                LinkedList<Buyer> buyers = database.getAllBuyers();
+                                ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
 
-                                    System.out.println("[ LOTE " + fish.toString() + " ]");
-                                    System.out.println("[ PRECIO DE SALIDA: " + fish.getPrecioSalida() + " ]");
+                                System.out.println("[ LOTE " + fish.toString() + " ]");
+                                System.out.println("[ PRECIO DE SALIDA: " + fish.getPrecioSalida() + " ]");
 
-                                    System.out.print("[ DIA DE SUBASTA:");
-                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + " ]");
+                                System.out.print("[ DIA DE SUBASTA:");
+                                System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + " ]");
 
-                                    System.out.print("[ HORA DE SUBASTA:");
-                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + " ]");
-                                    agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
-                                               // TODO: A lo mejor esto deberia ir dentro del comportamiento
-                                }
+                                System.out.print("[ HORA DE SUBASTA:");
+                                System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + " ]");
+                                agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
+
                             } else {
-                                //done = true;
-
+                                done = true;
                             }
 
-                        } else {
-                           // System.out.println("[SE TERMINA]");
-                            done = true;
                         }
                     }
                 });
@@ -135,10 +129,8 @@ public class SubastaLote extends Behaviour {
 
     @Override
     public boolean done() {
-        if (done) {
-
+        if (done)
             System.out.println("[FINALIZACION][CIERRE DE LA SUBASTA]");
-        }
         return done;
     }
 }

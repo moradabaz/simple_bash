@@ -206,7 +206,6 @@ public class Subasta extends Behaviour {
     public boolean done() {
         if (done) {
             ((FishMarketAgent) agente).setSubastando(false);
-
         }
         return done;
     }
@@ -216,6 +215,7 @@ public class Subasta extends Behaviour {
 
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+        msg.setConversationId("subasta");
         msg.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
         Iterator it = message.getAllReceiver();
         while (it.hasNext()) {
@@ -229,7 +229,6 @@ public class Subasta extends Behaviour {
         } catch (IOException e) {
             System.err.println(" ## FALLO ## ");
             ((FishMarketAgent) agente).setSubastando(false);
-            ((FishMarketAgent) agente).removeFirstLote();
         }
 
         return msg;

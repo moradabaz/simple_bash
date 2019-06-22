@@ -2,6 +2,7 @@ package es.um.poa.agents.fishmarket.behaviours;
 
 import es.um.poa.Objetos.Seller;
 import es.um.poa.Objetos.SellerBuyerDB;
+import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.fishmarket.FishMarketAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -73,24 +74,30 @@ public class RegistroVendedorResp extends Behaviour {
 
     @Override
     public void action() {
-        ACLMessage request = ((FishMarketAgent) agente).receive(mensaje);
-        if (request != null) {
-            if (request.getPerformative() == ACLMessage.REQUEST) {
-                ACLMessage response = null;
-                response = prepareResponse(request);
-                if (response != null) {
-                    agente.send(response);
-                    System.out.println("Vendedores -> ");
-                    database.mostrarVendedores();
+        if (((FishMarketAgent)agente).getSimTime() != null) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_REGISTRO) {
+                ACLMessage request = ((FishMarketAgent) agente).receive(mensaje);
+                if (request != null) {
+                    if (request.getPerformative() == ACLMessage.REQUEST) {
+                        ACLMessage response = null;
+                        response = prepareResponse(request);
+                        if (response != null) {
+                            agente.send(response);
+                            System.out.println("Vendedores -> ");
+                            database.mostrarVendedores();
+                        }
+                        step++;
+                        //done = true;
+                    }
                 }
-                step++;
-                done = true;
+            } else {
+                done = false;
             }
         }
     }
 
     @Override
     public boolean done() {
-        return false;
+        return done;
     }
 }

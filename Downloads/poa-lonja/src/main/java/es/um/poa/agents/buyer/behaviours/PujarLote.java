@@ -149,9 +149,18 @@ public class PujarLote extends Behaviour {
                             try {
                                 Fish fish = (Fish) response.getContentObject();
                                 System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
+                                for (String s :  ((BuyerAgent) agent).getListaDeseos()) {
+                                    System.out.println(s);
+                                }
                                 ((BuyerAgent) agent).eliminarDeListaDeseos(fish.getNombre());
                                 ((BuyerAgent) agent).decremetnarSaldo(fish.getPrecioFinal());
                                 System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
+                                for (String s :  ((BuyerAgent) agent).getListaDeseos()) {
+                                    System.out.println(s);
+                                }
+                                if (((BuyerAgent) agent).getListaDeseos().isEmpty()) {
+                                    done = true;
+                                }
                             } catch (UnreadableException e) {
                                 e.printStackTrace();
                             }

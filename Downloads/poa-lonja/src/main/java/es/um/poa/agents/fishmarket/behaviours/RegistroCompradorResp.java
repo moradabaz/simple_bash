@@ -2,6 +2,8 @@ package es.um.poa.agents.fishmarket.behaviours;
 
 import es.um.poa.Objetos.Buyer;
 import es.um.poa.Objetos.SellerBuyerDB;
+import es.um.poa.agents.TimePOAAgent;
+import es.um.poa.agents.fishmarket.FishMarketAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -52,20 +54,26 @@ public class RegistroCompradorResp extends Behaviour {
             Buyer buyer = ((Buyer) request.getContentObject());
             String cif = buyer.getCif();
             String nombre = buyer.getNombre();
-            dataBase.registrarBuyer(buyer);
+            if (!dataBase.checkBuyerByID(buyer.getCif())) {
+                dataBase.registrarBuyer(buyer);
 
-            System.out.println("Mensaje recibido √");
-            System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " }");
+                System.out.println("Mensaje recibido √");
+                System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " } ACEPTADO");
 
-            // RESPUESTA
-            ACLMessage reply = request.createReply();
-            reply.setPerformative(ACLMessage.AGREE);
-            return reply;
+                // RESPUESTA
+                ACLMessage reply = request.createReply();
+                reply.setPerformative(ACLMessage.AGREE);
+                return reply;
+            } else {
+                ACLMessage refuseReply = request.createReply();
+                refuseReply.setPerformative(ACLMessage.REFUSE);
+                return refuseReply;
+            }
 
         } catch (UnreadableException e) {
             e.printStackTrace();
             ACLMessage reply = request.createReply();
-            reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+            reply.setPerformative(ACLMessage.FAILURE);
             return reply;
         }
 
@@ -89,25 +97,30 @@ public class RegistroCompradorResp extends Behaviour {
 
     @Override
     public void action() {
-        ACLMessage request = agente.receive(mensaje);
-        if (request != null) {
-
-            if (request.getPerformative() == ACLMessage.REQUEST) {
-                    ACLMessage response = null;
-                    try {
-                        response = prepareResponse(request);
-                    } catch (NotUnderstoodException e) {
-                        e.printStackTrace();
-                    } catch (RefuseException e) {
-                        e.printStackTrace();
+        if (((FishMarketAgent)agente).getSimTime() != null) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_REGISTRO) {
+                ACLMessage request = agente.receive(mensaje);
+                if (request != null) {
+                    if (request.getPerformative() == ACLMessage.REQUEST) {
+                        ACLMessage response = null;
+                        try {
+                            response = prepareResponse(request);
+                        } catch (NotUnderstoodException e) {
+                            e.printStackTrace();
+                        } catch (RefuseException e) {
+                            e.printStackTrace();
+                        }
+                        if (response != null) {
+                            agente.send(response);
+                            System.out.println("Compradores ");
+                            dataBase.mostrarCompradores();
+                        }
+                        step++;
+                        //done = true;
                     }
-                    if (response != null) {
-                        agente.send(response);
-                        System.out.println("Compradores ");
-                        dataBase.mostrarCompradores();
-                    }
-                    step = 1;
-                    done = true;
+                }
+            } else {
+                done = false;
             }
         }
     }
