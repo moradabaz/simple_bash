@@ -5,6 +5,8 @@ import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.behaviours.InicioCredito;
 import es.um.poa.agents.buyer.behaviours.PujarLote;
 import es.um.poa.agents.buyer.behaviours.RegistroComprador;
+import es.um.poa.agents.buyer.behaviours.RetiroCompra;
+import es.um.poa.productos.Fish;
 import jade.core.AID;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.domain.FIPANames;
@@ -14,6 +16,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 
@@ -25,13 +28,14 @@ public class BuyerAgent extends TimePOAAgent {
 
 	private boolean peticionInicioCreditoEnviada=false;
 	private LinkedList<String> listaDeseos = new LinkedList<String>();
+	private HashMap<Integer, Fish> articulosAdjudicados;
 	private double saldo = 0;
 	private double precioPropuesta = 0;
 
 	SequentialBehaviour seq;
 
 	public BuyerAgent() {
-
+		articulosAdjudicados = new HashMap<>();
 	}
 
 	/**
@@ -108,8 +112,9 @@ public class BuyerAgent extends TimePOAAgent {
 
 
 					MessageTemplate template = MessageTemplate.MatchConversationId("subasta");
-
 					addBehaviour(new PujarLote(this, template));
+
+					addBehaviour(new RetiroCompra(this));
 
 				//}
 			}else if (config==null){
@@ -196,7 +201,13 @@ public class BuyerAgent extends TimePOAAgent {
 		return precioPropuesta;
 	}
 
+	public HashMap<Integer, Fish> getAdjudicaciones() {
+		return articulosAdjudicados;
+	}
 
+	public void addArticuloAdjudicado(int tiempo, Fish fish) {
+		this.articulosAdjudicados.put(tiempo, fish);
+	}
 	public void eliminarDeListaDeseos(String nombre) {
 		listaDeseos.remove(nombre);
 	}

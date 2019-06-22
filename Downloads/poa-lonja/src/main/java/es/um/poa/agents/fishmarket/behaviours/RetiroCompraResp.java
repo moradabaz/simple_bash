@@ -1,13 +1,21 @@
 package es.um.poa.agents.fishmarket.behaviours;
 
 import es.um.poa.Objetos.Buyer;
+import es.um.poa.Objetos.Concepto;
+import es.um.poa.Objetos.Movimiento;
 import es.um.poa.Objetos.SellerBuyerDB;
+import es.um.poa.agents.TimePOAAgent;
+import es.um.poa.agents.fishmarket.FishMarketAgent;
+import es.um.poa.productos.Fish;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.AchieveREResponder;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -15,16 +23,17 @@ import jade.proto.AchieveREResponder;
  * una peticion del comprador de retirar el lote adquirido en la subasta.
  *
  */
-public class RetiroCompraResp extends AchieveREResponder {
+public class RetiroCompraResp extends Behaviour {
 
     private Agent agente;
     private MessageTemplate mensaje;
     private SellerBuyerDB dataBase = SellerBuyerDB.getInstance();
+    private boolean done;
 
     public RetiroCompraResp(Agent a, MessageTemplate mt) {
-        super(a, mt);
         this.agente = a;
         this.mensaje = mt;
+        this.done = false;
     }
 
     /**
@@ -34,25 +43,20 @@ public class RetiroCompraResp extends AchieveREResponder {
      * @param request
      * @return
      */
-    @Override
     public ACLMessage prepareResponse(ACLMessage request)  {
 
         try {
 
             Buyer buyer = ((Buyer) request.getContentObject());
-
             String cif = buyer.getCif();
             String nombre = buyer.getNombre();
-
             System.out.println("Mensaje recibido de Retiro de Compra");
 
             /*
              * en la subasta habria que buscar con el cif lo que no se ha retirado y ponerlo
              * a entregado
              * */
-
             dataBase.retirarCompra(cif);
-
             ACLMessage reply = request.createReply();
             reply.setPerformative(ACLMessage.AGREE);
             return reply;
@@ -68,7 +72,6 @@ public class RetiroCompraResp extends AchieveREResponder {
 
     }
 
-    @Override
     public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
         //Esta funcion es para decir que hemos enviado esto por pantalla
         System.out.println(
@@ -95,7 +98,89 @@ public class RetiroCompraResp extends AchieveREResponder {
         this.mensaje = msg;
     }
 
+    /*
+    @Override
+    public void action() {
+        if (((FishMarketAgent) agente).getSimTime() != null) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA) {
+                ACLMessage request = agente.receive(mensaje);
+                if (request != null) {
+                    if (request.getPerformative() == ACLMessage.REQUEST) {
+                        try {
+                                HashMap<Integer, Fish> adjudicaciones = (HashMap<Integer, Fish>) request.getContentObject();
+                            if (adjudicaciones != null) {
 
+                                Iterator<Integer> it = adjudicaciones.keySet().iterator();
+                                while (it.hasNext()) {
+                                    int tiempo = it.next();
+                                    Fish fish = adjudicaciones.get(tiempo);
+                                    double precio = fish.getPrecioFinal();
+                                    Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
+                                    dataBase.registrarVenta(buyer.getCif(), fish, precio);
+                                    ((FishMarketAgent) agente).incrementarIngreso(precio);
+                                    String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
+                                            buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
+                                    Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
+                                    dataBase.registrarMovimientoBuyer(buyer.getCif(), movimiento);
+                                }
+
+                                ACLMessage respone = request.createReply();
+                                respone.setPerformative(ACLMessage.AGREE);
+                                agente.send(respone);
+                                done = true;
+
+                            }
+                        } catch (UnreadableException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }*/
+
+    @Override
+    public void action() {
+        if (((FishMarketAgent) agente).getSimTime() != null) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA) {
+                ACLMessage request = agente.receive(mensaje);
+                if (request != null) {
+                    if (request.getPerformative() == ACLMessage.REQUEST) {
+                        try {
+                            HashMap<Integer, Fish> adjudicaciones = (HashMap<Integer, Fish>) request.getContentObject();
+                            if (adjudicaciones != null) {
+
+                                Iterator<Integer> it = adjudicaciones.keySet().iterator();
+                                while (it.hasNext()) {
+                                    int tiempo = it.next();
+                                    Fish fish = adjudicaciones.get(tiempo);
+                                    double precio = fish.getPrecioFinal();
+                                    Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
+                                    dataBase.registrarVenta(buyer.getCif(), fish, precio);
+                                    ((FishMarketAgent) agente).incrementarIngreso(precio);
+                                    String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
+                                            buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
+                                    Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
+                                    dataBase.registrarMovimientoBuyer(buyer.getCif(), movimiento);
+                                }
+
+                                ACLMessage respone = request.createReply();
+                                respone.setPerformative(ACLMessage.AGREE);
+                                agente.send(respone);
+                            }
+                        } catch (UnreadableException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean done() {
+        return done;
+    }
 }
 
 

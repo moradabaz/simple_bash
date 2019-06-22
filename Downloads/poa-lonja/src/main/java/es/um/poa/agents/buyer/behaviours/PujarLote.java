@@ -147,7 +147,9 @@ public class PujarLote extends Behaviour {
                         case ACLMessage.ACCEPT_PROPOSAL:
                             System.out.println("[NOTIFY_BUYER] PESCAICO PA MI");
                             try {
+
                                 Fish fish = (Fish) response.getContentObject();
+                                ((BuyerAgent) agent).addArticuloAdjudicado(((BuyerAgent) agent).getSimTime().getTime(), fish);
                                 System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
                                 for (String s :  ((BuyerAgent) agent).getListaDeseos()) {
                                     System.out.println(s);
@@ -172,7 +174,7 @@ public class PujarLote extends Behaviour {
                             break;
                     }
                 }
-            } else if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA){
+            } else if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_RETIRADA){
                 done = true;
             }
 

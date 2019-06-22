@@ -112,6 +112,8 @@ public class SubastaLote extends Behaviour {
                                 System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + " ]");
                                 agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
 
+
+
                             } else {
                                 //done = true;
                             }

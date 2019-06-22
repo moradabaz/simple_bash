@@ -59,6 +59,9 @@ public class FishMarketAgent extends TimePOAAgent {
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
 				addBehaviour(new SubastaLote(this, 1000));
 
+				MessageTemplate retiraCompramsg = MessageTemplate.MatchConversationId("retiro-compra");
+				addBehaviour(new RetiroCompraResp(this, retiraCompramsg));
+
 			}
 
 		} else {
@@ -112,5 +115,9 @@ public class FishMarketAgent extends TimePOAAgent {
 
 	public boolean isSubastando() {
 		return subastando;
+	}
+
+	public void incrementarIngreso(double ingreso) {
+		this.ingresos += ingreso;
 	}
 }

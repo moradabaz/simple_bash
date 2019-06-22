@@ -58,7 +58,7 @@ public class Buyer implements Serializable {
     }
 
     /*
-     * Retorna el identificador del comprador
+     * Retorna el identificador del compradore
      */
     public String getCif() {
         return identificador;
@@ -99,6 +99,7 @@ public class Buyer implements Serializable {
         this.articulosComprados = articulosComprados;
     }
 
+
     public String getNombre() {
         return nombre;
     }
@@ -114,5 +115,9 @@ public class Buyer implements Serializable {
     public void comprarLote(Fish fish) {
         if (!articulosComprados.contains(fish))
             this.articulosComprados.add(fish);
+    }
+
+    public void decrementarSaldo(double dinero) {
+        this.saldo-=dinero;
     }
 }

@@ -72,16 +72,14 @@ public class Subasta extends Behaviour {
                         if (tiempoFinal - tiempoInicialRonda <= TIEMPO_RONDA) {
                             double cantidadPujada = 0;
                             AID mejorCandidato = null;
-
-
                             ACLMessage propose = agente.receive(mt);
-                            if (propose != null) {                                                 // TODO: Es NULO
-                                if (propose.getPerformative() == ACLMessage.PROPOSE) {                      // TODO: Hay un NULLPOINTEREXCEPTION
+                            if (propose != null) {                                                                  // TODO: Es NULO
+                                if (propose.getPerformative() == ACLMessage.PROPOSE) {                              // TODO: Hay un NULLPOINTEREXCEPTION
                                     ACLMessage mensajeAdjudicacion = propose.createReply();
                                     mensajeAdjudicacion.setConversationId("subasta");
                                     mensajeAdjudicacion.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
 
-                                    Buyer buyer = database.getBuyer(propose.getSender().getLocalName());       // TODO: Es LONJA ???
+                                    Buyer buyer = database.getBuyer(propose.getSender().getLocalName());            // TODO: Es LONJA ???
                                     System.out.println(buyer.getCif() + " ha pujado");
 
                                     candidatos.put(((FishMarketAgent) agente).getSimTime().getTime(), propose);
