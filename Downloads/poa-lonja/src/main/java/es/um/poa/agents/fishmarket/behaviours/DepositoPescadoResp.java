@@ -59,7 +59,7 @@ public class DepositoPescadoResp extends Behaviour {
 
             if (database.checkSellerByID(seller.getCif())) {
                 LinkedList<Movimiento> movimientos = registrarLotes(seller);
-               // database.anadirLotes(seller.getListaPescado());
+                //database.anadirLotes(seller.getListaPescado());
                 database.registrarSeller(seller);
                 for (Movimiento movimiento : movimientos)
                     database.registarMovimientoSeller(seller.getCif(), movimiento); /// NULLPOINTEREXCEPTION

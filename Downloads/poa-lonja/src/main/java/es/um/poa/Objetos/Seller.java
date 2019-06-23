@@ -71,7 +71,7 @@ public class Seller implements Serializable {
     public void setListaPescado(List<Fish> listaPescado) {
         this.listaPescado = new LinkedList<>(listaPescado);
         for (Fish fish : this.listaPescado) {
-            fish.setIdComprador(cif);
+            fish.setIdVendedor(cif);
         }
     }
 
@@ -85,6 +85,7 @@ public class Seller implements Serializable {
         LinkedList<Movimiento> lista = new LinkedList<>();
         for (Fish fish : this.listaPescado) {
             fish.setEstadoVenta(EstadoVenta.REGISTRADO);
+            fish.setIdVendedor(this.getCif());
             Movimiento m = new Movimiento(cif, Concepto.REGISTRAR_LOTE);
             String descripcion = "Registro de Lote: " +  fish.toString();
             m.setDescripcion(descripcion);

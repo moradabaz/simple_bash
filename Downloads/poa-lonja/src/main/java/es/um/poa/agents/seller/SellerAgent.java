@@ -6,6 +6,7 @@ import es.um.poa.Objetos.SellerBuyerDB;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.seller.behaviours.DepositoPescado;
 import es.um.poa.agents.seller.behaviours.RegistroVendedor;
+import es.um.poa.agents.seller.behaviours.RetiroGanancia;
 import es.um.poa.productos.Fish;
 import es.um.poa.productos.FishConfig;
 import jade.core.AID;
@@ -86,6 +87,8 @@ public class SellerAgent extends TimePOAAgent {
 				seq.addSubBehaviour(new DepositoPescado(this, requestFish));                        // Añadimos el comporamiento de deposito de pescado
 
 				addBehaviour(seq);
+
+				addBehaviour(new RetiroGanancia(this));
 
 			} else {
 				doDelete();

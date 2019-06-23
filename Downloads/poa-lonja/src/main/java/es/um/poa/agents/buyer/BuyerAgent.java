@@ -116,6 +116,7 @@ public class BuyerAgent extends TimePOAAgent {
 
 					addBehaviour(new RetiroCompra(this));
 
+
 				//}
 			}else if (config==null){
 				doDelete();

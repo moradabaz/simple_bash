@@ -9,7 +9,6 @@ import es.um.poa.agents.fishmarket.FishMarketAgent;
 import es.um.poa.productos.Fish;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
-import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -72,16 +71,6 @@ public class RetiroCompraResp extends Behaviour {
 
     }
 
-    public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
-        //Esta funcion es para decir que hemos enviado esto por pantalla
-        System.out.println(
-                "Agente " + agente.getLocalName() + ": completado con exito: " + request.getSender().getLocalName());
-
-        ACLMessage inform = request.createReply();
-        inform.setPerformative(ACLMessage.INFORM);
-        return inform;
-    }
-
     public Agent getAgente() {
         return agente;
     }
@@ -102,7 +91,7 @@ public class RetiroCompraResp extends Behaviour {
     @Override
     public void action() {
         if (((FishMarketAgent) agente).getSimTime() != null) {
-            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA_COMPRADOR) {
                 ACLMessage request = agente.receive(mensaje);
                 if (request != null) {
                     if (request.getPerformative() == ACLMessage.REQUEST) {
@@ -142,7 +131,7 @@ public class RetiroCompraResp extends Behaviour {
     @Override
     public void action() {
         if (((FishMarketAgent) agente).getSimTime() != null) {
-            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA_COMPRADOR) {
                 ACLMessage request = agente.receive(mensaje);
                 if (request != null) {
                     if (request.getPerformative() == ACLMessage.REQUEST) {
@@ -158,6 +147,9 @@ public class RetiroCompraResp extends Behaviour {
                                     Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
                                     dataBase.registrarVenta(buyer.getCif(), fish, precio);
                                     ((FishMarketAgent) agente).incrementarIngreso(precio);
+                                    String idVendedor = fish.getIdVendedor();
+                                    System.out.println("Vendedor: " + idVendedor);
+                                    ((FishMarketAgent) agente).anadirVendedorGanancia(idVendedor, precio);
                                     String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
                                             buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
                                     Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);

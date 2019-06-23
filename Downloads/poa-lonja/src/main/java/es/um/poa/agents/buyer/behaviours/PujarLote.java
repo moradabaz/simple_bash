@@ -174,7 +174,7 @@ public class PujarLote extends Behaviour {
                             break;
                     }
                 }
-            } else if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_RETIRADA){
+            } else if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_RETIRADA_COMPRADOR){
                 done = true;
             }
 

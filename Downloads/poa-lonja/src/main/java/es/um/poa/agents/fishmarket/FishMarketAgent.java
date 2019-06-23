@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import static jade.lang.acl.MessageTemplate.MatchConversationId;
@@ -26,6 +27,7 @@ public class FishMarketAgent extends TimePOAAgent {
 	private double comisionPorLote = 0.2;
 	private boolean subastando = false;
 	private LinkedList<Fish> lotesASubastar = new LinkedList<Fish>();
+	private HashMap<String, Double> gananciasVendedore = new HashMap<String, Double>();
 
 	public void setup() {
 		super.setup();
@@ -61,6 +63,9 @@ public class FishMarketAgent extends TimePOAAgent {
 
 				MessageTemplate retiraCompramsg = MessageTemplate.MatchConversationId("retiro-compra");
 				addBehaviour(new RetiroCompraResp(this, retiraCompramsg));
+
+				MessageTemplate retiroGanancia = MessageTemplate.MatchConversationId("retiro-ganancia");
+				addBehaviour(new RetiroGananciaResp(this, retiroGanancia));
 
 			}
 
@@ -119,5 +124,22 @@ public class FishMarketAgent extends TimePOAAgent {
 
 	public void incrementarIngreso(double ingreso) {
 		this.ingresos += ingreso;
+	}
+
+	public void incrementarGanancia(String cif, double ingreso) {
+		double ganancia = gananciasVendedore.get(cif);
+		ganancia += ingreso;
+		gananciasVendedore.put(cif, ganancia);
+	}
+	public void anadirVendedorGanancia(String cif, double ingreso) {
+		if (gananciasVendedore.containsKey(cif)) {
+			incrementarGanancia(cif, ingreso);
+		} else {
+			this.gananciasVendedore.put(cif, ingreso);
+		}
+	}
+
+	public HashMap<String, Double> getGananciasVendedore() {
+		return gananciasVendedore;
 	}
 }

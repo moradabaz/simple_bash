@@ -69,7 +69,7 @@ public class RetiroCompra extends Behaviour {
     @Override
     public void action() {
         if (((BuyerAgent) agente).getSimTime() != null) {
-            if (((BuyerAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA) {
+            if (((BuyerAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA_COMPRADOR) {
                 switch (step) {
                     case 0:
                         ACLMessage request = null;

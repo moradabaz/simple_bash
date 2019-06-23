@@ -17,8 +17,9 @@ public class TimePOAAgent  extends POAAgent {
 	private SimTimeOntology simTime;
 
 	public static final int FASE_REGISTRO = 5;
-	public static final int FASE_SUBASTA = 25;
-	public static final int FASE_RETIRADA = 35;
+	public static final int FASE_SUBASTA = 20;
+	public static final int FASE_RETIRADA_COMPRADOR = 22;
+	public static final int FASE_RETIRADA_VENDEDOR = 25;
 
 
 	public void setup() {
@@ -84,8 +85,11 @@ public class TimePOAAgent  extends POAAgent {
 			return FASE_REGISTRO;
 		else if (simTime.getTime() < FASE_SUBASTA)
 			return FASE_SUBASTA;
+
+		else if (simTime.getTime() < FASE_RETIRADA_COMPRADOR)
+			return FASE_RETIRADA_COMPRADOR;
 		else
-			return FASE_RETIRADA;
+			return FASE_RETIRADA_VENDEDOR;
 	}
 
 
