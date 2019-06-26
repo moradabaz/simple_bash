@@ -88,7 +88,7 @@ public class SellerAgent extends TimePOAAgent {
 
 				addBehaviour(seq);
 
-				addBehaviour(new RetiroGanancia(this));
+
 
 			} else {
 				doDelete();
@@ -96,6 +96,14 @@ public class SellerAgent extends TimePOAAgent {
 		} else {
 			getLogger().info("ERROR", "Requiere fichero de cofiguración.");
 			doDelete();
+		}
+	}
+
+	@Override
+	public void checkAgentBehaviours() {
+		int faseActual = getFaseActual();
+		if (faseActual == FASE_RETIRADA_VENDEDOR) {
+			addBehaviour(new RetiroGanancia(this));
 		}
 	}
 

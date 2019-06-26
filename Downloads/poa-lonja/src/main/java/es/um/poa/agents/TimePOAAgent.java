@@ -13,7 +13,7 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
 
-public class TimePOAAgent  extends POAAgent {
+public abstract class TimePOAAgent  extends POAAgent {
 	private SimTimeOntology simTime;
 
 	public static final int FASE_REGISTRO = 5;
@@ -66,6 +66,7 @@ public class TimePOAAgent  extends POAAgent {
 			((POAAgent)getAgent()).getLogger().info("TimerUpdaterBehaviour", sto.toString());
 			simTime = sto;
 			getLogger().info("TimerUpdaterBehaviour", simTime.toString());
+			checkAgentBehaviours();
 			if(simTime.getSimState().equals(SimTimeOntology.END)) {
 				ACLMessage cancel = inform.createReply();
 				cancel.setPerformative(ACLMessage.CANCEL);
@@ -91,6 +92,8 @@ public class TimePOAAgent  extends POAAgent {
 		else
 			return FASE_RETIRADA_VENDEDOR;
 	}
+
+	public abstract void checkAgentBehaviours();
 
 
 	protected class CheckTimeNotNullBehav extends Behaviour {

@@ -28,6 +28,9 @@ public class FishMarketAgent extends TimePOAAgent {
 	private boolean subastando = false;
 	private LinkedList<Fish> lotesASubastar = new LinkedList<Fish>();
 	private HashMap<String, Double> gananciasVendedore = new HashMap<String, Double>();
+	private boolean isSubastaON = false;
+	private boolean isRetiradaCompraON = false;
+	private boolean isRetiradaGananciaON = false;
 
 	public void setup() {
 		super.setup();
@@ -59,13 +62,11 @@ public class FishMarketAgent extends TimePOAAgent {
 				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("deposito-fish");
 				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
-				addBehaviour(new SubastaLote(this, 1000));
 
-				MessageTemplate retiraCompramsg = MessageTemplate.MatchConversationId("retiro-compra");
-				addBehaviour(new RetiroCompraResp(this, retiraCompramsg));
 
-				MessageTemplate retiroGanancia = MessageTemplate.MatchConversationId("retiro-ganancia");
-				addBehaviour(new RetiroGananciaResp(this, retiroGanancia));
+
+
+
 
 			}
 
@@ -74,7 +75,33 @@ public class FishMarketAgent extends TimePOAAgent {
 			doDelete();
 		}
 	}
-	
+
+	@Override
+	public void checkAgentBehaviours() {
+		int faseActual = getFaseActual();
+		switch (faseActual) {
+			case FASE_SUBASTA:
+				if (!isSubastaON) {
+					addBehaviour(new SubastaLote(this, 1000));
+					isSubastaON = true;
+				}
+				break;
+			case FASE_RETIRADA_COMPRADOR:
+				if (!isRetiradaCompraON) {
+					MessageTemplate retiraCompramsg = MessageTemplate.MatchConversationId("retiro-compra");
+					addBehaviour(new RetiroCompraResp(this, retiraCompramsg));
+					isRetiradaCompraON = true;
+				}
+				break;
+			case FASE_RETIRADA_VENDEDOR:
+				if (!isRetiradaGananciaON) {
+					MessageTemplate retiroGanancia = MessageTemplate.MatchConversationId("retiro-ganancia");
+					addBehaviour(new RetiroGananciaResp(this, retiroGanancia));
+					isRetiradaGananciaON = true;
+				}
+		}
+	}
+
 	private FishMarketAgentConfig initAgentFromConfigFile(String fileName) {
 		FishMarketAgentConfig config = null;
 		try {

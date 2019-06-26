@@ -31,6 +31,8 @@ public class BuyerAgent extends TimePOAAgent {
 	private HashMap<Integer, Fish> articulosAdjudicados;
 	private double saldo = 0;
 	private double precioPropuesta = 0;
+	private boolean comportamientoSubastaON = false;
+	private boolean comportaminetoRetiradaON = false;
 
 	SequentialBehaviour seq;
 
@@ -110,11 +112,11 @@ public class BuyerAgent extends TimePOAAgent {
 
 					 * */
 
-
+/*
 					MessageTemplate template = MessageTemplate.MatchConversationId("subasta");
 					addBehaviour(new PujarLote(this, template));
 
-					addBehaviour(new RetiroCompra(this));
+					addBehaviour(new RetiroCompra(this));*/
 
 
 				//}
@@ -151,6 +153,28 @@ public class BuyerAgent extends TimePOAAgent {
 		} else {
 			getLogger().info("ERROR", "Requiere fichero de cofiguración.");
 			doDelete();
+		}
+	}
+
+	@Override
+	public void checkAgentBehaviours() {
+		int faseActual = this.getFaseActual();
+		switch (faseActual) {
+			case FASE_SUBASTA:
+				if (!comportamientoSubastaON) {
+					MessageTemplate template = MessageTemplate.MatchConversationId("subasta");
+					addBehaviour(new PujarLote(this, template));
+					comportamientoSubastaON = true;
+				}
+				break;
+
+			case FASE_RETIRADA_COMPRADOR:
+				if (!comportaminetoRetiradaON) {
+					addBehaviour(new RetiroCompra(this));
+					comportaminetoRetiradaON = true;
+				}
+			default:
+				break;
 		}
 	}
 
