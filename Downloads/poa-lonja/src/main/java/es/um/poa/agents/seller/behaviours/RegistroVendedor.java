@@ -27,23 +27,19 @@ public class RegistroVendedor extends Behaviour {
 
 
     public void handleAgree(ACLMessage agree) {
-        System.out.println("El agente Lonja ha aceptado su peticion");
-    }
-
-    public void handleInform(ACLMessage inform) {
-        System.out.println("El agente vendedor" + agente.getLocalName() + " se ha registrado correctamente");
+        System.out.println("++ El agente " + ((SellerAgent)agente).getLocalName() + " HA SIDO REGISTRADO CORRECTAMENTE");
     }
 
     public void handleRefuse(ACLMessage refuse) {
-        System.out.println("El agente " + refuse.getSender().getLocalName() + " ha rechazado la solicitud del agente vendedor"
+        System.out.println("-- El agente " + refuse.getSender().getLocalName() + " ha rechazado la solicitud del agente vendedor"
                 + agente.getLocalName());
     }
 
     public void handleFailure(ACLMessage failure) {
         if (failure.getSender().equals(myAgent.getAMS())) {
-            System.out.println("Responder does not exist");
+            System.out.println("-- Responder does not exist");
         } else {
-            System.out.println("Agent " + failure.getSender().getLocalName()
+            System.out.println("-- Agent " + failure.getSender().getLocalName()
                     + " failed to perform the requested action: " + agente.getLocalName());
         }
     }
@@ -83,13 +79,11 @@ public class RegistroVendedor extends Behaviour {
                                     done = true;
                                     break;
                                 case ACLMessage.REFUSE:
-                                    handleFailure(reply);
+                                    handleRefuse(reply);
                                     break;
                                 case ACLMessage.FAILURE:
                                     handleFailure(reply);
                                     break;
-                             //   case ACLMessage.INFORM:
-                             //       handleInform(reply);
                             }
                             done = true;
                         }

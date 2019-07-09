@@ -73,9 +73,6 @@ public class InicioCredito extends Behaviour {
                         case ACLMessage.REFUSE:
                             handleRefuse(reply);
                             break;
-                       // case ACLMessage.INFORM:
-                       //     handleInform(reply);
-                       //     break;
                     }
                     done = true;
                 }
@@ -83,7 +80,7 @@ public class InicioCredito extends Behaviour {
     }
 
     private void handleAgree(ACLMessage reply) {
-        System.out.println("La lonja ha aceptado la solicitud de inicio de credito");
+        System.out.println("El agente " + agente.getLocalName() + " ha depositado su credito con exito");
     }
 
     @Override

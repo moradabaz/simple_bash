@@ -32,7 +32,7 @@ public class RegistroComprador extends Behaviour {
      * @param inform
      */
     public void handleInform(ACLMessage inform) {
-        System.out.println(" >> El mensaje " + inform.getConversationId() + " ha sido notificado correctamente");
+        System.out.println(" El mensaje " + inform.getConversationId() + " ha sido notificado correctamente");
         System.out.println("[TIEMPO_REGISTRO] -> " + ((BuyerAgent) agente).getSimTime().toString());
     }
 
@@ -59,6 +59,9 @@ public class RegistroComprador extends Behaviour {
 
     }
 
+    public void handleAgree(ACLMessage agree) {
+        System.out.println("++ El agente " + ((BuyerAgent) agente).getLocalName() + " HA SIDO REGISTRADO CORRECTAMENTE");
+    }
 
     public Agent getAgente() {
         return agente;
@@ -68,9 +71,7 @@ public class RegistroComprador extends Behaviour {
         this.agente = agente;
     }
 
-    public void handleAgree(ACLMessage agree) {
-        System.out.println("El agente Lonja ha aceptado su peticion");
-    }
+
 
     public ACLMessage getMensaje() {
         return mensaje;
@@ -102,9 +103,6 @@ public class RegistroComprador extends Behaviour {
                                 case ACLMessage.REFUSE:
                                     handleRefuse(reply);
                                     break;
-                              //  case ACLMessage.INFORM:
-                              //      handleInform(reply);
-                              //      break;
                             }
                             done = true;
                         }

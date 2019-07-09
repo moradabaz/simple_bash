@@ -50,17 +50,12 @@ public class RegistroCompradorResp extends Behaviour {
 
         try {
 
-            System.out.println(">>>>>>> Estamos preparando la respuesta " + request.getContentObject());
             Buyer buyer = ((Buyer) request.getContentObject());
             String cif = buyer.getCif();
             String nombre = buyer.getNombre();
             if (!dataBase.checkBuyerByID(buyer.getCif())) {
                 dataBase.registrarBuyer(buyer);
-
-                System.out.println("Mensaje recibido √");
-                System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " } ACEPTADO");
-
-                // RESPUESTA
+                System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " } ACEPTADO PARA REGISTRO");
                 ACLMessage reply = request.createReply();
                 reply.setPerformative(ACLMessage.AGREE);
                 return reply;
@@ -110,13 +105,9 @@ public class RegistroCompradorResp extends Behaviour {
                         } catch (RefuseException e) {
                             e.printStackTrace();
                         }
-                        if (response != null) {
+                        if (response != null)
                             agente.send(response);
-                            System.out.println("Compradores ");
-                            dataBase.mostrarCompradores();
-                        }
                         step++;
-                        //done = true;
                     }
                 }
             } else {

@@ -17,9 +17,6 @@ import java.util.Set;
  */
 public class SellerBuyerDB {
 
-    private static final String PREFIX_BUYER = "BU";
-    private static final String PREFIX_SELLER = "SE";
-
     private static SellerBuyerDB ourInstance;
     private Map<String, Seller> sellers;
     private Map<String, Buyer> buyers;
@@ -51,7 +48,7 @@ public class SellerBuyerDB {
      * Registra un Vendedor en el mapa de compradores
      * @param seller Vendedor a registrar
      */
-    public void registrarSeller(Seller seller) {
+    public void actualizarSeller(Seller seller) {
         sellers.put(seller.getCif(), seller);
     }
 
@@ -300,7 +297,7 @@ public class SellerBuyerDB {
             buyer.decrementarSaldo(articulo.getPrecioFinal());
             buyer.comprarLote(articulo);
             buyers.put(buyercif, buyer);
-
+            System.out.println("[DATABASE] Se registra una venta del articulo " + articulo.getNombre() + " por valor de "+ precioFinal + " del comprador " + buyercif);
         }
     }
 

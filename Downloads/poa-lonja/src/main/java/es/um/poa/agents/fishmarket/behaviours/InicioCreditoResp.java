@@ -2,10 +2,10 @@ package es.um.poa.agents.fishmarket.behaviours;
 
 import es.um.poa.Objetos.Buyer;
 import es.um.poa.Objetos.SellerBuyerDB;
+import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.fishmarket.FishMarketAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
-import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -32,23 +32,17 @@ public class InicioCreditoResp extends Behaviour {
         this.step = 0;
     }
 
-    //@Override
     public ACLMessage prepareResponse(ACLMessage request)  {
-
         try {
-
-            Buyer buyer = (Buyer) request.getContentObject();   // AQUI HAY UN CASTING
+            Buyer buyer = (Buyer) request.getContentObject();
             String cif = buyer.getCif();
             if (dataBase.checkBuyerByID(cif)) {
                 double creditoAnadir = buyer.getSaldo();
-
-                System.out.println(" $$$$$ Mensaje recibido de inicio de credito");
-
-                // Se supone que siempre podemos a�adir el credito, mandamos el AGREE
                 dataBase.iniciarCreditoBuyer(cif, creditoAnadir);
-
                 ACLMessage reply = request.createReply();
                 reply.setPerformative(ACLMessage.AGREE);
+                System.out.println("Se acepta el deposito de credito del comprador [" + buyer.getCif() + "] cuyo nombre es [" + buyer.getNombre() + "]");
+                System.out.println("Saldo: " + buyer.getSaldo());
                 return reply;
             } else {
                 ACLMessage reply = request.createReply();
@@ -63,17 +57,6 @@ public class InicioCreditoResp extends Behaviour {
             return reply;
         }
 
-    }
-
-    //@Override
-    public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException {
-        //Esta funcion es para decir que hemos enviado esto por pantalla
-        System.out.println("Se ha anyadido el credito correctamente");
-        System.out.println("[TIEMPO_RESPUESTA] ++ " + ((FishMarketAgent) agente).getSimTime());
-
-        ACLMessage inform = request.createReply();
-        inform.setPerformative(ACLMessage.INFORM);
-        return inform;
     }
 
     public Agent getAgente() {
@@ -94,16 +77,19 @@ public class InicioCreditoResp extends Behaviour {
 
     @Override
     public void action() {
-        ACLMessage request = agente.receive(mensaje);
-        if (request != null) {
-
-            if (request.getPerformative() == ACLMessage.REQUEST) {
-                ACLMessage response = null;
-                response = prepareResponse(request);
-                if (response != null) {
-                    agente.send(response);
+        if (((FishMarketAgent)agente).getSimTime() != null) {
+            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_REGISTRO) {
+                ACLMessage request = agente.receive(mensaje);
+                if (request != null) {
+                    if (request.getPerformative() == ACLMessage.REQUEST) {
+                        ACLMessage response = null;
+                        response = prepareResponse(request);
+                        if (response != null) {
+                            agente.send(response);
+                        }
+                    }
                 }
-                step = 1;
+            } else {
                 done = true;
             }
         }

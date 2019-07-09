@@ -79,7 +79,6 @@ public class PujarLote extends Behaviour {
      */
     public boolean esFavorable(Fish fishEnSubasta, double propuesta, double saldo) {
         return (fishEnSubasta.getPrecioFinal() <= propuesta && saldo > propuesta);
-
     }
 
     /**
@@ -92,44 +91,13 @@ public class PujarLote extends Behaviour {
         double precio = Math.abs(Math.random() * (fish.getPrecioMinimo() - fish.getPrecioFinal() + 1) + fish.getPrecioFinal());
         return precio;
     }
-/*
+
+    
     @Override
     public void action() {
-        switch (step) {
-            case 0:
-                ACLMessage subastaRequest = agent.receive(cfp);
-                if (subastaRequest != null) {
-                    if (subastaRequest.getPerformative() == ACLMessage.CFP) {
-                        if (((BuyerAgent) agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
-                            ACLMessage propuesta = null;
-                            try {
-                                propuesta = prepareResponse(subastaRequest);
-                                agent.send(propuesta);
-                                //  step++;
-                            } catch (NotUnderstoodException e) {
-                                e.printStackTrace();
-                            } catch (RefuseException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-
-
-                        }
-                    }
-                }
-                break;
-        }
-
-    }
-
-*/
-    @Override
-    public void action() {
-
         ACLMessage subastaRequest = agent.receive(cfp);
         if (subastaRequest != null) {
             if (((BuyerAgent)agent).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
-                System.out.println("[NOTIFY_BUYER] HE RECIBIDO UNA PROPUESTA");
                 ACLMessage propuesta = null;
                 try {
                     propuesta = prepareResponse(subastaRequest);
@@ -145,21 +113,13 @@ public class PujarLote extends Behaviour {
                 if (response != null) {
                     switch (response.getPerformative()) {
                         case ACLMessage.ACCEPT_PROPOSAL:
-                            System.out.println("[NOTIFY_BUYER] PESCAICO PA MI");
                             try {
-
                                 Fish fish = (Fish) response.getContentObject();
                                 ((BuyerAgent) agent).addArticuloAdjudicado(((BuyerAgent) agent).getSimTime().getTime(), fish);
-                                System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
-                                for (String s :  ((BuyerAgent) agent).getListaDeseos()) {
-                                    System.out.println(s);
-                                }
+
                                 ((BuyerAgent) agent).eliminarDeListaDeseos(fish.getNombre());
                                 ((BuyerAgent) agent).decremetnarSaldo(fish.getPrecioFinal());
-                                System.out.println("[NOTIFY] NUM LISTA " + ((BuyerAgent) agent).getListaDeseos().size());
-                                for (String s :  ((BuyerAgent) agent).getListaDeseos()) {
-                                    System.out.println(s);
-                                }
+
                                 if (((BuyerAgent) agent).getListaDeseos().isEmpty()) {
                                     done = true;
                                 }
@@ -168,7 +128,6 @@ public class PujarLote extends Behaviour {
                             }
                             break;
                         case ACLMessage.REJECT_PROPOSAL:
-                            System.out.println("[NOTIFY_BUYER] ME LO HAN DENEGAOO, HIJOS DE PUTA");
                             break;
                         default:
                             break;

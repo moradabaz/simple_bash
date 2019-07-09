@@ -32,9 +32,9 @@ public class SellerBuyerDBTest {
         seller2 = new Seller(randomAlphaNumeric(12), "Carlos Tomas");
         seller3 = new Seller(randomAlphaNumeric(12), "Pedro Angel");
         buyer1 = new Buyer("BY500", "Jose miguel", 1300);
-        database.registrarSeller(seller1);
-        database.registrarSeller(seller2);
-        database.registrarSeller(seller3);
+        database.actualizarSeller(seller1);
+        database.actualizarSeller(seller2);
+        database.actualizarSeller(seller3);
         database.registrarBuyer(buyer1);
     }
 

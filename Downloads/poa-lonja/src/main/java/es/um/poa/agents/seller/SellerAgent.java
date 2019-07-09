@@ -78,7 +78,7 @@ public class SellerAgent extends TimePOAAgent {
 				try {
 					LinkedList<Fish> listaFish = parseFish(pescados);                            // Sacamos la lista de lotes de las configuraciones
 					seller.setListaPescado(listaFish);                                            // insertamos los lotes en la lista de lotes del vendedr
-					database.anadirLotes(listaFish);
+					database.anadirLotes(seller.getListaPescado());
 					requestFish.setContentObject((Serializable) seller);                        //
 				} catch (IOException e) {
 

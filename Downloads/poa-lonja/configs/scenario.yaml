@@ -2,7 +2,7 @@
 name: "EscenarioEjemplo"
 description: "Ejemplo para hacer una configuración YAML"
 clock:
-  unitTimeMillis: 1000
+  unitTimeMillis: 500
   numUnitDay: 25
   numSimDays: 1
 fishMarket:
@@ -18,9 +18,9 @@ buyers:
   - name: "BY336"
     config: "configs/buyerType4.yaml"
 sellers:
-  - name: "SE004"
-    config: "configs/sellerType1.yaml"
   - name: "SE014"
     config: "configs/sellerType2.yaml"
+  - name: "SE004"
+    config: "configs/sellerType1.yaml"
   - name: "SE206"
     config: "configs/sellerType3.yaml"

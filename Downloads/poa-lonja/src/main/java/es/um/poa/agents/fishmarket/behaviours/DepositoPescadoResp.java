@@ -41,7 +41,6 @@ public class DepositoPescadoResp extends Behaviour {
      * @return
      */
     public ACLMessage prepareResponse(ACLMessage request) {
-        System.out.println("Mensaje recibido √");
 
         try {
             System.out.println("Solicitud de deposito recibida : " +   request.getContentObject().toString());
@@ -49,28 +48,19 @@ public class DepositoPescadoResp extends Behaviour {
             System.out.println("Solicitud de deposito NO recibida correctament : ");
         }
 
-
         try {
-
-            System.out.println(" " +   request.getContentObject().toString());
-            System.out.println(">>>>>>> Estamos preparando la respuesta " + request.getContentObject());
-
             Seller seller = (Seller) request.getContentObject();
-
             if (database.checkSellerByID(seller.getCif())) {
                 LinkedList<Movimiento> movimientos = registrarLotes(seller);
-                //database.anadirLotes(seller.getListaPescado());
-                database.registrarSeller(seller);
+                database.actualizarSeller(seller);
                 for (Movimiento movimiento : movimientos)
-                    database.registarMovimientoSeller(seller.getCif(), movimiento); /// NULLPOINTEREXCEPTION
-
-                // RESPUESTA
+                    database.registarMovimientoSeller(seller.getCif(), movimiento);
                 ACLMessage agreeReply = request.createReply();
                 agreeReply.setPerformative(ACLMessage.AGREE);
+                System.out.println("El agente lonja acepta el deposito de lotes del vendedor " + seller.getNombre() + " cuyo cif es: "+ seller.getCif());
                 return agreeReply;
 
             } else {
-
                 System.out.println("No existe ningun vendedor cuyo en la base de datos para depositar");
                 ACLMessage refuseReply = request.createReply();
                 refuseReply.setPerformative(ACLMessage.REFUSE);
@@ -107,7 +97,7 @@ public class DepositoPescadoResp extends Behaviour {
                     agent.send(response);
                     database.mostrarVendedores();
                     step++;
-                    done = true;
+                   // done = true;
                 }
             }
         }

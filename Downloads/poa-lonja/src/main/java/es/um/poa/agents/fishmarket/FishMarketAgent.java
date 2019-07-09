@@ -23,8 +23,9 @@ import static jade.lang.acl.MessageTemplate.MatchConversationId;
  */
 public class FishMarketAgent extends TimePOAAgent {
 
+	public static final double COMISION_LOTE = 0.12;
+
 	private double ingresos = 0;
-	private double comisionPorLote = 0.2;
 	private boolean subastando = false;
 	private LinkedList<Fish> lotesASubastar = new LinkedList<Fish>();
 	private HashMap<String, Double> gananciasVendedore = new HashMap<String, Double>();
@@ -168,5 +169,10 @@ public class FishMarketAgent extends TimePOAAgent {
 
 	public HashMap<String, Double> getGananciasVendedore() {
 		return gananciasVendedore;
+	}
+
+
+	public double getIngresos() {
+		return ingresos;
 	}
 }

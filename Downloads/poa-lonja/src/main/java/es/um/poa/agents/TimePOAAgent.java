@@ -16,7 +16,7 @@ import jade.proto.SubscriptionInitiator;
 public abstract class TimePOAAgent  extends POAAgent {
 	private SimTimeOntology simTime;
 
-	public static final int FASE_REGISTRO = 5;
+	public static final int FASE_REGISTRO = 6;
 	public static final int FASE_SUBASTA = 20;
 	public static final int FASE_RETIRADA_COMPRADOR = 22;
 	public static final int FASE_RETIRADA_VENDEDOR = 25;
@@ -71,7 +71,6 @@ public abstract class TimePOAAgent  extends POAAgent {
 				ACLMessage cancel = inform.createReply();
 				cancel.setPerformative(ACLMessage.CANCEL);
 				getAgent().send(cancel);
-
 				getAgent().doDelete();
 			}
 		}
@@ -95,27 +94,4 @@ public abstract class TimePOAAgent  extends POAAgent {
 
 	public abstract void checkAgentBehaviours();
 
-
-	protected class CheckTimeNotNullBehav extends Behaviour {
-
-		private boolean done;
-
-		public CheckTimeNotNullBehav() {
-			done = false;
-		}
-
-		@Override
-		public void action() {
-			if (getSimTime() != null) {
-				System.out.println(" >>> EL tiempo no es nulo: " + getSimTime());
-				done = true;
-			}
-
-		}
-
-		@Override
-		public boolean done() {
-			return done;
-		}
-	}
 }

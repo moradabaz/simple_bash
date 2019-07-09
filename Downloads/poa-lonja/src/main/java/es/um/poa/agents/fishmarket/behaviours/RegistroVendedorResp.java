@@ -42,14 +42,13 @@ public class RegistroVendedorResp extends Behaviour {
      * @return Devuelve una respuesta adecuada
      */
     public ACLMessage prepareResponse(ACLMessage request) {
-        System.out.println("Agente " + agente.getLocalName() + ": Iniciador: " + request.getSender().getLocalName());
-
         try {
             Seller seller = (Seller) request.getContentObject();        // Recoje el objeto Seller (ERROR DE CAST: le llega la lista de pescado)
             if (!database.checkSellerByID(seller.getCif())) {           // Comprueba que NO si esta en la BBDD para registrarlo
-                database.registrarSeller(seller);
+                database.actualizarSeller(seller);
                 ACLMessage agreeReply = request.createReply();
                 agreeReply.setPerformative(ACLMessage.AGREE);
+                System.out.println("La peticion del agente vendedor "+ seller.getNombre() + ", cuyo CIF es " + seller.getCif() + " HA SIDO ACEPTADA");
                 return agreeReply;
             } else {
                 ACLMessage refuseReply = request.createReply();
@@ -57,20 +56,12 @@ public class RegistroVendedorResp extends Behaviour {
                 return refuseReply;
             }
         } catch (UnreadableException e) {
-            //e.printStackTrace();
             ACLMessage refuseReply = request.createReply();
             refuseReply.setPerformative(ACLMessage.FAILURE);
             return refuseReply;
         }
     }
 
-    public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
-        System.out.println("[TIEMPO_RESPUESTA] ++ " + ((FishMarketAgent) agente).getSimTime());
-
-        ACLMessage informMessage = request.createReply();
-        informMessage.setPerformative(ACLMessage.INFORM);
-        return informMessage;
-    }
 
     @Override
     public void action() {
@@ -83,11 +74,8 @@ public class RegistroVendedorResp extends Behaviour {
                         response = prepareResponse(request);
                         if (response != null) {
                             agente.send(response);
-                            System.out.println("Vendedores -> ");
-                            database.mostrarVendedores();
                         }
                         step++;
-                        //done = true;
                     }
                 }
             } else {

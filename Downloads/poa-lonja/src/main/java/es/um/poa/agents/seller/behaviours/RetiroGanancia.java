@@ -84,16 +84,18 @@ public class RetiroGanancia extends Behaviour {
                             switch (response.getPerformative()) {
                                 case ACLMessage.AGREE:
                                     handleInform(response);
-
+                                   // done = true;
                                     break;
                                 case ACLMessage.FAILURE:
                                     handleFailure(response);
+                                    break;
                                 case ACLMessage.REFUSE:
                                     handleRefuse(response);
                                     break;
                                 default:
                                     break;
                             }
+
                         }
                         break;
                 }

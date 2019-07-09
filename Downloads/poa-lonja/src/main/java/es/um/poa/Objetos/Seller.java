@@ -21,6 +21,7 @@ public class Seller implements Serializable {
     private String nombre;
     private LinkedList<Fish> listaPescado;
     private LinkedList<Fish> pescadoVendido;
+    private double ganancia;
 
 
     public Seller(String cif, String nombre) {
@@ -28,6 +29,7 @@ public class Seller implements Serializable {
         this.nombre = nombre;
         this.listaPescado = new LinkedList<>();
         this.pescadoVendido = new LinkedList<>();
+        this.ganancia = 0;
     }
 
     public Seller(String cif, String nombre, List<Fish> listaPescado) {
@@ -35,6 +37,7 @@ public class Seller implements Serializable {
         this.nombre = nombre;
         this.listaPescado = new LinkedList<Fish>(listaPescado);
         this.pescadoVendido = new LinkedList<>();
+        this.ganancia = 0;
     }
 
 
@@ -167,5 +170,19 @@ public class Seller implements Serializable {
     public boolean estaVendido(Fish fish) {
         return pescadoVendido.contains(fish);
     }
+
+    public double getGanancia() {
+        return ganancia;
+    }
+
+    public void incrementarGanancia(double ganancia) {
+        this.ganancia += ganancia;
+    }
+
+    public void decrementarGanacia(double ganancia) {
+        this.ganancia -= ganancia;
+    }
+
+
 
 }

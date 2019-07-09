@@ -80,6 +80,7 @@ public class SubastaLote extends Behaviour {
         if (((FishMarketAgent) agente).getSimTime() != null) {
             if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
                 Random random = new Random();
+
                 /**
                  * Este comportamiento ejecuta la gestion de las posibles respuestas a la
                  * subasta.
@@ -104,14 +105,15 @@ public class SubastaLote extends Behaviour {
                                     LinkedList<Buyer> buyers = database.getAllBuyers();
                                     ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
 
-                                    System.out.println("[ LOTE " + fish.toString() + " ]");
-                                    System.out.println("[ PRECIO DE SALIDA: " + fish.getPrecioSalida() + " ]");
+                                    System.out.println("[NUEVO LOTE]");
+                                    System.out.println("[LOTE " + fish.toString() + " ]");
+                                    System.out.println("[PRECIO DE SALIDA: " + fish.getPrecioSalida() + "]");
 
-                                    System.out.print("[ DIA DE SUBASTA:");
-                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + " ]");
+                                    System.out.print("[DIA DE SUBASTA:");
+                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + "]");
 
-                                    System.out.print("[ HORA DE SUBASTA:");
-                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + " ]");
+                                    System.out.print("[HORA DE SUBASTA:");
+                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + "]");
                                     agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
                                 } else {
                                     done = true;

@@ -26,14 +26,10 @@ public class DepositoPescado extends Behaviour {
         System.out.println("El agente vendedor" + agente.getLocalName() + " ha depositado sus lotes con exito");
     }
 
-    public void handleRefuse(ACLMessage refuse) {
-        System.out.println("El agente " + refuse.getSender().getLocalName() + " ha rechazado la solicitud de deposito de lotes"
-                + agente.getLocalName());
-    }
 
     public void handleFailure(ACLMessage failure) {
         if (failure.getSender().equals(myAgent.getAMS())) {
-            System.out.println("Responder does not exist");
+            System.out.println("[FAIL] El vendedor " + getAgente().getLocalName() + " NO HA GANADO NADA");
         } else {
             System.out.println("Agent " + failure.getSender().getLocalName()
                     + " failed to perform the requested action: " + agente.getLocalName());
@@ -61,6 +57,7 @@ public class DepositoPescado extends Behaviour {
          switch (step) {
              case 0:
                  agente.send(mensaje);
+                 System.out.println(getAgente().getLocalName() +": Envio un mensjae de deposito");
                  step++;
                  break;
              case 1:
@@ -77,10 +74,6 @@ public class DepositoPescado extends Behaviour {
                          case ACLMessage.FAILURE:
                              handleFailure(reply);
                              break;
-                        // case ACLMessage.INFORM:
-                        //     handleInform(reply);
-                        //     done = true;
-                        //     break;
                      }
                  }
          }

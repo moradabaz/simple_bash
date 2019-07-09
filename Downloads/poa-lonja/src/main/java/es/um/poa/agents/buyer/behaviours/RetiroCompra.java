@@ -34,7 +34,6 @@ public class RetiroCompra extends Behaviour {
     }
 
     public void handleInform(ACLMessage inform) {
-        System.out.println(" El buyer ha cobrado sus perrrillas");
         ListaMovimientos lista = database.getListaMovimientosBuyer(((BuyerAgent) agente).getLocalName());
         if (lista != null) {
             for (Movimiento m : lista.getMovimientos()) {
@@ -87,14 +86,14 @@ public class RetiroCompra extends Behaviour {
                         ACLMessage response = ((BuyerAgent) agente).receive();
                         if (response != null) {
                             switch (response.getPerformative()) {
-                                case ACLMessage.AGREE:
+                                case ACLMessage.ACCEPT_PROPOSAL:
                                     handleInform(response);
-                                    this.done = false;
                                     done = true;
                                     break;
                                 case ACLMessage.FAILURE:
                                     handleFailure(response);
-                                case ACLMessage.REFUSE:
+                                    break;
+                                case ACLMessage.REJECT_PROPOSAL:
                                     handleRefuse(response);
                                     break;
                                 default:
@@ -108,8 +107,8 @@ public class RetiroCompra extends Behaviour {
     }
 
     public ACLMessage createRequest() throws IOException {
-        ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-        request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+        ACLMessage request = new ACLMessage(ACLMessage.PROPOSE);
+        request.setProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE);
         request.addReceiver(new AID("Lonja", AID.ISLOCALNAME));
         request.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
         request.setConversationId("retiro-compra");

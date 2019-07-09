@@ -90,7 +90,6 @@ public class Movimiento {
      */
     public String toString() {
         String cadena = "";
-        cadena += "ID: " + ID + "\n";
         cadena += " Cif: " + cif + "\n";
         cadena += " Concepto " + concepto.getName() + "\n";
         cadena += " Descripcion: " + descripcion + "\n";

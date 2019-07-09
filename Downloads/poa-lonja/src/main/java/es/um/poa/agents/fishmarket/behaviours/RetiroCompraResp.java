@@ -62,7 +62,6 @@ public class RetiroCompraResp extends Behaviour {
 
 
         } catch (UnreadableException e) {
-
             e.printStackTrace();
             ACLMessage reply = request.createReply();
             reply.setPerformative(ACLMessage.REFUSE);
@@ -134,7 +133,7 @@ public class RetiroCompraResp extends Behaviour {
             if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA_COMPRADOR) {
                 ACLMessage request = agente.receive(mensaje);
                 if (request != null) {
-                    if (request.getPerformative() == ACLMessage.REQUEST) {
+                    if (request.getPerformative() == ACLMessage.PROPOSE) {
                         try {
                             HashMap<Integer, Fish> adjudicaciones = (HashMap<Integer, Fish>) request.getContentObject();
                             if (adjudicaciones != null) {
@@ -145,11 +144,9 @@ public class RetiroCompraResp extends Behaviour {
                                     Fish fish = adjudicaciones.get(tiempo);
                                     double precio = fish.getPrecioFinal();
                                     Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
-                                    dataBase.registrarVenta(buyer.getCif(), fish, precio);
                                     ((FishMarketAgent) agente).incrementarIngreso(precio);
                                     String idVendedor = fish.getIdVendedor();
-                                    System.out.println("Vendedor: " + idVendedor);
-                                    ((FishMarketAgent) agente).anadirVendedorGanancia(idVendedor, precio);
+                                    anadirGananciaVendedor(idVendedor, precio);
                                     String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
                                             buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
                                     Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
@@ -157,7 +154,11 @@ public class RetiroCompraResp extends Behaviour {
                                 }
 
                                 ACLMessage respone = request.createReply();
-                                respone.setPerformative(ACLMessage.AGREE);
+                                respone.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                                agente.send(respone);
+                            } else {
+                                ACLMessage respone = request.createReply();
+                                respone.setPerformative(ACLMessage.REJECT_PROPOSAL);
                                 agente.send(respone);
                             }
                         } catch (UnreadableException e) {
@@ -166,6 +167,16 @@ public class RetiroCompraResp extends Behaviour {
                     }
                 }
             }
+        }
+    }
+
+    public void anadirGananciaVendedor(String idVendedor, double precio) {
+        if (((FishMarketAgent) agente).getGananciasVendedore().containsKey(idVendedor)) {
+            double ganacia = ((FishMarketAgent) agente).getGananciasVendedore().get(idVendedor);
+            ganacia += precio;
+            ((FishMarketAgent) agente).anadirVendedorGanancia(idVendedor, ganacia);
+        } else {
+            ((FishMarketAgent) agente).anadirVendedorGanancia(idVendedor, precio);
         }
     }
 

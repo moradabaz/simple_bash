@@ -74,7 +74,7 @@ public class Subasta extends Behaviour {
                             AID mejorCandidato = null;
                             ACLMessage propose = agente.receive(mt);
                             if (propose != null) {                                                                  // TODO: Es NULO
-                                if (propose.getPerformative() == ACLMessage.PROPOSE) {                              // TODO: Hay un NULLPOINTEREXCEPTION
+                                if (propose.getPerformative() == ACLMessage.PROPOSE) {                              // TODO: Hay un NULLPOINTER_EXCEPTION
                                     ACLMessage mensajeAdjudicacion = propose.createReply();
                                     mensajeAdjudicacion.setConversationId("subasta");
                                     mensajeAdjudicacion.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
@@ -96,7 +96,6 @@ public class Subasta extends Behaviour {
 
                                         mensajeAdjudicacion.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 
-                                       // ((FishMarketAgent) agente).setSubastando(false);
                                         System.out.println("[VENDIDO]: Se acepta la puja por " + cantidadPujada + " del comprador " + mejorCandidato.getLocalName());
                                         System.out.println("Lote: " + fish.getNombre().toUpperCase());
                                         fish.setPrecioFinal(cantidadPujada);
@@ -109,7 +108,6 @@ public class Subasta extends Behaviour {
                                             e1.printStackTrace();
                                         }
 
-                                        System.out.println("SO FAR, SO GOOD");
                                         agente.send(mensajeAdjudicacion);
 
                                         ACLMessage mensajeDenegacion = new ACLMessage();
@@ -132,21 +130,19 @@ public class Subasta extends Behaviour {
                                 } else {
                                     rechazosPuja++;
                                     if (rechazosPuja == numBuyers) {                                                    // Si todos los compradores rechazan la puja
-                                        System.out.println("[NADIE QUIERE " + fish.getNombre().toUpperCase() + " A PRECIO DE " + fish.getPrecioFinal() +" ]");
+                                        System.out.println("[NOTIFY][NADIE QUIERE " + fish.getNombre().toUpperCase() + " A PRECIO DE " + fish.getPrecioFinal() +" ]");
                                         rechazosPuja = 0;
                                         double precio = fish.getPrecioFinal() - fish.getPrecioFinal() * 0.2;            // Se reduce el precio
                                         if (precio <= fish.getPrecioMinimo()) {                                         // Si su precio actual es menor que el 15% del precio inicial
                                             step = 3;
                                             done = true;
-                                            System.out.println("[[EL LOTE " + ((FishMarketAgent) agente).getLotesASubastar().size() + " SE CIERRA POR BAJO PRECIO]]");
+                                            System.out.println("[NOTIFY][[EL LOTE " + ((FishMarketAgent) agente).getLotesASubastar().size() + " SE CIERRA POR BAJO PRECIO]]");
                                             System.out.println("EL LOTE " + fish.getNombre() + " ha sido eliminado de la subasta");
                                         } else {
-                                            // Se actualiza la ronda
                                             rondas++;
-                                            System.out.println("[EXPIRA EL TIEMPO DE RONDA]");
                                             System.out.println("[" + fish.getNombre().toUpperCase() + "]" + "CAMBIO DE RONDA -> " + rondas);
-                                            System.out.print("HORA:");
-                                            System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getTime());
+                                            System.out.print("HORA: ");
+                                            System.out.println(((FishMarketAgent) agente).getSimTime().getTime());
                                             System.out.println("PRECIO ACTUAL DE " + fish.getNombre().toUpperCase() + ": " + precio);
                                             fish.setPrecioFinal(precio);
                                             step = 2;
@@ -166,9 +162,9 @@ public class Subasta extends Behaviour {
                             } else {
 
                                 rondas++;        // Se actualiza la ronda
-                                System.out.println("[" + fish.getNombre().toUpperCase() + "]" + "CAMBIO DE RONDA -> " + rondas);
+                                System.out.println("[NOTIFY][" + fish.getNombre().toUpperCase() + "]" + "CAMBIO DE RONDA -> " + rondas);
                                 System.out.print("HORA:");
-                                System.out.println("    " + ((FishMarketAgent) agente).getSimTime().getTime());
+                                System.out.println(" " + ((FishMarketAgent) agente).getSimTime().getTime());
                                 System.out.println("PRECIO ACTUAL DE " + fish.getNombre().toUpperCase() + ": " + precio);
                                 fish.setPrecioFinal(precio);
                                 step = 2;
@@ -177,7 +173,7 @@ public class Subasta extends Behaviour {
                         tiempoFinal = ((FishMarketAgent) agente).getSimTime().getTime();
                     } else {
 
-                        System.out.println("[SE CIERRA LA SUBASTA ACTUAL POR TIEMPO]");
+                        System.out.println("[NOTIFY][SE CIERRA LA SUBASTA ACTUAL POR TIEMPO]");
                         done = true;
                         step = 3;
                     }
@@ -190,7 +186,7 @@ public class Subasta extends Behaviour {
                         tiempoInicialRonda = ((FishMarketAgent) agente).getSimTime().getTime();
                         step = 1;
                     } else {
-                        System.out.println("[SE CIERRA LA SUBASTA ACTUAL POR TIEMPO]");
+                        System.out.println("[NOTIFY][SE CIERRA LA SUBASTA ACTUAL POR TIEMPO]");
                         done = true;
                         step = 3;
                     }
