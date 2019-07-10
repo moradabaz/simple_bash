@@ -16,7 +16,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 
@@ -28,7 +27,7 @@ public class BuyerAgent extends TimePOAAgent {
 
 	private boolean peticionInicioCreditoEnviada=false;
 	private LinkedList<String> listaDeseos = new LinkedList<String>();
-	private HashMap<Integer, Fish> articulosAdjudicados;
+	private LinkedList<Fish> articulosAdjudicados;
 	private double saldo = 0;
 	private double precioPropuesta = 0;
 	private boolean comportamientoSubastaON = false;
@@ -37,7 +36,7 @@ public class BuyerAgent extends TimePOAAgent {
 	SequentialBehaviour seq;
 
 	public BuyerAgent() {
-		articulosAdjudicados = new HashMap<>();
+		articulosAdjudicados = new LinkedList<>();
 	}
 
 	/**
@@ -48,8 +47,6 @@ public class BuyerAgent extends TimePOAAgent {
 	 * Los comportamientos que implementa son:
 	 *	- Registro del comprador (FIPA REQUEST)
 	 *	- Declaracion o inicio de credito si ya se ha registrado (FIPA REQUEST)
-	 *  - Puja por lote
-	 *  -
 	 */
 	public void setup() {
 
@@ -96,59 +93,13 @@ public class BuyerAgent extends TimePOAAgent {
 					e.printStackTrace();
 				}
 
-
 				seq.addSubBehaviour(new InicioCredito(this, requestAddCredit));
 
 				addBehaviour(seq);
 
-				//addBehaviour(new Comportamiento(config));
-				//this.send(request);
-
-					/*
-					 A trav�s del protocolo Fipa-Request vamos a manejar la situaci�n en la cual el
-					  comprador va a a�adir cr�dito a su cuenta. Dicho comprador manda un mensaje con
-					  su cif,nombre(los dos?) y el cr�dito a a�adir al agente Lonja, que a�adira el
-					  cr�dito a dicho comprador y le mandar� un mensaje Agree.
-
-					 * */
-
-/*
-					MessageTemplate template = MessageTemplate.MatchConversationId("subasta");
-					addBehaviour(new PujarLote(this, template));
-
-					addBehaviour(new RetiroCompra(this));*/
-
-
-				//}
 			}else if (config==null){
 				doDelete();
 			}
-
-
-
-			///*******************************************************
-			///PROTOCOLO RETIRADA DE LO COMPRADO
-			//**********************************************************
-/**
-
- ACLMessage requestRetire = new ACLMessage(ACLMessage.PROPOSE);
- requestRetire.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
- requestRetire.addReceiver(new AID( "Lonja", AID.ISLOCALNAME));
- requestRetire.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
- requestRetire.setConversationId("buyer-Retire");
-
-
- try {
- Buyer buyer = new Buyer(config.getCif(), config.getNombre(), config.getBudget());
- requestRetire.setContentObject((Serializable) buyer);
- } catch (IOException e) {
- // TODO Auto-generated catch block
- e.printStackTrace();
- }
-
- addBehaviour(new RetiroCompra(this, requestRetire));
- **/
-
 
 		} else {
 			getLogger().info("ERROR", "Requiere fichero de cofiguración.");
@@ -156,6 +107,10 @@ public class BuyerAgent extends TimePOAAgent {
 		}
 	}
 
+	/**
+	 * Este metodo abstracto se encarga de añadir un nuevo comportamiento cada vez que se entre
+	 * en una nueva fase.
+	 */
 	@Override
 	public void checkAgentBehaviours() {
 		int faseActual = this.getFaseActual();
@@ -202,37 +157,74 @@ public class BuyerAgent extends TimePOAAgent {
 		return listaDeseos.contains(nombre);
 	}
 
+	/**
+	 *
+	 * @param saldo
+	 */
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
 
+	/**
+	 *
+	 * @param saldo
+	 */
 	public void decremetnarSaldo(double saldo) {
 		this.saldo -= saldo;
 	}
 
+	/**
+	 *
+	 * @param saldo
+	 */
 	public void incrementarSaldo(double saldo) {
 		this.saldo += saldo;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public double getSaldo() {
 		return saldo;
 	}
 
+	/**
+	 *
+	 * @param precioPropuesta
+	 */
 	public void setPrecioPropuesta(double precioPropuesta) {
 		this.precioPropuesta = precioPropuesta;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public double getPrecioPropuesta() {
 		return precioPropuesta;
 	}
 
-	public HashMap<Integer, Fish> getAdjudicaciones() {
+	/**
+	 *
+	 * @return
+	 */
+	public LinkedList<Fish> getAdjudicaciones() {
 		return articulosAdjudicados;
 	}
 
-	public void addArticuloAdjudicado(int tiempo, Fish fish) {
-		this.articulosAdjudicados.put(tiempo, fish);
+	/**
+	 *
+	 * @param fish
+	 */
+	public void addArticuloAdjudicado(Fish fish) {
+		this.articulosAdjudicados.add(fish);
 	}
+
+	/**
+	 *
+	 * @param nombre
+	 */
 	public void eliminarDeListaDeseos(String nombre) {
 		listaDeseos.remove(nombre);
 	}

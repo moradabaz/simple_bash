@@ -45,7 +45,6 @@ public class RegistroCompradorResp extends Behaviour {
      * @throws NotUnderstoodException
      * @throws RefuseException
      */
-  //  @Override
     public ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException {
 
         try {

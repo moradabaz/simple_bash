@@ -329,4 +329,10 @@ public class SellerBuyerDB {
     public LinkedList<Fish> getLotes() {
         return lotes;
     }
+
+    public LinkedList<Fish> getLotesAdjudicados(String cif) {
+        if (!checkBuyerByID(cif))
+            return null;
+        return buyers.get(cif).getArticulosComprados();
+    }
 }

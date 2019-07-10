@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import static es.um.poa.agents.fishmarket.FishMarketAgent.setSubastando;
+
 public class Subasta extends Behaviour {
 
     private static final int TIEMPO_SUBASTA = 6;
@@ -199,7 +201,7 @@ public class Subasta extends Behaviour {
     @Override
     public boolean done() {
         if (done) {
-            ((FishMarketAgent) agente).setSubastando(false);
+            setSubastando(false);
         }
         return done;
     }
@@ -219,10 +221,8 @@ public class Subasta extends Behaviour {
         msg.setConversationId("subasta");
         try {
             msg.setContentObject((Serializable) fish);
-            ((FishMarketAgent) agente).setSubastando(true);
         } catch (IOException e) {
             System.err.println(" ## FALLO ## ");
-            ((FishMarketAgent) agente).setSubastando(false);
         }
 
         return msg;

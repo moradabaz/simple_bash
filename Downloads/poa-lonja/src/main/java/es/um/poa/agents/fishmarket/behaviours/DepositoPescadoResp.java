@@ -75,17 +75,20 @@ public class DepositoPescadoResp extends Behaviour {
         }
     }
 
-    public ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
-        ACLMessage informMessage = request.createReply();
-        informMessage.setPerformative(ACLMessage.INFORM);
-        return informMessage;
-    }
 
-
+    /**
+     * Este movimiento registra los lotes de un vendedor en una base de datos
+     * y crea una lista de movimientos por cada lote anyadido.
+     * @param seller
+     * @return
+     */
     public LinkedList<Movimiento> registrarLotes(Seller seller) {
        return seller.registrarLotes();
     }
 
+    /**
+     *
+     */
     @Override
     public void action() {
         ACLMessage request = agent.receive(mt);

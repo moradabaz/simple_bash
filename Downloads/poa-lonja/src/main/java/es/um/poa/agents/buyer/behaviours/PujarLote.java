@@ -25,6 +25,21 @@ public class PujarLote extends Behaviour {
         this.cfp = cfp;
         this.step = 0;
     }
+
+    /**
+     * Este metodo se utiliza para crear una respuesta a partir del mensaje CF
+     * mensaje de la subasta de una lonja.
+     * El algoritmo es el siguiente:
+     * - Extraemos el objeto subastado.
+     * - Si el comprador esta intersado, es decir, esta en su lista de deseos,
+     * comprueba cuanto esta dispuesto a pagar por el lote. En caso de que este dispuesto a pagar
+     * por el precio actual, enviara un mensaje con performativa PROPOSE.
+     * En caso contrario, enviara uno con performativa REFUSE.
+     * @param cfp
+     * @return
+     * @throws NotUnderstoodException
+     * @throws RefuseException
+     */
     public ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
 
         Fish objetoSubastado = null;
@@ -92,7 +107,12 @@ public class PujarLote extends Behaviour {
         return precio;
     }
 
-    
+    /**
+     * El comprador recibe un mensaje CFP de la subasta. Crea una respuesta a este mensaje, y
+     * espera una respuesta. Si la respuesta es ACCEPT_PROPOSAL, entonces se elimina el lote
+     * de la lista de deseos y se decrementa el saldo. El comprador dejará de pujar
+     * cuando ya no tenga ningun lote en la lista de deseos.
+     */
     @Override
     public void action() {
         ACLMessage subastaRequest = agent.receive(cfp);
@@ -108,18 +128,15 @@ public class PujarLote extends Behaviour {
                 } catch (RefuseException e) {
                     e.printStackTrace();
                 }
-
                 ACLMessage response = agent.receive(cfp);
                 if (response != null) {
                     switch (response.getPerformative()) {
                         case ACLMessage.ACCEPT_PROPOSAL:
                             try {
                                 Fish fish = (Fish) response.getContentObject();
-                                ((BuyerAgent) agent).addArticuloAdjudicado(((BuyerAgent) agent).getSimTime().getTime(), fish);
-
+                                ((BuyerAgent) agent).addArticuloAdjudicado(fish);
                                 ((BuyerAgent) agent).eliminarDeListaDeseos(fish.getNombre());
                                 ((BuyerAgent) agent).decremetnarSaldo(fish.getPrecioFinal());
-
                                 if (((BuyerAgent) agent).getListaDeseos().isEmpty()) {
                                     done = true;
                                 }

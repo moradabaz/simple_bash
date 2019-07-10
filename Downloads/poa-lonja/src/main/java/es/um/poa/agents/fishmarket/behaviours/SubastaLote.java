@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static es.um.poa.agents.fishmarket.FishMarketAgent.setSubastando;
+
 
 /**
  * La clase SubastaLote representa el comportamiento que ejecuta la lonja cuando va a
@@ -95,27 +97,33 @@ public class SubastaLote extends Behaviour {
                     @Override
                     protected void onTick() {
 
-
                             if (!((FishMarketAgent) agente).isSubastando()) {
-                                ((FishMarketAgent) agente).setSubastando(true);
+                                System.out.println("1 - ¿Esta subastando? :" + ((FishMarketAgent) agente).isSubastando());
+                                setSubastando(true);
+                                System.out.println("2 - ¿Esta subastando? :" + ((FishMarketAgent) agente).isSubastando());
                                 if (!lotesASubastar.isEmpty()) {
                                     rondas = 1;
-                                    Fish fish = lotesASubastar.getFirst();
-                                    lotesASubastar.removeFirst();
-                                    LinkedList<Buyer> buyers = database.getAllBuyers();
-                                    ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
+                                    try {
+                                        Fish fish = lotesASubastar.getFirst();
+                                        System.out.println("[ACTUALIZACION] LANZO UNA SUBASTA");
+                                        lotesASubastar.removeFirst();
+                                        LinkedList<Buyer> buyers = database.getAllBuyers();
+                                        ACLMessage mensajeSubasta = prepareRequest(buyers, fish);
+                                        System.out.println("[NUEVO LOTE]");
+                                        System.out.println("[LOTE " + fish.toString() + " ]");
+                                        System.out.println("[PRECIO DE SALIDA: " + fish.getPrecioSalida() + "]");
 
-                                    System.out.println("[NUEVO LOTE]");
-                                    System.out.println("[LOTE " + fish.toString() + " ]");
-                                    System.out.println("[PRECIO DE SALIDA: " + fish.getPrecioSalida() + "]");
+                                        System.out.print("[DIA DE SUBASTA:");
+                                        System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + "]");
 
-                                    System.out.print("[DIA DE SUBASTA:");
-                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getDay() + "]");
+                                        System.out.print("[HORA DE SUBASTA:");
+                                        System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + "]");
+                                        agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
+                                    } catch (NullPointerException e) {
+                                    }
 
-                                    System.out.print("[HORA DE SUBASTA:");
-                                    System.out.println("  " + ((FishMarketAgent) agente).getSimTime().getTime() + "]");
-                                    agente.addBehaviour(new Subasta(agente, mensajeSubasta, fish, buyers.size()));
                                 } else {
+                                    stop();
                                     done = true;
                                 }
                             } else {

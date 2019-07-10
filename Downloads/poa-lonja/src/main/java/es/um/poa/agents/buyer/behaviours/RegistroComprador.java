@@ -81,6 +81,9 @@ public class RegistroComprador extends Behaviour {
         this.mensaje = mensaje;
     }
 
+    /**
+     * El comprador envia un mensaje de solicitud a la lonja y espera la respuesta
+     */
     @Override
     public void action() {
         if (((BuyerAgent) agente).getSimTime() != null) {

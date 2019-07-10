@@ -13,8 +13,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 
 
 /**
@@ -86,47 +85,11 @@ public class RetiroCompraResp extends Behaviour {
         this.mensaje = msg;
     }
 
-    /*
-    @Override
-    public void action() {
-        if (((FishMarketAgent) agente).getSimTime() != null) {
-            if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_RETIRADA_COMPRADOR) {
-                ACLMessage request = agente.receive(mensaje);
-                if (request != null) {
-                    if (request.getPerformative() == ACLMessage.REQUEST) {
-                        try {
-                                HashMap<Integer, Fish> adjudicaciones = (HashMap<Integer, Fish>) request.getContentObject();
-                            if (adjudicaciones != null) {
-
-                                Iterator<Integer> it = adjudicaciones.keySet().iterator();
-                                while (it.hasNext()) {
-                                    int tiempo = it.next();
-                                    Fish fish = adjudicaciones.get(tiempo);
-                                    double precio = fish.getPrecioFinal();
-                                    Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
-                                    dataBase.registrarVenta(buyer.getCif(), fish, precio);
-                                    ((FishMarketAgent) agente).incrementarIngreso(precio);
-                                    String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
-                                            buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
-                                    Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
-                                    dataBase.registrarMovimientoBuyer(buyer.getCif(), movimiento);
-                                }
-
-                                ACLMessage respone = request.createReply();
-                                respone.setPerformative(ACLMessage.AGREE);
-                                agente.send(respone);
-                                done = true;
-
-                            }
-                        } catch (UnreadableException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
+    /**
+     * Este metodo representa el comporamiento de la lonja cuando recibe la solicitud de un mensaje
+     * de retirada.
+     * Se crea un mapa que
+     */
     @Override
     public void action() {
         if (((FishMarketAgent) agente).getSimTime() != null) {
@@ -134,36 +97,30 @@ public class RetiroCompraResp extends Behaviour {
                 ACLMessage request = agente.receive(mensaje);
                 if (request != null) {
                     if (request.getPerformative() == ACLMessage.PROPOSE) {
-                        try {
-                            HashMap<Integer, Fish> adjudicaciones = (HashMap<Integer, Fish>) request.getContentObject();
-                            if (adjudicaciones != null) {
+                        LinkedList<Fish> adjudicaciones = dataBase.getLotesAdjudicados(request.getSender().getLocalName());
+                        if (adjudicaciones != null) {
+                           for (Fish fish : adjudicaciones) {
 
-                                Iterator<Integer> it = adjudicaciones.keySet().iterator();
-                                while (it.hasNext()) {
-                                    int tiempo = it.next();
-                                    Fish fish = adjudicaciones.get(tiempo);
-                                    double precio = fish.getPrecioFinal();
-                                    Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
-                                    ((FishMarketAgent) agente).incrementarIngreso(precio);
-                                    String idVendedor = fish.getIdVendedor();
-                                    anadirGananciaVendedor(idVendedor, precio);
-                                    String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
-                                            buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
-                                    Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
-                                    dataBase.registrarMovimientoBuyer(buyer.getCif(), movimiento);
-                                }
+                               double precio = fish.getPrecioFinal();
+                               Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
+                               ((FishMarketAgent) agente).incrementarIngreso(precio);
+                               String idVendedor = fish.getIdVendedor();
+                               anadirGananciaVendedor(idVendedor, precio);
+                               String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
+                                       buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
+                               Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
+                               dataBase.registrarMovimientoBuyer(buyer.getCif(), movimiento);
+                           }
 
-                                ACLMessage respone = request.createReply();
-                                respone.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                                agente.send(respone);
-                            } else {
-                                ACLMessage respone = request.createReply();
-                                respone.setPerformative(ACLMessage.REJECT_PROPOSAL);
-                                agente.send(respone);
-                            }
-                        } catch (UnreadableException e) {
-                            e.printStackTrace();
+                            ACLMessage respone = request.createReply();
+                            respone.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                            agente.send(respone);
+                        } else {
+                            ACLMessage respone = request.createReply();
+                            respone.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                            agente.send(respone);
                         }
+
                     }
                 }
             }

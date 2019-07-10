@@ -32,6 +32,14 @@ public class InicioCreditoResp extends Behaviour {
         this.step = 0;
     }
 
+    /**
+     * Prepara una respuesto a partir del mensaje de solicitud que recibe la lonja.
+     * Consiste en comprobar primerament que el CIF del comprador esta en la BBDD.
+     * En caso de que este registrado, se extrae y se anyade el credito. Acto seguido, se
+     * envia una respuesta de performativa AGREE.
+     * @param request
+     * @return
+     */
     public ACLMessage prepareResponse(ACLMessage request)  {
         try {
             Buyer buyer = (Buyer) request.getContentObject();

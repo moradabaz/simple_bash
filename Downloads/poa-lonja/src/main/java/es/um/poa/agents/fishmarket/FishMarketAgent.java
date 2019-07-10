@@ -26,7 +26,7 @@ public class FishMarketAgent extends TimePOAAgent {
 	public static final double COMISION_LOTE = 0.12;
 
 	private double ingresos = 0;
-	private boolean subastando = false;
+	private static boolean subastando = false;
 	private LinkedList<Fish> lotesASubastar = new LinkedList<Fish>();
 	private HashMap<String, Double> gananciasVendedore = new HashMap<String, Double>();
 	private boolean isSubastaON = false;
@@ -83,7 +83,7 @@ public class FishMarketAgent extends TimePOAAgent {
 		switch (faseActual) {
 			case FASE_SUBASTA:
 				if (!isSubastaON) {
-					addBehaviour(new SubastaLote(this, 1000));
+					addBehaviour(new SubastaLote(this, 500));
 					isSubastaON = true;
 				}
 				break;
@@ -140,13 +140,12 @@ public class FishMarketAgent extends TimePOAAgent {
 		return lotesASubastar;
 	}
 
-	private void parseBuyerConfig(String buyerFile) {}
 
-	public void setSubastando(boolean subastando) {
-		this.subastando = subastando;
+	public static void setSubastando(boolean sub) {
+		subastando = sub;
 	}
 
-	public boolean isSubastando() {
+	public static boolean isSubastando() {
 		return subastando;
 	}
 

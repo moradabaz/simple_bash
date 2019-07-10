@@ -62,7 +62,6 @@ public class RegistroVendedorResp extends Behaviour {
         }
     }
 
-
     @Override
     public void action() {
         if (((FishMarketAgent)agente).getSimTime() != null) {

@@ -21,15 +21,19 @@ public class InicioCredito extends Behaviour {
         this.step = 0;
     }
 
-    public void handleInform(ACLMessage inform) {
-        System.out.println("El agente comprador" + agente.getLocalName() + " ha depositado su credito");
-    }
-
+    /**
+     * Manejador de un mensaje con una perfomativa REFUSE
+     * @param refuse
+     */
     public void handleRefuse(ACLMessage refuse) {
         System.out.println("El agente " + refuse.getSender().getLocalName() + " ha rechazado el deposito de credito agente "
                 + agente.getLocalName());
     }
 
+    /**
+     * Manejador de un mensaje con una perfomativa FAILURE
+     * @param failure
+     */
     public void handleFailure(ACLMessage failure) {
         if (failure.getSender().equals(myAgent.getAMS())) {
             System.out.println("No se ha podido declarar el credito");
@@ -38,22 +42,42 @@ public class InicioCredito extends Behaviour {
         }
     }
 
+    /**
+     *
+     * @return Devuelve el agente del comportamiento
+     */
     public Agent getAgente() {
         return agente;
     }
 
+    /**
+     * Estable el agente del comportamiento
+     * @param agente
+     */
     public void setAgente(Agent agente) {
         this.agente = agente;
     }
 
+    /**
+     *
+     * @return Devuelve el mensaje del comportamiento
+     */
     public ACLMessage getMsg() {
         return mensaje;
     }
 
+    /**
+     * Establece el mensaje del comportamiento
+     * @param msg
+     */
     public void setMsg(ACLMessage msg) {
         this.mensaje = msg;
     }
 
+    /**
+     * Acción del comportamiento.
+     * Envia el mensaje de solicitud. Se espera el mensaje de respuesta y luego se trata.
+     */
     @Override
     public void action() {
         switch (step) {
@@ -79,10 +103,18 @@ public class InicioCredito extends Behaviour {
         }
     }
 
+    /**
+     * Manejador de un mensaje con una perfomativa AGREE
+     * @param reply
+     */
     private void handleAgree(ACLMessage reply) {
         System.out.println("El agente " + agente.getLocalName() + " ha depositado su credito con exito");
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean done() {
         return done;
