@@ -64,20 +64,11 @@ public class SellerBuyerDB {
 
 
     /**
-     * Comprueba si un objeto vendedor esta registrado en el mapa
-     * @param seller Objeto a verificar en la BBDD
-     * @return Retorna un valor True si existe dicho objeto en el mapa de vendedores
-     */
-    public boolean existeSeller(Seller seller) {
-        return sellers.containsValue(seller);
-    }
-
-    /**
      * Comprueba que existe un vendedor dado su identificador
      * @param sellerID
      * @return
      */
-    public boolean checkSellerByID(String sellerID) {
+    public boolean isSellerRegistered(String sellerID) {
         return sellers.containsKey(sellerID);
     }
 
@@ -90,23 +81,13 @@ public class SellerBuyerDB {
     }
 
     /**
-     *
+     * Elimina un vendedor
      * @param seller
      */
     public void removeSeller(Seller seller) {
         sellers.remove(seller.getCif(), seller);
     }
 
-    /**
-     *
-     * @param seller
-     */
-    public void modificarSeller(Seller seller) {
-        if (checkBuyerByID(seller.getCif())) {
-            sellers.remove(seller.getCif());
-            sellers.put(seller.getCif(), seller);
-        }
-    }
 
     /**
      *
@@ -117,42 +98,24 @@ public class SellerBuyerDB {
         return sellers.getOrDefault(sellerID, null);
     }
 
-    /**
-     *
-     * @param buyer
-     * @return
-     */
-    public boolean existeBuyer(Buyer buyer) {
-        return buyers.containsValue(buyer);
-    }
 
     /**
-     *
+     * Comprueaba que existe un comprador
      * @param buyerID
      * @return
      */
-    public boolean checkBuyerByID(String buyerID) {
+    public boolean isBuyerRegistered(String buyerID) {
         return buyers.containsKey(buyerID);
     }
 
     /**
-     *
+     * Elimina un comprador
      * @param buyerID
      */
     public void removerBuyerByID(String buyerID) {
         buyers.remove(buyerID);
     }
 
-    /**
-     *
-     * @param buyer
-     */
-    public void modificarBuyer(Buyer buyer) {
-       if (buyers.containsKey(buyer.getCif())) {
-           buyers.remove(buyer.getCif());
-           buyers.put(buyer.getCif(), buyer);
-       }
-    }
 
     /**
      *
@@ -163,13 +126,6 @@ public class SellerBuyerDB {
         return buyers.getOrDefault(buyerID, null);
     }
 
-    /**
-     *
-     * @return
-     */
-    public Set<String> getBuyerIDs() {
-        return buyers.keySet();
-    }
 
     /**
      *
@@ -179,13 +135,6 @@ public class SellerBuyerDB {
         return sellers.keySet();
     }
 
-    /**
-     *
-     * @return
-     */
-    public LinkedList<Seller> getAllSellers() {
-        return new LinkedList<>(sellers.values());
-    }
 
     /**
      *
@@ -196,7 +145,7 @@ public class SellerBuyerDB {
     }
 
     /**
-     *
+     * Registra un movimiento de un vendedor
      * @param cifSeller
      * @param movimiento
      */
@@ -214,6 +163,7 @@ public class SellerBuyerDB {
 
     /**
      *
+     * Registra un movimiento de un comprador
      * @param cifBuyer
      * @param movimiento
      */
@@ -232,7 +182,7 @@ public class SellerBuyerDB {
     /**
      *
      * @param cif
-     * @return
+     * @return Devuelve una lista de movimientos de un vendedor
      */
     public ListaMovimientos getListaMovimientoSeller(String cif) {
         if (movimientosSeller.containsKey(cif))
@@ -240,26 +190,17 @@ public class SellerBuyerDB {
         return null;
     }
 
+    /**
+     *
+     * @param cif
+     * @return Devuelve una lista de movimientos de un comprador
+     */
     public ListaMovimientos getListaMovimientosBuyer(String cif) {
         if (movimientosBuyer.containsKey(cif))
             return movimientosBuyer.get(cif);
         return null;
     }
 
-
-    public LinkedList<Movimiento> getSellerMovimientos(String sellerCif) {
-        if (movimientosSeller.containsKey(sellerCif)) {
-            return movimientosSeller.get(sellerCif).getMovimientos();
-        }
-        return null;
-    }
-
-    public LinkedList<Movimiento> getBuyerMovimientos(String buyerCif) {
-        if (movimientosSeller.containsKey(buyerCif)) {
-            return movimientosSeller.get(buyerCif).getMovimientos();
-        }
-        return null;
-    }
 
     /**
      * Le inicia el credito a un comprador
@@ -268,12 +209,12 @@ public class SellerBuyerDB {
      */
     public void iniciarCreditoBuyer(String buyerCif, double credito) {
 
-        if (this.checkBuyerByID(buyerCif)) {
+        if (this.isBuyerRegistered(buyerCif)) {
             Buyer buyerAddCredit = this.getBuyer(buyerCif);    // Aqui hay un NULL_POINTER_EXCEPTION
             buyerAddCredit.setSaldo(credito);
             buyers.put(buyerAddCredit.getCif(), buyerAddCredit);
         } else {
-            System.err.println("########## El comprador " + buyerCif + " No existe");
+            System.err.println(buyerCif + " No existe");
         }
     }
 
@@ -288,6 +229,12 @@ public class SellerBuyerDB {
     }
 
 
+    /**
+     * Registra un articulo en la lista de articulos comprados de un comprador
+     * @param buyercif
+     * @param articulo
+     * @param precioFinal
+     */
     public void registrarVenta(String buyercif, Fish articulo, double precioFinal) { // TODO: Aqui hay un fallo
         if (!buyers.containsKey(buyercif)) {
             System.err.println("## ERROR ## -> El cif " + buyercif + " No está contenido");
@@ -303,11 +250,6 @@ public class SellerBuyerDB {
         }
     }
 
-    public void mostrarCompradores() {
-        for (Buyer buyer : buyers.values()) {
-            System.out.println("[ " + buyer.getCif() + " - " + buyer.getNombre() + " ]");
-        }
-    }
 
     public void mostrarVendedores() {
         for (Seller seller : sellers.values()) {
@@ -315,25 +257,22 @@ public class SellerBuyerDB {
         }
     }
 
+
     public void anadirLotes(LinkedList<Fish> listaPescado) {
         lotes.addAll(listaPescado);
-    }
-
-
-    public void anadirLote(Fish fish) {
-        lotes.add(fish);
-    }
-
-    public void removeFirst() {
-        lotes.removeFirst();
     }
 
     public LinkedList<Fish> getLotes() {
         return lotes;
     }
 
+    /**
+     *
+     * @param cif
+     * @return Devuelve los lotes adjudicados de un comprador
+     */
     public LinkedList<Fish> getLotesAdjudicados(String cif) {
-        if (!checkBuyerByID(cif))
+        if (!isBuyerRegistered(cif))
             return null;
         return buyers.get(cif).getArticulosComprados();
     }

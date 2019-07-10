@@ -50,7 +50,7 @@ public class DepositoPescadoResp extends Behaviour {
 
         try {
             Seller seller = (Seller) request.getContentObject();
-            if (database.checkSellerByID(seller.getCif())) {
+            if (database.isSellerRegistered(seller.getCif())) {
                 LinkedList<Movimiento> movimientos = registrarLotes(seller);
                 database.actualizarSeller(seller);
                 for (Movimiento movimiento : movimientos)

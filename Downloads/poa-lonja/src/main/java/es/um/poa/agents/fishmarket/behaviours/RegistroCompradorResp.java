@@ -52,7 +52,7 @@ public class RegistroCompradorResp extends Behaviour {
             Buyer buyer = ((Buyer) request.getContentObject());
             String cif = buyer.getCif();
             String nombre = buyer.getNombre();
-            if (!dataBase.checkBuyerByID(buyer.getCif())) {
+            if (!dataBase.isBuyerRegistered(buyer.getCif())) {
                 dataBase.registrarBuyer(buyer);
 
                 System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " } ACEPTADO PARA REGISTRO");

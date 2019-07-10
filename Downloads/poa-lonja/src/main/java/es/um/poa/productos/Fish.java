@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class Fish implements Serializable {
 
     private static final int NO_ASIGNADO = -100;
-
+    private static final double PORCENTAJE_MIN = 0.15;
     private EstadoVenta estadoVenta;
     private final TipoProducto tipoProducto;
     private final String nombre;
@@ -101,7 +101,7 @@ public class Fish implements Serializable {
     }
 
     public double getPrecioMinimo() {
-        return precioSalida * 0.15;
+        return precioSalida * PORCENTAJE_MIN;
     }
 
     public String getIdComprador() {

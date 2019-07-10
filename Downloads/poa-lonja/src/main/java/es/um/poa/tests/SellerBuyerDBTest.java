@@ -51,7 +51,7 @@ public class SellerBuyerDBTest {
 
     @Test
     public void checkSeller1() {
-        System.out.println(database.checkBuyerByID(seller1.getCif()));
+        System.out.println(database.isBuyerRegistered(seller1.getCif()));
     }
 
 

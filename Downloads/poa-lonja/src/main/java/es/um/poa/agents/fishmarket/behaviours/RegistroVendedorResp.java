@@ -44,7 +44,7 @@ public class RegistroVendedorResp extends Behaviour {
     public ACLMessage prepareResponse(ACLMessage request) {
         try {
             Seller seller = (Seller) request.getContentObject();        // Recoje el objeto Seller (ERROR DE CAST: le llega la lista de pescado)
-            if (!database.checkSellerByID(seller.getCif())) {           // Comprueba que NO si esta en la BBDD para registrarlo
+            if (!database.isSellerRegistered(seller.getCif())) {           // Comprueba que NO si esta en la BBDD para registrarlo
                 database.actualizarSeller(seller);
                 ACLMessage agreeReply = request.createReply();
                 agreeReply.setPerformative(ACLMessage.AGREE);

@@ -44,7 +44,7 @@ public class InicioCreditoResp extends Behaviour {
         try {
             Buyer buyer = (Buyer) request.getContentObject();
             String cif = buyer.getCif();
-            if (dataBase.checkBuyerByID(cif)) {
+            if (dataBase.isBuyerRegistered(cif)) {
                 double creditoAnadir = buyer.getSaldo();
                 dataBase.iniciarCreditoBuyer(cif, creditoAnadir);
                 ACLMessage reply = request.createReply();

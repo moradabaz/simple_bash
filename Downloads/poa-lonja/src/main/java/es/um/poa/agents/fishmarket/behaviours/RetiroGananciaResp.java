@@ -29,7 +29,10 @@ public class RetiroGananciaResp extends Behaviour {
     }
 
     /**
-     * Este metodo
+     * Este metodo se utiliza para crear un mensaje de respuesta a la solicitud de retiro de dinero
+     * por parte de un vendedor.
+     * Lo que hace basicamente este metodo es recorrer la lista de vendedores y ganancias.
+     * Se actualizan los valores y se envia una performativa AGREE.
      * @param request
      * @return
      */
@@ -74,11 +77,6 @@ public class RetiroGananciaResp extends Behaviour {
             }
         }
         return null;
-       /* ACLMessage respone = new ACLMessage(ACLMessage.FAILURE);
-        respone.addReceiver(new AID(, AID.ISLOCALNAME));
-        respone.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-        respone.setConversationId("retiro-ganancia");
-        return respone;*/
     }
 
 

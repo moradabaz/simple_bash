@@ -44,7 +44,7 @@ public class RegistroComprador extends Behaviour {
      * @param refuse
      */
     public void handleRefuse(ACLMessage refuse) {
-        System.out.println(" ! >> (Registro Comprador)El mensaje enviado ha sido por rechazado por el agente " + refuse.getSender().getLocalName());
+        System.out.println(" (Registro Comprador) El mensaje enviado ha sido por rechazado por el agente " + refuse.getSender().getLocalName());
     }
 
     /**
@@ -53,11 +53,11 @@ public class RegistroComprador extends Behaviour {
      */
     public void handleFailure(ACLMessage failure) {
         if (agente.getAMS().equals(failure.getSender())) {
-            System.out.println(" X: Ha habido un fallo en el envío");
+            System.out.println("(Registro de Comprador): Ha habido un fallo en el envío en el registro del comprador");
             System.out.println(agente.getAMS());
             System.out.println(failure.getSender());
         } else {
-            System.out.println(" X: El agente receptor NO existe");
+            System.out.println("(Registro de Comprador): El agente receptor NO existe");
         }
 
     }
@@ -112,7 +112,7 @@ public class RegistroComprador extends Behaviour {
                                     handleRefuse(reply);
                                     break;
                             }
-                            done = true;
+                            //done = true;
                         }
 
                 }

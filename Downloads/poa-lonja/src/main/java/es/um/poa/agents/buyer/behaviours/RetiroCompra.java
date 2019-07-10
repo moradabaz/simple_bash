@@ -43,16 +43,16 @@ public class RetiroCompra extends Behaviour {
     }
 
     public void handleRefuse(ACLMessage refuse) {
-        System.out.println(" ! >> (Retirada Comprador) El mensaje enviado ha sido por rechazado por el agente " + refuse.getSender().getLocalName());
+        System.out.println("  (Retirada Compra) El mensaje enviado ha sido por rechazado por el agente " + refuse.getSender().getLocalName());
     }
 
     public void handleFailure(ACLMessage failure) {
         if (agente.getAMS().equals(failure.getSender())) {
-            System.out.println(" X: Ha habido un fallo en el envío");
+            System.out.println(" (Retirada Compra): Ha habido un fallo en el envío");
             System.out.println(agente.getAMS());
             System.out.println(failure.getSender());
         } else {
-            System.out.println(" X: El agente receptor NO existe");
+            System.out.println("(Retirada Compra): El agente receptor NO existe");
         }
 
     }
@@ -106,6 +106,11 @@ public class RetiroCompra extends Behaviour {
         }
     }
 
+    /**
+     * Crea una solicitud de mensaje para proponer una retirada de lotes.
+     * @return
+     * @throws IOException
+     */
     public ACLMessage createRequest() throws IOException {
         ACLMessage request = new ACLMessage(ACLMessage.PROPOSE);
         request.setProtocol(FIPANames.InteractionProtocol.FIPA_PROPOSE);

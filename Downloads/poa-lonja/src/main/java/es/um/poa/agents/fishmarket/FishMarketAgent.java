@@ -63,12 +63,6 @@ public class FishMarketAgent extends TimePOAAgent {
 				MessageTemplate messageTemplateDP = MessageTemplate.MatchConversationId("deposito-fish");
 				// Aniadimos un comportamiento de respuesta a la solicitud de pescado
 				addBehaviour(new DepositoPescadoResp(this, messageTemplateDP));
-
-
-
-
-
-
 			}
 
 		} else {
@@ -77,6 +71,9 @@ public class FishMarketAgent extends TimePOAAgent {
 		}
 	}
 
+	/**
+	 * Este metodo abstracto se encarga de anyadir comportamientos en funcion de la fase actual
+	 */
 	@Override
 	public void checkAgentBehaviours() {
 		int faseActual = getFaseActual();
@@ -118,46 +115,50 @@ public class FishMarketAgent extends TimePOAAgent {
 	}
 
 
-	public void anadirLoteASubasta(Fish fish) {
-		lotesASubastar.add(fish);
-	}
-
-	public void anadirTodosLotes(LinkedList<Fish> lista) {
-		lotesASubastar.addAll(lista);
-	}
-
-	public void removeLoteFromSubasta(Fish fish) {
-		if (lotesASubastar.contains(fish))
-			lotesASubastar.add(fish);
-	}
-
-	public void removeFirstLote() {
-		if (!lotesASubastar.isEmpty())
-			lotesASubastar.removeFirst();
-	}
-
+	/**
+	 *
+	 * @return Devuelve una lista de lotes que se van a subastar
+	 */
 	public LinkedList<Fish> getLotesASubastar() {
 		return lotesASubastar;
 	}
 
-
+	/**
+	 * Establece si la lonja esta subastando o no
+	 * @param sub
+	 */
 	public static void setSubastando(boolean sub) {
 		subastando = sub;
 	}
 
+	/**
+	 * Este metodo consulta si la lonja esta en proceso de subasta
+	 * @return
+	 */
 	public static boolean isSubastando() {
 		return subastando;
 	}
 
+	/**
+	 * Este metodo se utililza para incremenar el ingreso de la lonja
+	 * @param ingreso
+	 */
 	public void incrementarIngreso(double ingreso) {
 		this.ingresos += ingreso;
 	}
+
 
 	public void incrementarGanancia(String cif, double ingreso) {
 		double ganancia = gananciasVendedore.get(cif);
 		ganancia += ingreso;
 		gananciasVendedore.put(cif, ganancia);
 	}
+
+	/**
+	 * Este metodo se utiliza para incrementar el ingreso de un vendedor
+	 * @param cif
+	 * @param ingreso
+	 */
 	public void anadirVendedorGanancia(String cif, double ingreso) {
 		if (gananciasVendedore.containsKey(cif)) {
 			incrementarGanancia(cif, ingreso);
@@ -170,8 +171,4 @@ public class FishMarketAgent extends TimePOAAgent {
 		return gananciasVendedore;
 	}
 
-
-	public double getIngresos() {
-		return ingresos;
-	}
 }
