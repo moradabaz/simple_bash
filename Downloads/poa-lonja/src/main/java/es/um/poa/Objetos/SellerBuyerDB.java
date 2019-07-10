@@ -61,6 +61,8 @@ public class SellerBuyerDB {
         buyers.put(buyer.getCif(), buyer);
     }
 
+
+
     /**
      * Comprueba si un objeto vendedor esta registrado en el mapa
      * @param seller Objeto a verificar en la BBDD

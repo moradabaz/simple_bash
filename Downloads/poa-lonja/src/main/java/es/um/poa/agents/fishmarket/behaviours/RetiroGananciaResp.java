@@ -28,7 +28,11 @@ public class RetiroGananciaResp extends Behaviour {
         this.done = false;
     }
 
-
+    /**
+     * Este metodo
+     * @param request
+     * @return
+     */
     public ACLMessage prepareResponse(ACLMessage request)  {
         if (request != null) {
             String idVendedor = request.getSender().getLocalName();
@@ -54,7 +58,7 @@ public class RetiroGananciaResp extends Behaviour {
                                 e.printStackTrace();
                             }
                             String descripcion = "El vendedor " + cifVendedor + " ha ganado " +  ganacia + " euros ";
-                            Movimiento movimiento = new Movimiento(cifVendedor, Concepto.ADJUDICACION, descripcion);
+                            Movimiento movimiento = new Movimiento(cifVendedor, ((FishMarketAgent) agente).getSimTime().getTime(), Concepto.GANANCIA, descripcion);
                             dataBase.registarMovimientoSeller(cifVendedor, movimiento);
                             return respone;
                         }

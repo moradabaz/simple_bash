@@ -6,6 +6,7 @@ import es.um.poa.Objetos.Movimiento;
 import es.um.poa.Objetos.SellerBuyerDB;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.fishmarket.FishMarketAgent;
+import es.um.poa.productos.EstadoVenta;
 import es.um.poa.productos.Fish;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -88,7 +89,9 @@ public class RetiroCompraResp extends Behaviour {
     /**
      * Este metodo representa el comporamiento de la lonja cuando recibe la solicitud de un mensaje
      * de retirada.
-     * Se crea un mapa que
+     * Se recoge una lista de adjudicaciones. Para cada adjudicacion, se establece su estado
+     * como entregado. Se incrementa el incgreso de la lonja y del vendedor en la BBDD.
+     * Por ultimo se crea y se registra un movimiento
      */
     @Override
     public void action() {
@@ -100,7 +103,7 @@ public class RetiroCompraResp extends Behaviour {
                         LinkedList<Fish> adjudicaciones = dataBase.getLotesAdjudicados(request.getSender().getLocalName());
                         if (adjudicaciones != null) {
                            for (Fish fish : adjudicaciones) {
-
+                                fish.setEstadoVenta(EstadoVenta.ENTREGADO);
                                double precio = fish.getPrecioFinal();
                                Buyer buyer = dataBase.getBuyer(request.getSender().getLocalName());
                                ((FishMarketAgent) agente).incrementarIngreso(precio);
@@ -108,7 +111,7 @@ public class RetiroCompraResp extends Behaviour {
                                anadirGananciaVendedor(idVendedor, precio);
                                String descripcion = "Se adjudica el lote " + fish.toString() + " al comprador " +
                                        buyer.getNombre() + " cuyo CIF es: " + buyer.getCif();
-                               Movimiento movimiento = new Movimiento(buyer.getCif(), Concepto.ADJUDICACION, descripcion);
+                               Movimiento movimiento = new Movimiento(buyer.getCif(), ((FishMarketAgent) agente).getSimTime().getTime(), Concepto.ADJUDICACION, descripcion);
                                dataBase.registrarMovimientoBuyer(buyer.getCif(), movimiento);
                            }
 

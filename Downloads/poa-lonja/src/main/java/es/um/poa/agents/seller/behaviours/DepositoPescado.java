@@ -57,7 +57,7 @@ public class DepositoPescado extends Behaviour {
          switch (step) {
              case 0:
                  agente.send(mensaje);
-                 System.out.println(getAgente().getLocalName() +": Envio un mensjae de deposito");
+                 System.out.println(getAgente().getLocalName() +": Envio un mensaje de deposito");
                  step++;
                  break;
              case 1:

@@ -1,5 +1,8 @@
 package es.um.poa.agents.buyer.behaviours;
 
+import es.um.poa.Objetos.Concepto;
+import es.um.poa.Objetos.Movimiento;
+import es.um.poa.Objetos.SellerBuyerDB;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.BuyerAgent;
 import es.um.poa.productos.Fish;
@@ -58,6 +61,9 @@ public class PujarLote extends Behaviour {
                     ACLMessage propose = cfp.createReply();
                     propose.setPerformative(ACLMessage.PROPOSE);
                     double precio = ((BuyerAgent) agent).getPrecioPropuesta();
+                    String descripcion = "El comprador " + ((BuyerAgent) agent).getLocalName() + " puja por el lote " + objetoSubastado.getNombre() + " por " + precioPropuesta;
+                    Movimiento movimiento = new Movimiento(((BuyerAgent) agent).getLocalName(), ((BuyerAgent) agent).getSimTime().getTime(), Concepto.PUJA, descripcion);
+                    SellerBuyerDB.getInstance().registrarMovimientoBuyer(((BuyerAgent) agent).getLocalName(), movimiento);
                     try {
                         propose.setContentObject(String.valueOf(precioObjetoSubastado));
                     } catch (IOException e) {

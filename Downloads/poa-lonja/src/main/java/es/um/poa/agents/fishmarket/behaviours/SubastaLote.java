@@ -98,9 +98,7 @@ public class SubastaLote extends Behaviour {
                     protected void onTick() {
 
                             if (!((FishMarketAgent) agente).isSubastando()) {
-                                System.out.println("1 - ¿Esta subastando? :" + ((FishMarketAgent) agente).isSubastando());
                                 setSubastando(true);
-                                System.out.println("2 - ¿Esta subastando? :" + ((FishMarketAgent) agente).isSubastando());
                                 if (!lotesASubastar.isEmpty()) {
                                     rondas = 1;
                                     try {

@@ -1,5 +1,8 @@
 package es.um.poa.agents.buyer.behaviours;
 
+import es.um.poa.Objetos.Concepto;
+import es.um.poa.Objetos.Movimiento;
+import es.um.poa.Objetos.SellerBuyerDB;
 import es.um.poa.agents.TimePOAAgent;
 import es.um.poa.agents.buyer.BuyerAgent;
 import jade.core.Agent;
@@ -61,6 +64,9 @@ public class RegistroComprador extends Behaviour {
 
     public void handleAgree(ACLMessage agree) {
         System.out.println("++ El agente " + ((BuyerAgent) agente).getLocalName() + " HA SIDO REGISTRADO CORRECTAMENTE");
+        String descripcion = "Se registra el comprador " + ((BuyerAgent) agente).getLocalName();
+        Movimiento movimiento = new Movimiento(((BuyerAgent) agente).getLocalName(), ((BuyerAgent) agente).getSimTime().getTime(), Concepto.REGISTRO, descripcion);
+        SellerBuyerDB.getInstance().registrarMovimientoBuyer(((BuyerAgent) agente).getLocalName(), movimiento);
     }
 
     public Agent getAgente() {
@@ -70,7 +76,6 @@ public class RegistroComprador extends Behaviour {
     public void setAgente(Agent agente) {
         this.agente = agente;
     }
-
 
 
     public ACLMessage getMensaje() {

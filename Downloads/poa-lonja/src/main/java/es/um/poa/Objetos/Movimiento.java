@@ -12,6 +12,7 @@ public class Movimiento {
     private static int contador = 0;
     private final int ID;
     private final String cif;
+    private int hora;
     private Concepto concepto;
     private String descripcion;
 
@@ -21,11 +22,21 @@ public class Movimiento {
      * @param cif   El cif de la persona (vendedor/comprador) de la que se registran los movimientos
      * @param concepto  El concepto por el que se registra le nuevo movimiento
      */
-    public Movimiento(String cif, Concepto concepto) {
+    public Movimiento(String cif, int hora, Concepto concepto) {
         this.ID = contador;
         contador++;
         this.cif = cif;
         this.concepto = concepto;
+        this.hora = hora;
+
+    }
+
+    public Movimiento(String cif,  Concepto concepto) {
+        this.ID = contador;
+        contador++;
+        this.cif = cif;
+        this.concepto = concepto;
+        this.hora = 0;
 
     }
 
@@ -35,12 +46,13 @@ public class Movimiento {
      * @param concepto
      * @param descripcion
      */
-    public Movimiento(String cif, Concepto concepto, String descripcion) {
+    public Movimiento(String cif, int hora,  Concepto concepto, String descripcion) {
         this.ID = contador;
         contador++;
         this.cif = cif;
         this.concepto = concepto;
         this.descripcion = descripcion;
+        this.hora = hora;
     }
 
     /**

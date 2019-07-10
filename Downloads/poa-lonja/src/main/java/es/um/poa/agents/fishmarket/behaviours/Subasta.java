@@ -58,6 +58,9 @@ public class Subasta extends Behaviour {
         this.done = false;
     }
 
+    /**
+     * Metodo de funcionamiento de la subasta de un lote
+     */
     @Override
     public void action() {
         if (((FishMarketAgent) agente).getFaseActual() == TimePOAAgent.FASE_SUBASTA) {
@@ -82,6 +85,7 @@ public class Subasta extends Behaviour {
                                     mensajeAdjudicacion.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
 
                                     Buyer buyer = database.getBuyer(propose.getSender().getLocalName());            // TODO: Es LONJA ???
+
                                     System.out.println(buyer.getCif() + " ha pujado");
 
                                     candidatos.put(((FishMarketAgent) agente).getSimTime().getTime(), propose);

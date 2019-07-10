@@ -9,7 +9,9 @@ public enum Concepto {
     REGISTRO("Registro en Lonja"),
     REGISTRAR_LOTE("Registrar Lote"),
     PUJA("Puja por lote"),
+    GANANCIA("Retiro de ganancia"),
     ADJUDICACION("Adjudicacion de lote");
+
 
     private String name;
 

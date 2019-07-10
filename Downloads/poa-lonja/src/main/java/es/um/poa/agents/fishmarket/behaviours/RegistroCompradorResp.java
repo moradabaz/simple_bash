@@ -54,6 +54,7 @@ public class RegistroCompradorResp extends Behaviour {
             String nombre = buyer.getNombre();
             if (!dataBase.checkBuyerByID(buyer.getCif())) {
                 dataBase.registrarBuyer(buyer);
+
                 System.out.println("Agente tipo " + buyer.getClass().getName() + " { " + "cif: " + cif + " | " + " nombre: " + nombre + " } ACEPTADO PARA REGISTRO");
                 ACLMessage reply = request.createReply();
                 reply.setPerformative(ACLMessage.AGREE);

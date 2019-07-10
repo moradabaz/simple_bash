@@ -86,9 +86,8 @@ public class DepositoPescadoResp extends Behaviour {
        return seller.registrarLotes();
     }
 
-    /**
-     *
-     */
+
+
     @Override
     public void action() {
         ACLMessage request = agent.receive(mt);
