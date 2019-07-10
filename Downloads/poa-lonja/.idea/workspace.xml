@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="4" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="d181de22-f1fd-4d95-a21a-6c50c23cdaf9" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/bin/default/" />
@@ -47,41 +50,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RegistroVendedor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="34" column="71" selection-start-line="34" selection-start-column="71" selection-end-line="34" selection-end-column="71" />
+            <state relative-caret-position="40">
+              <caret line="47" selection-start-line="47" selection-end-line="47" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/InicioCredito.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/clock/ClockAgent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="404">
-              <caret line="40" column="121" selection-start-line="40" selection-start-column="81" selection-end-line="40" selection-end-column="121" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RetiroGanancia.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="583">
-              <caret line="100" column="17" selection-start-line="100" selection-start-column="17" selection-end-line="100" selection-end-column="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="40">
+              <caret line="112" column="50" selection-start-line="112" selection-start-column="50" selection-end-line="112" selection-end-column="50" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/PujarLote.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/SubastaLote.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-373">
-              <caret line="64" column="154" selection-start-line="64" selection-start-column="154" selection-end-line="64" selection-end-column="154" />
+            <state relative-caret-position="-335">
+              <caret line="45" column="11" selection-start-line="45" selection-start-column="11" selection-end-line="45" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -90,10 +78,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RegistroComprador.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/scenarios/ScenarioLauncher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1350">
-              <caret line="114" column="30" selection-start-line="114" selection-start-column="30" selection-end-line="114" selection-end-column="30" />
+            <state relative-caret-position="840">
+              <caret line="76" column="51" selection-start-line="76" selection-start-column="51" selection-end-line="76" selection-end-column="51" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/TimePOAAgent.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1218">
+              <caret line="102" column="30" selection-start-line="102" selection-start-column="30" selection-end-line="102" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -101,23 +98,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RetiroCompra.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
+            <state relative-caret-position="1302">
               <caret line="109" column="73" selection-start-line="109" selection-start-column="73" selection-end-line="109" selection-end-column="73" />
-              <folding>
-                <element signature="e#4269#4270#0" expanded="true" />
-                <element signature="e#4296#4297#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subasta.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="716">
-              <caret line="90" column="19" lean-forward="true" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
+            <state relative-caret-position="124">
+              <caret line="99" column="29" selection-start-line="99" selection-start-column="29" selection-end-line="99" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#5545#5546#0" expanded="true" />
+                <element signature="e#5577#5578#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -174,7 +169,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/InicioCredito.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/AddCredit.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/TicketBehaviour.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/BuyerRegister.java" />
@@ -183,7 +177,6 @@
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/tests/SellerBuyerDBTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/ListaMovimientos.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/tests/SimTimeTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/clock/ClockAgent.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/ComportamientoTiempo.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/clock/SimTimeOntology.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
@@ -195,19 +188,15 @@
         <option value="$PROJECT_DIR$/configs/buyerType3.yaml" />
         <option value="$PROJECT_DIR$/configs/sellerType3.yaml" />
         <option value="$PROJECT_DIR$/configs/sellerType2.yaml" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/scenarios/ScenarioLauncher.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/Buyer.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/productos/Tiempo.java" />
         <option value="$PROJECT_DIR$/configs/buyerType4.yaml" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/SellerAgent.java" />
         <option value="$PROJECT_DIR$/configs/scenario.yaml" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/TimePOAAgent.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/Pujar.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/InicioCredito.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/InicioCreditoResp.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RegistroVendedorResp.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/BuyerAgent.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/SubastaLote.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/DepositoPescadoResp.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RegistroCompradorResp.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/PujarLote.java" />
@@ -216,15 +205,21 @@
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroCompraResp.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/Seller.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/Movimiento.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RegistroVendedor.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subasta.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.java" />
-        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgent.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/SellerBuyerDB.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/productos/Fish.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RetiroCompra.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RegistroComprador.java" />
         <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RetiroGanancia.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/SellerAgent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/scenarios/ScenarioLauncher.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/TimePOAAgent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RegistroVendedor.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/clock/ClockAgent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/SubastaLote.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subastaa.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subasta.java" />
       </list>
     </option>
   </component>
@@ -234,19 +229,15 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="-1680" />
-    <option name="y" value="-250" />
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="width" value="1280" />
+    <option name="height" value="800" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -424,6 +415,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -433,7 +426,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1562737967546" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1562774666796" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.Arquillian JUnit4" value="" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
@@ -725,7 +718,8 @@
       <workItem from="1562531833044" duration="188000" />
       <workItem from="1562701226745" duration="1293000" />
       <workItem from="1562712590555" duration="9901000" />
-      <workItem from="1562735490206" duration="2330000" />
+      <workItem from="1562735490206" duration="2940000" />
+      <workItem from="1562762200094" duration="3731000" />
     </task>
     <servers />
   </component>
@@ -762,13 +756,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="337242000" />
+    <option name="totallyTimeSpent" value="341583000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1680" y="-250" width="1680" height="1050" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49859944" visible="true" weight="0.22039072" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49859944" weight="0.2956381" />
       <window_info id="Structure" order="1" sideWeight="0.5014006" side_tool="true" weight="0.20355412" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -777,7 +771,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3277311" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.746888" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.9579832" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.5106036" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -786,10 +780,10 @@
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.5826331" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.5812325" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Build" order="13" weight="0.32899868" />
-      <window_info anchor="bottom" id="Messages" order="14" weight="0.36410788" />
+      <window_info anchor="bottom" id="Messages" order="14" weight="0.3627451" />
       <window_info anchor="bottom" id="Duplicate detector" order="15" weight="0.32982457" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -803,42 +797,6 @@
       <window_info anchor="right" id="Gradle" order="9" weight="0.32956383" />
       <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.17826618" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49859944" visible="true" weight="0.19709209" />
-      <window_info id="Structure" order="1" sideWeight="0.5014006" side_tool="true" weight="0.20355412" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3277311" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.95106035" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4728261" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="CheckStyle" order="7" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.5854342" />
-      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
-      <window_info anchor="bottom" id="Build" order="13" weight="0.32899868" />
-      <window_info anchor="bottom" id="Messages" order="14" weight="0.84502447" />
-      <window_info anchor="bottom" id="Duplicate detector" order="15" weight="0.32982457" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Theme Preview" order="4" />
-      <window_info anchor="right" id="Maven" order="5" weight="0.3290735" />
-      <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Database" order="8" />
-      <window_info anchor="right" id="Gradle" order="9" weight="0.32956383" />
-      <window_info anchor="right" id="Coverage" order="10" side_tool="true" weight="0.17826618" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -936,22 +894,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/TimePOAAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="626">
-          <caret line="76" column="5" selection-start-line="76" selection-start-column="5" selection-end-line="76" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/Pujar.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/BuyerRegister.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/clock/ClockAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-518">
-          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/BuyerAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
@@ -1014,28 +958,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subasta.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="947">
-          <caret line="219" column="18" lean-forward="true" selection-start-line="219" selection-start-column="18" selection-end-line="219" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/SubastaLote.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="101" selection-start-line="101" selection-end-line="101" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5545#5546#0" expanded="true" />
-            <element signature="e#5577#5578#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgentConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="28">
@@ -1043,38 +965,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="823">
-          <caret line="172" column="4" selection-start-line="172" selection-start-column="4" selection-end-line="172" selection-end-column="4" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4205#4206#0" expanded="true" />
-            <element signature="e#4228#4229#0" expanded="true" />
-            <element signature="e#4338#4339#0" expanded="true" />
-            <element signature="e#4362#4363#0" expanded="true" />
-            <element signature="e#4506#4507#0" expanded="true" />
-            <element signature="e#4537#4538#0" expanded="true" />
-            <element signature="e#5100#5101#0" expanded="true" />
-            <element signature="e#5132#5133#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/DepositoPescado.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="686">
           <caret line="59" column="83" selection-start-line="59" selection-start-column="83" selection-end-line="59" selection-end-column="83" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/SellerAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="80" column="67" selection-start-line="80" selection-start-column="67" selection-end-line="80" selection-end-column="67" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1139,13 +1033,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/productos/FishAdquirido.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/productos/FishAdquirido.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/productos/Fish.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-356">
@@ -1182,17 +1070,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/scenarios/ScenarioLauncher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/Objetos/Movimiento.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="532">
           <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RetiroCompra.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1302">
+          <caret line="109" column="73" selection-start-line="109" selection-start-column="73" selection-end-line="109" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/SellerAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1610">
+          <caret line="117" column="41" selection-start-line="117" selection-start-column="41" selection-end-line="117" selection-end-column="41" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RegistroComprador.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="626">
+          <caret line="114" column="30" selection-start-line="114" selection-start-column="30" selection-end-line="114" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/PujarLote.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14">
+          <caret line="64" column="154" selection-start-line="64" selection-start-column="154" selection-end-line="64" selection-end-column="154" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RetiroGanancia.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="100" column="17" selection-start-line="100" selection-start-column="17" selection-end-line="100" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1206,57 +1141,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/PujarLote.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/TimePOAAgent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-373">
-          <caret line="64" column="154" selection-start-line="64" selection-start-column="154" selection-end-line="64" selection-end-column="154" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="1218">
+          <caret line="102" column="30" selection-start-line="102" selection-start-column="30" selection-end-line="102" selection-end-column="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/scenarios/ScenarioLauncher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="716">
-          <caret line="90" column="19" lean-forward="true" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="840">
+          <caret line="76" column="51" selection-start-line="76" selection-start-column="51" selection-end-line="76" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RegistroVendedor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="34" column="71" selection-start-line="34" selection-start-column="71" selection-end-line="34" selection-end-column="71" />
+        <state relative-caret-position="40">
+          <caret line="47" selection-start-line="47" selection-end-line="47" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RetiroCompra.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/clock/ClockAgent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="109" column="73" selection-start-line="109" selection-start-column="73" selection-end-line="109" selection-end-column="73" />
+        <state relative-caret-position="40">
+          <caret line="112" column="50" selection-start-line="112" selection-start-column="50" selection-end-line="112" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="82" column="44" selection-start-line="82" selection-start-column="44" selection-end-line="82" selection-end-column="44" />
           <folding>
-            <element signature="e#4269#4270#0" expanded="true" />
-            <element signature="e#4296#4297#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/buyer/behaviours/RegistroComprador.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/SubastaLote.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="114" column="30" selection-start-line="114" selection-start-column="30" selection-end-line="114" selection-end-column="30" />
+        <state relative-caret-position="-335">
+          <caret line="45" column="11" selection-start-line="45" selection-start-column="11" selection-end-line="45" selection-end-column="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/seller/behaviours/RetiroGanancia.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subasta.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="100" column="17" selection-start-line="100" selection-start-column="17" selection-end-line="100" selection-end-column="17" />
+        <state relative-caret-position="124">
+          <caret line="99" column="29" selection-start-line="99" selection-start-column="29" selection-end-line="99" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#5545#5546#0" expanded="true" />
+            <element signature="e#5577#5578#0" expanded="true" />
           </folding>
         </state>
       </provider>

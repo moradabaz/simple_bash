@@ -88,7 +88,6 @@ public class RetiroGananciaResp extends Behaviour {
                 ACLMessage response = prepareResponse(request);
                 if (response != null) {
                     agente.send(response);
-                   // done = true;
                 }
             }
         }

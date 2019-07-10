@@ -76,10 +76,15 @@ public abstract class TimePOAAgent  extends POAAgent {
 		}
 	}
 
+
 	public SimTimeOntology getSimTime() {
 		return simTime;
 	}
 
+	/***
+	 * Este metodo comprueba si un tiempo esta en una determinada fase
+	 * @return Devuelve la fase actual de la ejecucion
+	 */
 	public int getFaseActual() {
 		if (simTime.getTime() < FASE_REGISTRO)
 			return FASE_REGISTRO;
@@ -92,6 +97,11 @@ public abstract class TimePOAAgent  extends POAAgent {
 			return FASE_RETIRADA_VENDEDOR;
 	}
 
+	/**
+	 * Metodo abstracto que es implementado por la subclases en la que cada
+	 * subclase va insertando comportamientos en funcion de la fase actual
+	 * en la que se encuentra.
+	 */
 	public abstract void checkAgentBehaviours();
 
 }

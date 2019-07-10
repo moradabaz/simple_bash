@@ -80,7 +80,7 @@ public class FishMarketAgent extends TimePOAAgent {
 		switch (faseActual) {
 			case FASE_SUBASTA:
 				if (!isSubastaON) {
-					addBehaviour(new SubastaLote(this, 500));
+					addBehaviour(new Subasta(this, 500));
 					isSubastaON = true;
 				}
 				break;

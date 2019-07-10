@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Agente que controla la tiempo de la simulación
+ * Agente que controla la tiempo de la simulacion
  * 
  * @author pablo
  *
@@ -43,7 +43,7 @@ public class ClockAgent extends POAAgent {
 			MessageTemplate mt = SubscriptionResponder.createMessageTemplate(ACLMessage.SUBSCRIBE);
 			addBehaviour(new SubscriptionResponder(this, mt, clockBehaviour));
 
-			// Registrar servicio de medición del tiempo en el DF
+			// Registrar servicio de medicion del tiempo en el DF
 			DFAgentDescription dfd = new DFAgentDescription();
 			dfd.setName(getAID());
 			ServiceDescription sd = new ServiceDescription();
@@ -79,12 +79,12 @@ public class ClockAgent extends POAAgent {
 	 *
 	 */
 	private class ClockTickerBehaviour extends TickerBehaviour implements SubscriptionManager {
-		private int unitTimeMillis; // Número de milisegundos que forman una unidad de tiempo
-		private int numUnitDay; // Número de unidades que forman un día
-		private int numSimDays; // Número de días que durará la simulación
+		private int unitTimeMillis; // Numero de milisegundos que forman una unidad de tiempo
+		private int numUnitDay; // Numero de unidades que forman un dia
+		private int numSimDays; // Numero de dias que durara la simulacion
 		
 		private int time = 0; // contador de unidades de tiempo
-		private int day = 0; // contador de días
+		private int day = 0; // contador de dias
 		
 		List<Subscription> subs = new ArrayList<Subscription>();
 		
@@ -99,18 +99,18 @@ public class ClockAgent extends POAAgent {
 		protected void onTick() {
 			time += 1;
 			if (numUnitDay <= time) {
-				// Otro día
+				// Otro dia
 				time = 0;
 				day += 1;
 			}
 			
 			if(isSimEnd()) {
-				// Notificar fin simulación
+				// Notificar fin simulacion
 				((POAAgent)this.getAgent()).getLogger().info("ClockTickerBehaviour","Fin Simulaci?n!");
-				// Mandar notificaciones de fin de la simulación
+				// Mandar notificaciones de fin de la simulacion
 				notifySubsciptors(true);
 			} else {
-				// notificar agentes subscritos día y unidad de tiempo
+				// notificar agentes subscritos dia y unidad de tiempo
 				((POAAgent)this.getAgent()).getLogger().info("ClockTickerBehaviour","day="+day+", time="+time);
 				// TODO Actualizar GUI del reloj vitual?
 				notifySubsciptors(false);

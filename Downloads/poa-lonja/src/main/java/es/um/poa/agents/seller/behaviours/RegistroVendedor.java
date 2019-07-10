@@ -29,6 +29,11 @@ public class RegistroVendedor extends Behaviour {
     }
 
 
+    /**
+     * Metodo de manejo de un mensaje AGREE.
+     * Registra un movimiento de registro en la BBDD
+     * @param agree
+     */
     public void handleAgree(ACLMessage agree) {
         System.out.println("++ El agente " + ((SellerAgent)agente).getLocalName() + " HA SIDO REGISTRADO CORRECTAMENTE");
         String descripcion = "Se registra el vendedor " + ((SellerAgent) agente).getLocalName();
@@ -37,7 +42,7 @@ public class RegistroVendedor extends Behaviour {
     }
 
     public void handleRefuse(ACLMessage refuse) {
-        System.out.println("-- El agente " + refuse.getSender().getLocalName() + " ha rechazado la solicitud del agente vendedor"
+        System.out.println("-- El agente " + refuse.getSender().getLocalName() + " ha rechazado la solicitud  de registro del agente vendedor"
                 + agente.getLocalName());
     }
 

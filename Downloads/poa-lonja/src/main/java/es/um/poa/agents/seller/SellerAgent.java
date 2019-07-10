@@ -111,6 +111,12 @@ public class SellerAgent extends TimePOAAgent {
 		return cif;
 	}
 
+	/**
+	 * Este metodo se encarga de extraer la informacion relativa a los lotes,
+	 *  crear un objeto fish-
+	 * @param fishConfig
+	 * @return Retorna una lista de lotes
+	 */
 	public LinkedList<Fish> parseFish(List<FishConfig> fishConfig) {
 		LinkedList<Fish> lista = new LinkedList<>();
 		for (FishConfig fConfig : fishConfig) {
