@@ -1,0 +1,3 @@
+/Users/morad/Desktop/ASO/simplesh/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/morad/Desktop/ASO/simplesh/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/morad/Desktop/ASO/simplesh/cmake-build-debug/CMakeFiles/simplesh.dir
