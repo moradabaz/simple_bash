@@ -12,342 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2cec989-db5a-4094-bf57-a4fa5555cee9" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simplesh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simplesh.o" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/valgrind.out" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.classpath" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/checkstyle-idea.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/compiler.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/encodings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/gradle.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_annotations_2_9_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_core_2_9_8.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_databind_2_9_8.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_google_code_findbugs_jsr305_3_0_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_google_errorprone_error_prone_annotations_2_1_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_google_guava_guava_26_0_jre.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__com_google_j2objc_j2objc_annotations_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__junit_junit_4_12.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__net_sf_ingenias_jade_4_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__org_apache_commons_commons_math3_3_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__org_checkerframework_checker_qual_2_5_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__org_codehaus_mojo_animal_sniffer_annotations_1_14.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Gradle__org_yaml_snakeyaml_1_21.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/libraries/Maven__Arquillian_JUnit_Release.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/modules/poa-lonja.main.iml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/modules/poa-lonja.test.iml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/uiDesigner.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.project" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/.settings/org.eclipse.buildship.core.prefs" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/APDescription.txt" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/allclasses-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/allclasses-noframe.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/constant-values.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/deprecated-list.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/Buyer.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/Concepto.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/ListaMovimientos.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/Movimiento.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/Seller.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/SellerBuyerDB.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/Objetos/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/POAAgent.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/TimePOAAgent.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/BuyerAgent.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/BuyerAgentConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/InicioCredito.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/PujarLote.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/RegistroComprador.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/RetiroCompra.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/behaviours/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/buyer/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/clock/ClockAgent.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/clock/ClockAgentConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/clock/SimTimeOntology.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/clock/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/clock/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/clock/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/FishMarketAgent.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/FishMarketAgentConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/DepositoPescadoResp.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/InicioCreditoResp.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/RegistroCompradorResp.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/RegistroVendedorResp.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/RetiroCompraResp.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/Subasta.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/SubastaLote.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/behaviours/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/fishmarket/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/SellerAgent.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/SellerAgentConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/behaviours/DepositoPescado.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/behaviours/RegistroVendedor.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/behaviours/RetiroGanancia.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/behaviours/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/behaviours/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/behaviours/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/agents/seller/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/EstadoVenta.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/Fish.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/FishConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/FishDeseoConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/TipoProducto.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/productos/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/scenarios/AgentRefConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/scenarios/ScenarioConfig.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/scenarios/ScenarioLauncher.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/scenarios/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/scenarios/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/scenarios/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/BuyerAgentConfigTest.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/FishTest.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/SellerAgentConfigTest.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/SellerBuyerDBTest.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/SimTimeTest.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/tests/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/AgentLoggerWrapper.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/AgentLoggingHTMLFormatter.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/LogAgentFilter.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/OntologyFactory.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/es/um/poa/utils/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/help-doc.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-1.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-10.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-11.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-12.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-13.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-14.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-15.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-16.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-17.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-18.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-2.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-3.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-4.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-5.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-6.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-7.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-8.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index-files/index-9.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/overview-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/overview-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/overview-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/package-list" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/script.js" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/serialized-form.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/JavaDocPOA/stylesheet.css" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/MTPs-Main-Container.txt" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/POAAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/TimePOAAgent$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/TimePOAAgent$TimerUpdaterBehaviour.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/TimePOAAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/buyer/BuyerAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/buyer/BuyerAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/clock/ClockAgent$ClockTickerBehaviour.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/clock/ClockAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/clock/ClockAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/clock/SimTimeOntology.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/fishmarket/FishMarketAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/fishmarket/FishMarketAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/seller/Lot.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/seller/SellerAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/agents/seller/SellerAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/scenarios/AgentRefConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/scenarios/ScenarioConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/scenarios/ScenarioLauncher.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/utils/AgentLoggerWrapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/utils/AgentLoggingHTMLFormatter.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/utils/ColorManager.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/utils/LogAgentFilter.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/bin/main/es/um/poa/utils/OntologyFactory.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/POAAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/TimePOAAgent$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/TimePOAAgent$TimerUpdaterBehaviour.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/TimePOAAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/buyer/BuyerAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/buyer/BuyerAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/clock/ClockAgent$ClockTickerBehaviour$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/clock/ClockAgent$ClockTickerBehaviour.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/clock/ClockAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/clock/ClockAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/clock/SimTimeOntology.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/fishmarket/FishMarketAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/fishmarket/FishMarketAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/seller/Lot.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/seller/SellerAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/agents/seller/SellerAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/scenarios/AgentRefConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/scenarios/ScenarioConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/scenarios/ScenarioLauncher.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/utils/AgentLoggerWrapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/utils/AgentLoggingHTMLFormatter.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/utils/ColorManager.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/utils/LogAgentFilter.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/build/classes/java/main/es/um/poa/utils/OntologyFactory.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/buyerType1.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/buyerType2.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/buyerType3.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/buyerType4.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/fishMarket.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/scenario.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/sellerType1.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/sellerType2.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/configs/sellerType3.yaml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/gradle/wrapper/gradle-wrapper.jar" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/gradle/wrapper/gradle-wrapper.properties" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/gradlew" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/gradlew.bat" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/jade.jar" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/logs/EscenarioEjemplo.html" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/logs/EscenarioEjemplo.html.1" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/logs/EscenarioEjemplo.html.lck" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/META-INF/poa-lonja.main.kotlin_module" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/Objetos/Buyer.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/Objetos/Concepto.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/Objetos/ListaMovimientos.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/Objetos/Movimiento.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/Objetos/Seller.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/Objetos/SellerBuyerDB.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/POAAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/TimePOAAgent$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/TimePOAAgent$TimerUpdaterBehaviour.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/TimePOAAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/buyer/BuyerAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/buyer/BuyerAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/buyer/behaviours/InicioCredito.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/buyer/behaviours/PujarLote.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/buyer/behaviours/RegistroComprador.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/buyer/behaviours/RetiroCompra.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/clock/ClockAgent$ClockTickerBehaviour.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/clock/ClockAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/clock/ClockAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/clock/SimTimeOntology.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/FishMarketAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/FishMarketAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/DepositoPescadoResp.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/InicioCreditoResp.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/RegistroCompradorResp.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/RegistroVendedorResp.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/RetiroCompraResp.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/Subasta$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/Subasta.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/fishmarket/behaviours/SubastaLote.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/seller/SellerAgent.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/seller/SellerAgentConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/seller/behaviours/DepositoPescado.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/seller/behaviours/RegistroVendedor.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/agents/seller/behaviours/RetiroGanancia.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/productos/EstadoVenta.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/productos/Fish.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/productos/FishConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/productos/FishDeseoConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/productos/TipoProducto.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/scenarios/AgentRefConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/scenarios/ScenarioConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/scenarios/ScenarioLauncher.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/tests/BuyerAgentConfigTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/tests/FishTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/tests/SellerAgentConfigTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/tests/SellerBuyerDBTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/tests/SimTimeTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/utils/AgentLoggerWrapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/utils/AgentLoggingHTMLFormatter.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/utils/ColorManager.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/utils/LogAgentFilter.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/out/production/classes/es/um/poa/utils/OntologyFactory.class" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/poa-lonja.iml" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/settings.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/snakeyaml-1.9.jar" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java.zip" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/Objetos/Buyer.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/Objetos/Concepto.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/Objetos/ListaMovimientos.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/Objetos/Movimiento.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/Objetos/Seller.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/Objetos/SellerBuyerDB.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/POAAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/TimePOAAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/buyer/BuyerAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/buyer/BuyerAgentConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/buyer/behaviours/InicioCredito.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/buyer/behaviours/PujarLote.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/buyer/behaviours/RegistroComprador.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/buyer/behaviours/RetiroCompra.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/clock/ClockAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/clock/ClockAgentConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/clock/SimTimeOntology.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/FishMarketAgentConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/DepositoPescadoResp.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/InicioCreditoResp.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/RegistroCompradorResp.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/RegistroVendedorResp.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroCompraResp.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/RetiroGananciaResp.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/Subasta.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/fishmarket/behaviours/SubastaLote.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/seller/SellerAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/seller/SellerAgentConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/seller/behaviours/DepositoPescado.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/seller/behaviours/RegistroVendedor.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/agents/seller/behaviours/RetiroGanancia.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/productos/EstadoVenta.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/productos/Fish.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/productos/FishConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/productos/FishDeseoConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/productos/TipoProducto.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/scenarios/AgentRefConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/scenarios/ScenarioConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/scenarios/ScenarioLauncher.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/tests/BuyerAgentConfigTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/tests/FishTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/tests/SellerAgentConfigTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/tests/SellerBuyerDBTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/tests/SimTimeTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/utils/AgentLoggerWrapper.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/utils/AgentLoggingHTMLFormatter.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/utils/LogAgentFilter.java" afterPath="" />
-      <change type="DELETED" beforePath="$USER_HOME$/Downloads/poa-lonja/src/main/java/es/um/poa/utils/OntologyFactory.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/depend.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/depend.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/flags.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/flags.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/link.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplesh" afterPath="$PROJECT_DIR$/simplesh" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplesh.o" afterPath="$PROJECT_DIR$/simplesh.o" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/libreadline.supp" afterPath="$PROJECT_DIR$/libreadline.supp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplesh.c" afterPath="$PROJECT_DIR$/simplesh.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/valgrind.out" afterPath="$PROJECT_DIR$/valgrind.out" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -366,12 +35,12 @@
       <file leaf-file-name="simplesh.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simplesh.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="680" column="99" lean-forward="false" selection-start-line="680" selection-start-column="99" selection-end-line="680" selection-end-column="99" />
+            <state relative-caret-position="388">
+              <caret line="1065" column="53" lean-forward="true" selection-start-line="1065" selection-start-column="53" selection-end-line="1065" selection-end-column="53" />
               <folding>
                 <element signature="e#524#543#0" expanded="true" />
-                <element signature="e#747#777#0" expanded="true" />
-                <element signature="e#1831#1900#0" expanded="true" />
+                <element signature="e#764#794#0" expanded="true" />
+                <element signature="e#1888#1957#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -393,6 +62,7 @@
     <findStrings>
       <find>free_cmd</find>
       <find>'&gt;'</find>
+      <find>simplesh</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -620,12 +290,12 @@
       <workItem from="1568634771293" duration="73000" />
       <workItem from="1568634848339" duration="1643000" />
       <workItem from="1569263162169" duration="101000" />
-      <workItem from="1569263269424" duration="1551000" />
+      <workItem from="1569263269424" duration="2664000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3687000" />
+    <option name="totallyTimeSpent" value="4800000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -638,6 +308,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1280" y="-172" width="1680" height="1050" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -645,8 +316,8 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4325726" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14224665" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4325726" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14224665" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -674,8 +345,8 @@
           <caret line="829" column="35" lean-forward="false" selection-start-line="829" selection-start-column="35" selection-end-line="829" selection-end-column="35" />
           <folding>
             <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#747#777#0" expanded="true" />
-            <element signature="e#1831#1900#0" expanded="true" />
+            <element signature="e#764#794#0" expanded="true" />
+            <element signature="e#1888#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -686,8 +357,8 @@
           <caret line="964" column="20" lean-forward="false" selection-start-line="964" selection-start-column="20" selection-end-line="964" selection-end-column="20" />
           <folding>
             <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#747#777#0" expanded="true" />
-            <element signature="e#1831#1900#0" expanded="true" />
+            <element signature="e#764#794#0" expanded="true" />
+            <element signature="e#1888#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -698,8 +369,8 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#747#777#0" expanded="true" />
-            <element signature="e#1831#1900#0" expanded="true" />
+            <element signature="e#764#794#0" expanded="true" />
+            <element signature="e#1888#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -710,8 +381,8 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#747#777#0" expanded="true" />
-            <element signature="e#1831#1900#0" expanded="true" />
+            <element signature="e#764#794#0" expanded="true" />
+            <element signature="e#1888#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -726,12 +397,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/simplesh.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="680" column="99" lean-forward="false" selection-start-line="680" selection-start-column="99" selection-end-line="680" selection-end-column="99" />
+        <state relative-caret-position="388">
+          <caret line="1065" column="53" lean-forward="true" selection-start-line="1065" selection-start-column="53" selection-end-line="1065" selection-end-column="53" />
           <folding>
             <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#747#777#0" expanded="true" />
-            <element signature="e#1831#1900#0" expanded="true" />
+            <element signature="e#764#794#0" expanded="true" />
+            <element signature="e#1888#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>

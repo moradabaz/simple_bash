@@ -30,10 +30,13 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <pwd.h>
 
 // Biblioteca readline
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <limits.h>
+#include <libgen.h>
 
 
 /******************************************************************************
@@ -1037,13 +1040,37 @@ void free_cmd(struct cmd* cmd)
 // biblioteca readline. Ésta permite mantener el historial, utilizar las flechas
 // para acceder a las órdenes previas del historial, búsquedas de órdenes, etc.
 
+
+
 char* get_cmd()
 {
+    uid_t  uid = getuid();
+    struct passwd *pw = getpwuid(uid);
+    if (!pw) {
+        perror("Error en getpwuid");
+        exit(EXIT_FAILURE);
+    }
+
+    char path[PATH_MAX];
+
+    if (!getcwd(path, PATH_MAX)) {
+        perror("DIRECTORY FAILURE");
+        exit(EXIT_FAILURE);
+    }
+
+    //
+    char * cur_dir = basename(path);
+    size_t prompt_size = strlen(pw->pw_name) + strlen(cur_dir) + 4;
+
+    char * prompt = malloc(prompt_size * sizeof(char));
+    sprintf(prompt, "%s@%s> ", pw->pw_name, cur_dir);
+
+
     char* buf;
 
     // Lee la orden tecleada por el usuario
-    buf = readline("simplesh> ");
-
+    buf = readline(prompt);
+    free(prompt);
     // Si el usuario ha escrito una orden, almacenarla en la historia.
     if(buf)
         add_history(buf);
