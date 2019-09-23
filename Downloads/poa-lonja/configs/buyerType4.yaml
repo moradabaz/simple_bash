@@ -1,7 +1,0 @@
-!!es.um.poa.agents.buyer.BuyerAgentConfig
-cif: "BY336"
-nombre: "Jose Sabadell"
-budget: 288.0
-listaDeseos:
-  - nombre: "boqueron"
-  - nombre: "merluza"

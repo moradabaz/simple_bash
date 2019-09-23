@@ -1,7 +1,0 @@
-!!es.um.poa.agents.buyer.BuyerAgentConfig
-cif: "BY722"
-nombre: "Fran Jimenez"
-budget: 125.0
-listaDeseos:
-  - nombre: "lubina"
-  - nombre: "merluza"

@@ -1,7 +1,0 @@
-!!es.um.poa.agents.buyer.BuyerAgentConfig
-cif: "BY500"
-nombre: "Pepe Dominguez"
-budget: 1000.0
-listaDeseos:
-  - nombre: "sardina"
-  - nombre: "lubina"
