@@ -3,5 +3,10 @@
     Memcheck:Leak
     ...
     fun:*
+<<<<<<< HEAD
     obj:/usr/local/opt/readline/lib/*
+=======
+    obj:/lib/i386-linux-gnu/libreadline.so.*
+    ...
+>>>>>>> cf9a40930bb5c2f77b1e68090fbda652465adcd9
 }
