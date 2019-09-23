@@ -3,6 +3,6 @@
     Memcheck:Leak
     ...
     fun:*
-    obj:/lib/x86_64-linux-gnu/libreadline.so.*
+    obj:/usr/local/opt/readline/*
     ...
 }

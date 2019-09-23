@@ -238,8 +238,8 @@ struct cmd* execcmd(void)
 
 // Construye una estructura `cmd` de tipo `REDR`
 struct cmd* redrcmd(struct cmd* subcmd,
-        char* file, char* efile,
-        int flags, mode_t mode, int fd)
+                    char* file, char* efile,
+                    int flags, mode_t mode, int fd)
 {
     struct redrcmd* cmd;
 
@@ -343,7 +343,7 @@ struct cmd* subscmd(struct cmd* subcmd)
 // `get_token` devuelve un *token* de la cadena de entrada.
 
 int get_token(char** start_of_str, char const* end_of_str,
-        char** start_of_token, char** end_of_token)
+              char** start_of_token, char** end_of_token)
 {
     char* s;
     int ret;
@@ -397,8 +397,8 @@ int get_token(char** start_of_str, char const* end_of_str,
 
             ret = 'a';
             while (s < end_of_str &&
-                    !strchr(WHITESPACE, *s) &&
-                    !strchr(SYMBOLS, *s))
+                   !strchr(WHITESPACE, *s) &&
+                   !strchr(SYMBOLS, *s))
                 s++;
             break;
     }
@@ -581,7 +581,7 @@ struct cmd* parse_exec(char** start_of_str, char* end_of_str)
     while (!peek(start_of_str, end_of_str, "|)&;"))
     {
         if ((token = get_token(start_of_str, end_of_str,
-                        &start_of_token, &end_of_token)) == 0)
+                               &start_of_token, &end_of_token)) == 0)
             break;
 
         // El siguiente token debe ser un argumento porque el bucle
@@ -675,10 +675,10 @@ struct cmd* parse_redr(struct cmd* cmd, char** start_of_str, char* end_of_str)
                 cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDONLY, 0, STDIN_FILENO);
                 break;
             case '>':
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT, 0, STDOUT_FILENO);
+                cmd = redrcmd(cmd, start_of_token, end_of_token,  O_RDWR|O_CREAT|O_TRUNC, S_IRWXU, STDOUT_FILENO);
                 break;
             case '+': // >>
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT, 0, STDOUT_FILENO);
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_WRONLY|O_CREAT|O_APPEND, S_IRWXU, STDOUT_FILENO);
                 break;
         }
     }

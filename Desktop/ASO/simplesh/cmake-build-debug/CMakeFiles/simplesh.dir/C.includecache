@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/morad/Desktop/ASO/simplesh/simplesh.c
+assert.h
+-
+errno.h
+-
+fcntl.h
+-
+getopt.h
+-
+stdarg.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+sys/wait.h
+-
+unistd.h
+-
+readline/readline.h
+-
+readline/history.h
+-
+
