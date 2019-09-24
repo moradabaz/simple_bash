@@ -37,13 +37,15 @@
 #include <readline/history.h>
 #include <limits.h>
 #include <libgen.h>
+#include <stdbool.h>
 
 
 /******************************************************************************
  * Constantes, macros y variables globales
  ******************************************************************************/
 
-
+char * lista_comandos_internos[] = {"exit", "cwd", "cd"};
+static const int TAM_LISTA_COMANDOS = 3;
 static const char* VERSION = "0.19";
 
 // Niveles de depuración
@@ -458,6 +460,8 @@ struct cmd* null_terminate(struct cmd*);
 //
 // `parse_cmd` utiliza `parse_line` para obtener una estructura `cmd`.
 
+char *cur_dir();
+
 struct cmd* parse_cmd(char* start_of_str)
 {
     char* end_of_str;
@@ -766,6 +770,96 @@ void exec_cmd(struct execcmd* ecmd)
 }
 
 
+/*****************************************************************************
+ * ZONA PARA COMANDOS INTERNOS
+*****************************************************************************/
+char * cur_dir() {
+    char * path = malloc(PATH_MAX * sizeof(char *));
+    if (!getcwd(path, PATH_MAX)) {
+        perror("Current directory failure");
+        exit(EXIT_FAILURE);
+    }
+    return path;
+}
+
+
+void cd_home() {
+    char * current_dir = cur_dir();
+    char * home = getenv("HOME");
+    chdir(home);
+    setenv("OLDPWD", current_dir, true);
+}
+
+void run_cd(char * path) {
+    if (strcmp(path, "-") == 0) {
+        char * dir = getenv("OLDPWD");
+        if (dir) {
+            run_cd(dir);
+        } else {
+            printf("run_cd: Variable OLDPWD no definida\n");
+        }
+    } else {
+        if (!path) {
+            printf("run_cd: No existe el directorio '%s'\n", path);
+        } else {
+            char * current_dir = cur_dir();
+            char * whole_dir_path = malloc((PATH_MAX + 1) * sizeof(char *));
+            realpath(path, whole_dir_path);
+            if (strcmp(whole_dir_path, "") == 0) {
+                perror("run_cd: No existe el directorio\n");
+            } else {
+                int success = chdir(whole_dir_path);
+                if (success == 0) {
+                    setenv("OLDPWD", current_dir, true);
+                } else {
+                    perror("Directory coudn't be changed");
+                }
+                free(whole_dir_path);
+            }
+        }
+    }
+}
+
+
+void run_cwd() {
+    char path[PATH_MAX];
+    if (!getcwd(path, PATH_MAX)) {
+        perror("cwd command fail");
+        exit(EXIT_FAILURE);
+    }
+    printf("cwd: %s\n", path);
+}
+
+int internal_cmd(struct execcmd * cmd) {
+    if (cmd->argv[0] == 0) return 0;
+    for (int i = 0; i < TAM_LISTA_COMANDOS; ++i) {
+        if (strcmp(cmd->argv[0], lista_comandos_internos[i]) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+void exec_internal_cmd(struct execcmd * cmd) {
+    if (strcmp(cmd->argv[0], "cwd") == 0) {
+        run_cwd();
+    } else if (strcmp(cmd->argv[0], "cd") == 0){
+        if (cmd->argv[1]){
+            if (cmd->argc > 2) {
+                printf("run_cd: Demasiados argumentos\n");
+            } else {
+                run_cd(cmd->argv[1]);
+            }
+        } else {
+            cd_home();
+        }
+    }
+}
+
+/*****************************************************************************
+ * FIN DE LA ZONA PARA COMANDOS INTERNOS
+*****************************************************************************/
+
+
 void run_cmd(struct cmd* cmd)
 {
     struct execcmd* ecmd;
@@ -785,9 +879,13 @@ void run_cmd(struct cmd* cmd)
     {
         case EXEC:
             ecmd = (struct execcmd*) cmd;
-            if (fork_or_panic("fork EXEC") == 0)
-                exec_cmd(ecmd);
-            TRY( wait(NULL) );
+            if (internal_cmd(ecmd) > 0) {
+                exec_internal_cmd(ecmd);
+            } else {
+                if (fork_or_panic("fork EXEC") == 0)
+                    exec_cmd(ecmd);
+                TRY(wait(NULL));
+            }
             break;
 
         case REDR:
@@ -1030,6 +1128,10 @@ void free_cmd(struct cmd* cmd)
     }
 }
 
+
+/*****************************************************************************
+ * ZONA PARA COMANDOS INTERNOS
+*****************************************************************************/
 
 /******************************************************************************
  * Lectura de la línea de órdenes con la biblioteca libreadline

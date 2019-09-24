@@ -1,1 +1,1 @@
-/Library/Developer/CommandLineTools/usr/bin/cc  lreadline -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/simplesh.dir/simplesh.c.o  -o simplesh 
+/Library/Developer/CommandLineTools/usr/bin/cc  -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/simplesh.dir/simplesh.c.o  -o simplesh 
