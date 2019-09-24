@@ -28,25 +28,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
+#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <pwd.h>
-
+#include <limits.h>
+#include <libgen.h>
 // Biblioteca readline
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <limits.h>
-#include <libgen.h>
 #include <stdbool.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 
 /******************************************************************************
  * Constantes, macros y variables globales
  ******************************************************************************/
 
-char * lista_comandos_internos[] = {"exit", "cwd", "cd"};
-static const int TAM_LISTA_COMANDOS = 3;
-static const char* VERSION = "0.19";
+
+static const char* VERSION = "0.18";
 
 // Niveles de depuración
 #define DBG_CMD   (1 << 0)
@@ -87,8 +89,8 @@ static int g_dbg_level = 0;
 
 // Número máximo de argumentos de un comando
 #define MAX_ARGS 16
-
-
+#define DEFAULT_LINE_HD  3
+#define BSIZE 1024
 // Delimitadores
 static const char WHITESPACE[] = " \t\r\n\v";
 // Caracteres especiales
@@ -98,6 +100,157 @@ static const char SYMBOLS[] = "<|>&;()";
 /******************************************************************************
  * Funciones auxiliares
  ******************************************************************************/
+
+int olddir = 0;
+
+void print_hd_help() {
+    printf("Uso: hd [-l NLINES] [-b NBYTES] [-t BSIZE] [FILE1] [FILE2]...\n"
+                   "\tOpciones:\n"
+                   "\t-l NLINES Numero maximo de lineas a mostrar.\n"
+                   "\t-b NBYTES Numero maximo de bytes a mostrar.\n"
+                   "\t-t BSIZE Tamano en bytes de los bloques leidos de [FILEn] o stdin.\n"
+                   "\t-h help\n");
+}
+
+void print_src_help() {
+    printf("Uso: src [-d DELIM] [FILE1] [FILE2]...\n"
+                   "\tOpciones:\n"
+                   "\t-d DELIM Carácter de inicio de comentarios.\n"
+                   "\t-h help\n");
+}
+
+void read_and_print_lines(int fd, char* buffer, int numLineas) {
+    int counter = 0;
+    ssize_t n = read(fd, buffer, BSIZE);
+    char *linea = strtok(buffer, "\n");
+    if (linea != NULL) {
+        while (n > 0 && counter < numLineas) {
+            printf("%s\n", linea);
+            linea = strtok(NULL, "\n");
+            counter++;
+            if (linea == NULL) {
+                n = read(fd, buffer, BSIZE);
+                linea = strtok(buffer, "\n");
+            }
+        }
+    }
+}
+
+void print_bytes(int fd, char* buffer, int writeBytes) {
+    ssize_t w;
+    ssize_t n = read(fd, buffer, BSIZE);
+    if (writeBytes < n) {
+         w = write(STDOUT_FILENO, buffer, writeBytes);
+        if (w == -1) {
+            perror("Error de escritura\n");
+            return;
+        }
+    }  else {
+        int total = 0;
+        do {
+            w = write(STDOUT_FILENO, buffer, n);
+            if (w) {
+                total += n;
+                n = read(fd, buffer, BSIZE);
+            }
+        } while (total < writeBytes && n > 0);
+    }
+}
+
+void read_file(int fd, int size, int type) {
+    char * buffer = malloc(BSIZE * sizeof(char));
+    ssize_t n;
+    if (type == 1) {
+        read_and_print_lines(fd, buffer, size);
+    } else if (type == 2) {
+        print_bytes(fd, buffer, size);
+    } else if (type == 3) {
+        if (size <= 0) {
+            printf("hd: Opcion no valida\n");
+            return;
+        }
+        n = read(fd, buffer, size);
+        int total = 0;
+        do {                // TODO: FALTA POR HACER
+            ssize_t w = write(STDOUT_FILENO, buffer, 1);
+            if (w != n) {
+                int total = w;
+                do {
+                    w = write(STDOUT_FILENO, total + buffer, n - total);
+                    total += w;
+                } while(total < size);
+            }
+            total += n;
+            n = read(fd, buffer, BSIZE);
+        } while (total < size && n > 0);
+    }
+    free(buffer);
+    close(fd);
+}
+
+void parse_hd_args(int argc, char *argv[]) {
+    int opt, flag;
+    int nl;
+    flag = nl = 0;
+    optind = 1;
+    int hayficheros = 0;
+    while ((opt = getopt(argc, argv, "l:b:t:h")) != -1) {
+        switch (opt) {
+            case 'l':
+                flag = 1;
+                nl = atoi(optarg);
+                break;
+            case 'b':
+                nl = atoi(optarg);
+                flag = 2;
+                break;
+            case 't':
+                nl = atoi(optarg);
+                flag = 3;
+                break;
+            case 'h':
+                print_hd_help();
+                return;
+                break;
+            default:
+                fprintf(stderr, "Usage: %s [-f] [-n NUM]\n", argv[0]);
+                break;
+        }
+    }
+
+    for (int i = optind; i < argc; ++i) {
+        for (int j = 0; j < strlen(argv[i]); ++j) {
+            if (argv[i][j] == '-') {
+                printf("hd: Opciones incompatibles\n");
+                return;
+            }
+        }
+    }
+
+    if (flag == 3 && nl <= 0) {
+        printf("hd: Opcion no valida\n");
+        return;
+    }
+
+    hayficheros = argc - optind;
+    if (hayficheros > 0) {
+        for (int i = optind; i < argc; ++i) {
+            //TODO : Aqui falta un descriptor de fichero
+            int fd = open(argv[i], O_RDONLY);
+            if (fd > 0)
+                read_file(fd, nl, flag);
+            close(fd);
+        }
+    } else {
+       read_file(STDIN_FILENO, nl, flag);
+    }
+
+    // (echo 1; echo 2; echo 3; echo 4; echo 5; echo 6) | hd -l4
+    // for(int i = optind; i < argc; i++) printf("%s\n", argv[i]);
+}
+
+
+
 
 
 // Imprime el mensaje
@@ -122,6 +275,9 @@ void error(const char *fmt, ...)
     vfprintf(stderr, fmt, arg);
     va_end(arg);
 }
+
+
+
 
 
 // Imprime el mensaje de error y aborta la ejecución
@@ -149,6 +305,112 @@ int fork_or_panic(const char* s)
     return pid;
 }
 
+void read_src_file(int fd, char * buffer, int size) {
+    ssize_t n = -1;
+    do {
+        n = read(fd, buffer, 4096);
+        // JODIDO
+
+        long tam = lseek(fd, 4096, 0);
+    } while(n != 0);
+    //printf("%ld\n", tam);
+    //printf("%zd\n", n);
+}
+
+void parse_src_args(int argc, char *argv[]) {
+    int opt, flag;
+    char c;
+    optind = 1;
+    int hayficheros = 0;
+    while ((opt = getopt(argc, argv, "d:h")) != -1) {
+        switch (opt) {
+            case 'd':
+                flag = 1;
+                c = optarg[0];
+                break;
+            case 'h':
+                print_hd_help();
+                return;
+                break;
+            default:
+                fprintf(stderr, "Usage: %s [-d] [DELIM]\n", argv[0]);
+                break;
+        }
+    }
+    hayficheros = argc - optind;
+    if (hayficheros > 0 ){
+
+    } else {
+        char * buffer = malloc(BSIZE * sizeof(char));
+        read_src_file(STDIN_FILENO, buffer, 4096);          // TODO: No poner numeros magicos
+
+    }
+    //printf("%s\n", argv[optind]);
+
+}
+
+
+
+void run_src(int argc, char* argv[]) {
+    parse_src_args(argc, argv);
+}
+
+
+void run_cwd() {
+    char ruta[PATH_MAX];
+    if (!getcwd(ruta, PATH_MAX)) {
+        perror("FALLO DE RUTA");
+        exit(EXIT_FAILURE);
+    }
+    printf("cwd: %s\n", ruta);
+}
+
+char * get_cur_dir() {
+    char * ruta = malloc(PATH_MAX * sizeof(char*));
+    if (!getcwd(ruta, PATH_MAX)) {
+        perror("FALLO DE RUTA");
+        exit(EXIT_FAILURE);
+    }
+    return ruta;
+}
+
+void run_cd_HOME() {
+     char * dir_actual = get_cur_dir();
+    char * dir_home = getenv("HOME");
+    chdir(dir_home);
+     setenv("OLDPWD", dir_actual, true);
+}
+
+void run_cd(char* path) {
+    if (strcmp(path, "-") == 0) {
+        char * dir = getenv("OLDPWD");
+        if (dir != NULL && olddir > 0) {
+            run_cd(dir);
+        } else {
+            printf("run_cd: Variable OLDPWD no definida\n");
+           // exit(EXIT_FAILURE);
+        }
+    } else {
+           DIR* dir = opendir(path);
+        if(!dir) {
+            printf("run_cd: No existe el directorio '%s'\n", path);
+        } else {
+         char * dir_actual = get_cur_dir();
+             if (strcmp(dir_actual, "") == 0) {
+             perror("run_cd: No existe el directorio\n");
+             } else {
+                int succes = chdir(dir_actual);
+                if (succes == 0) {
+               setenv("OLDPWD", dir_actual, true);
+               olddir = 1;
+                } else {
+                    perror("NO se ha podido cambiar de directorio\n");
+                }
+            }
+        }
+    }
+
+}
 
 /******************************************************************************
  * Estructuras de datos `cmd`
@@ -335,6 +597,12 @@ struct cmd* subscmd(struct cmd* subcmd)
     return (struct cmd*) cmd;
 }
 
+void run_exit(struct execcmd * ecmd) {
+
+    // LIMPIAR LA MEMORIA
+    free(ecmd);
+    exit(EXIT_SUCCESS);
+}
 
 /******************************************************************************
  * Funciones para realizar el análisis sintáctico de la línea de órdenes
@@ -347,7 +615,7 @@ struct cmd* subscmd(struct cmd* subcmd)
 //
 // `get_token` devuelve un *token* de la cadena de entrada.
 
-int get_token(char** start_of_str, char const* end_of_str,
+int get_token(char** start_of_str, char* end_of_str,
               char** start_of_token, char** end_of_token)
 {
     char* s;
@@ -423,6 +691,56 @@ int get_token(char** start_of_str, char const* end_of_str,
 }
 
 
+
+//************************************************************************
+//*          FUNCIONES DE LA PRÁCTICA
+//************************************************************************
+
+int internal_cmd(struct execcmd * ecmd) {
+    if (ecmd->argv[0] == 0) return 0;
+    if (strcmp(ecmd->argv[0], "exit") == 0) {
+        return 1;
+    } else if (strcmp(ecmd->argv[0], "cwd") == 0) {
+        return 2;
+    } else if (strcmp(ecmd->argv[0], "cd") == 0) {
+        return  3;
+    } else  if (strcmp(ecmd->argv[0], "hd") == 0) {
+        return 4;
+    } else if (strcmp(ecmd->argv[0], "src") == 0) {
+        return 5;
+    }
+    return 0;
+}
+
+
+void exec_internal_cmd(struct execcmd * ecmd) {
+    if (strcmp(ecmd->argv[0], "exit") == 0) {
+        run_exit(ecmd);
+    } else if (strcmp(ecmd->argv[0], "cwd") == 0) {
+        run_cwd();
+    } else if (strcmp(ecmd->argv[0], "cd") == 0) {
+        if (ecmd->argv[1] != NULL) {
+                if(ecmd->argc > 2) {
+                    printf("run_cd: Demasiados argumentos\n");
+                    //exit(EXIT_FAILURE);               
+                } else {
+                run_cd(ecmd->argv[1]);
+                }   
+        } else {
+            run_cd_HOME();
+        }
+    } else if (strcmp(ecmd->argv[0], "hd") == 0) {
+        parse_hd_args(ecmd->argc, ecmd->argv);
+    } else if (strcmp(ecmd->argv[0], "src") == 0) {
+        run_src(ecmd->argc, ecmd->argv);
+    }
+}
+
+
+
+
+//*******************************************************************
+
 // `peek` recibe un puntero al principio de una cadena (`start_of_str`), otro
 // puntero al final de esa cadena (`end_of_str`) y un conjunto de caracteres
 // (`delimiter`).
@@ -433,7 +751,7 @@ int get_token(char** start_of_str, char const* end_of_str,
 // `peek` devuelve un valor distinto de `NULL` si encuentra alguno de los
 // caracteres en `delimiter` justo después de los caracteres en `WHITESPACE`.
 
-int peek(char** start_of_str, char const* end_of_str, char* delimiter)
+int peek(char** start_of_str, char* end_of_str, char* delimiter)
 {
     char* s;
 
@@ -459,8 +777,6 @@ struct cmd* null_terminate(struct cmd*);
 // introducida por el usuario.
 //
 // `parse_cmd` utiliza `parse_line` para obtener una estructura `cmd`.
-
-char *cur_dir();
 
 struct cmd* parse_cmd(char* start_of_str)
 {
@@ -570,7 +886,7 @@ struct cmd* parse_exec(char** start_of_str, char* end_of_str)
     struct execcmd* cmd;
     struct cmd* ret;
 
-    // ¿Inicio de un bloque?
+    // ¿Inicio de un bloque?        Si empieza por '(' encot
     if (peek(start_of_str, end_of_str, "("))
         return parse_subs(start_of_str, end_of_str);
 
@@ -679,13 +995,13 @@ struct cmd* parse_redr(struct cmd* cmd, char** start_of_str, char* end_of_str)
         switch(delimiter)
         {
             case '<':
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDONLY, 0, STDIN_FILENO);
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDONLY, 0, 0);
                 break;
             case '>':
-                cmd = redrcmd(cmd, start_of_token, end_of_token,  O_RDWR|O_CREAT|O_TRUNC, S_IRWXU, STDOUT_FILENO);
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT|O_TRUNC, S_IRWXU, 1);     //
                 break;
             case '+': // >>
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_WRONLY|O_CREAT|O_APPEND, S_IRWXU, STDOUT_FILENO);
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT|O_APPEND, S_IRWXU, 1);
                 break;
         }
     }
@@ -753,105 +1069,6 @@ struct cmd* null_terminate(struct cmd* cmd)
 }
 
 
-
-
-/*****************************************************************************
- * ZONA PARA COMANDOS INTERNOS
-*****************************************************************************/
-char * cur_dir() {
-    char * path = malloc(PATH_MAX * sizeof(char *));
-    if (!getcwd(path, PATH_MAX)) {
-        perror("Current directory failure");
-        exit(EXIT_FAILURE);
-    }
-    return path;
-}
-
-
-void cd_home() {
-    char * current_dir = cur_dir();
-    char * home = getenv("HOME");
-    chdir(home);
-    setenv("OLDPWD", current_dir, true);
-}
-
-void run_cd(char * path) {
-    if (strcmp(path, "-") == 0) {
-        char * dir = getenv("OLDPWD");
-        if (dir) {
-            run_cd(dir);
-        } else {
-            printf("run_cd: Variable OLDPWD no definida\n");
-        }
-    } else {
-        if (!path) {
-            printf("run_cd: No existe el directorio '%s'\n", path);
-        } else {
-            char * current_dir = cur_dir();
-            char * whole_dir_path = malloc((PATH_MAX + 1) * sizeof(char *));
-            realpath(path, whole_dir_path);
-            if (strcmp(whole_dir_path, "") == 0) {
-                perror("run_cd: No existe el directorio\n");
-            } else {
-                int success = chdir(whole_dir_path);
-                if (success == 0) {
-                    setenv("OLDPWD", current_dir, true);
-                } else {
-                    perror("Directory coudn't be changed");
-                }
-                free(whole_dir_path);
-            }
-        }
-    }
-}
-
-
-void run_cwd() {
-    char path[PATH_MAX];
-    if (!getcwd(path, PATH_MAX)) {
-        perror("cwd command fail");
-        exit(EXIT_FAILURE);
-    }
-    printf("cwd: %s\n", path);
-}
-
-int internal_cmd(struct execcmd * cmd) {
-    if (cmd->argv[0] == 0) return 0;
-    for (int i = 0; i < TAM_LISTA_COMANDOS; ++i) {
-        if (strcmp(cmd->argv[0], lista_comandos_internos[i]) == 0) {
-            if (strcmp(cmd->argv[0], "exit") == 0)
-                return 1;
-            else
-                return 2;
-
-        }
-    }
-    return 0;
-}
-
-void run_exit(struct execcmd * ecmd) {
-    free(ecmd);
-    exit(EXIT_SUCCESS);
-}
-
-void exec_internal_cmd(struct execcmd * cmd) {
-    if (strcmp(cmd->argv[0], "cwd") == 0) {
-        run_cwd();
-    } else if (strcmp(cmd->argv[0], "cd") == 0){
-        if (cmd->argv[1]){
-            if (cmd->argc > 2) {
-                printf("run_cd: Demasiados argumentos\n");
-            } else {
-                run_cd(cmd->argv[1]);
-            }
-        } else {
-            cd_home();
-        }
-    } else if (strcmp(cmd->argv[0], "exit") == 0) {
-        run_exit(cmd);
-    }
-}
-
 /******************************************************************************
  * Funciones para la ejecución de la línea de órdenes
  ******************************************************************************/
@@ -870,11 +1087,6 @@ void exec_cmd(struct execcmd* ecmd)
 }
 
 
-/*****************************************************************************
- * FIN DE LA ZONA PARA COMANDOS INTERNOS
-*****************************************************************************/
-
-
 void run_cmd(struct cmd* cmd)
 {
     struct execcmd* ecmd;
@@ -887,7 +1099,6 @@ void run_cmd(struct cmd* cmd)
     int fd;
 
     DPRINTF(DBG_TRACE, "STR\n");
-
     if(cmd == 0) return;
 
     switch(cmd->type)
@@ -903,43 +1114,36 @@ void run_cmd(struct cmd* cmd)
             }
             break;
 
-        case REDR:
+        case REDR:          
             rcmd = (struct redrcmd*) cmd;
-            int terminal_fd = dup(rcmd->fd);
-            int is_internal_cmd = 0;
+            int terminal_fd = dup(STDOUT_FILENO);
+            //close(rcmd->fd);
+                
+            int es_cmd_interno = 0;
             if (rcmd->cmd->type == EXEC)
-                is_internal_cmd = internal_cmd((struct execcmd*) rcmd->cmd);
-            if (is_internal_cmd > 0) {
-                close(rcmd->fd);
+                es_cmd_interno = internal_cmd((struct execcmd*) rcmd->cmd);
+            if(es_cmd_interno > 0) {
                 if ((fd = open(rcmd->file, rcmd->flags, rcmd->mode)) < 0) {
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
-                if (is_internal_cmd == 1) {
-                    close(fd);
-                    dup2(terminal_fd, fd);
-                    close(terminal_fd);
-                    exec_internal_cmd((struct execcmd *) rcmd->cmd);
-                } else {
-                    exec_internal_cmd((struct execcmd *) rcmd->cmd);
-                    int error = dup2(terminal_fd, fd);
-                    if (error == -1) {
-                        fprintf(stderr, "dup2 error\n");
-                        exit(EXIT_FAILURE);
-                    }
-                }
+                //close(fd);
+                //free(rcmd);
+                exec_internal_cmd((struct execcmd*) rcmd->cmd); 
+                close(fd);
+                     dup2(terminal_fd, STDOUT_FILENO);
+                     close(terminal_fd);
             } else {
                 if (fork_or_panic("fork REDR") == 0) {
                     TRY(close(rcmd->fd));
-                    if ((fd = open(rcmd->file, rcmd->flags)) < 0) {
+                    if ((fd = open(rcmd->file, rcmd->flags, rcmd->mode)) < 0) {
                         perror("open");
                         exit(EXIT_FAILURE);
                     }
 
-
-                    if (rcmd->cmd->type == EXEC)
+                    if (rcmd->cmd->type == EXEC) {
                         exec_cmd((struct execcmd *) rcmd->cmd);
-                    else
+                    } else
                         run_cmd(rcmd->cmd);
                     exit(EXIT_SUCCESS);
                 }
@@ -964,7 +1168,7 @@ void run_cmd(struct cmd* cmd)
             // Ejecución del hijo de la izquierda
             if (fork_or_panic("fork PIPE left") == 0)
             {
-                TRY( close(STDOUT_FILENO) );
+                TRY( close(1) );
                 TRY( dup(p[1]) );
                 TRY( close(p[0]) );
                 TRY( close(p[1]) );
@@ -978,7 +1182,7 @@ void run_cmd(struct cmd* cmd)
             // Ejecución del hijo de la derecha
             if (fork_or_panic("fork PIPE right") == 0)
             {
-                TRY( close(STDIN_FILENO) );
+                TRY( close(0) );
                 TRY( dup(p[0]) );
                 TRY( close(p[0]) );
                 TRY( close(p[1]) );
@@ -992,7 +1196,7 @@ void run_cmd(struct cmd* cmd)
             TRY( close(p[1]) );
 
             // Esperar a ambos hijos
-            TRY( wait(NULL) );
+            TRY( wait(NULL) );          // TODO FALLA AQUI :S
             TRY( wait(NULL) );
             break;
 
@@ -1019,8 +1223,10 @@ void run_cmd(struct cmd* cmd)
             break;
 
         case INV:
+            break;
         default:
             panic("%s: estructura `cmd` desconocida\n", __func__);
+            break;
     }
 
     DPRINTF(DBG_TRACE, "END\n");
@@ -1040,6 +1246,9 @@ void print_cmd(struct cmd* cmd)
 
     switch(cmd->type)
     {
+        default:
+            panic("%s: estructura `cmd` desconocida\n", __func__);
+
         case EXEC:
             ecmd = (struct execcmd*) cmd;
             if (ecmd->argv[0] != 0)
@@ -1094,10 +1303,6 @@ void print_cmd(struct cmd* cmd)
             print_cmd(scmd->cmd);
             printf(" )");
             break;
-
-        case INV:
-        default:
-            panic("%s: estructura `cmd` desconocida\n", __func__);
     }
 }
 
@@ -1116,6 +1321,7 @@ void free_cmd(struct cmd* cmd)
     switch(cmd->type)
     {
         case EXEC:
+           // free(ecmd);
             break;
 
         case REDR:
@@ -1168,10 +1374,6 @@ void free_cmd(struct cmd* cmd)
 }
 
 
-/*****************************************************************************
- * ZONA PARA COMANDOS INTERNOS
-*****************************************************************************/
-
 /******************************************************************************
  * Lectura de la línea de órdenes con la biblioteca libreadline
  ******************************************************************************/
@@ -1181,36 +1383,31 @@ void free_cmd(struct cmd* cmd)
 // biblioteca readline. Ésta permite mantener el historial, utilizar las flechas
 // para acceder a las órdenes previas del historial, búsquedas de órdenes, etc.
 
-
-
 char* get_cmd()
 {
-    uid_t  uid = getuid();
-    struct passwd *pw = getpwuid(uid);
-    if (!pw) {
-        perror("Error en getpwuid");
-        exit(EXIT_FAILURE);
-    }
-
-    char path[PATH_MAX];
-
-    if (!getcwd(path, PATH_MAX)) {
-        perror("DIRECTORY FAILURE");
-        exit(EXIT_FAILURE);
-    }
-
-    //
-    char * cur_dir = basename(path);
-    size_t prompt_size = strlen(pw->pw_name) + strlen(cur_dir) + 4;
-
-    char * prompt = malloc(prompt_size * sizeof(char));
-    sprintf(prompt, "%s@%s> ", pw->pw_name, cur_dir);
-
-
     char* buf;
+
+    uid_t uid = getuid();
+    struct passwd *pw = getpwuid(uid);
+    if (pw == NULL) {
+        perror("getpwuid");
+        exit(EXIT_FAILURE);
+    }
+    char ruta[PATH_MAX];
+    if (!getcwd(ruta, PATH_MAX)) {
+        perror("FALLO DE RUTA");
+        exit(EXIT_FAILURE);
+    }
+    //run_cwd();
+    char * dir_actual = basename(ruta);                                     // TODO: Comprobar si la funcion lanza excepciones
+    size_t prompt_size = strlen(pw->pw_name) + strlen(dir_actual) + 4;
+    char *prompt;
+    prompt = malloc(prompt_size * sizeof(char));
+    sprintf(prompt, "%s@%s> ", pw->pw_name, dir_actual);
 
     // Lee la orden tecleada por el usuario
     buf = readline(prompt);
+   
     free(prompt);
     // Si el usuario ha escrito una orden, almacenarla en la historia.
     if(buf)
@@ -1225,7 +1422,7 @@ char* get_cmd()
  ******************************************************************************/
 
 
-void help(char **argv)
+void help(int argc, char **argv)
 {
     info("Usage: %s [-d N] [-h]\n\
          shell simplesh v%s\n\
@@ -1248,7 +1445,7 @@ void parse_args(int argc, char** argv)
                 break;
             case 'h':
             default:
-                help(argv);
+                help(argc, argv);
                 exit(EXIT_SUCCESS);
                 break;
         }
@@ -1268,6 +1465,7 @@ int main(int argc, char** argv)
     // Bucle de lectura y ejecución de órdenes
     while ((buf = get_cmd()) != NULL)
     {
+        
         // Realiza el análisis sintáctico de la línea de órdenes
         cmd = parse_cmd(buf);
 
@@ -1278,18 +1476,22 @@ int main(int argc, char** argv)
             info("%s:%d:%s: print_cmd: ",
                  __FILE__, __LINE__, __func__);
             print_cmd(cmd); printf("\n"); fflush(NULL); } );
+        
 
         // Ejecuta la línea de órdenes
         run_cmd(cmd);
+        
+
 
         // Libera la memoria de las estructuras `cmd`
         free_cmd(cmd);
         free(cmd);
         // Libera la memoria de la línea de órdenes
         free(buf);
+
     }
 
-    DPRINTF(DBG_TRACE, "END\n");
 
+    DPRINTF(DBG_TRACE, "END\n");
     return 0;
 }
