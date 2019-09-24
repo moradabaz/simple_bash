@@ -761,11 +761,8 @@ struct cmd* null_terminate(struct cmd* cmd)
 void exec_cmd(struct execcmd* ecmd)
 {
     assert(ecmd->type == EXEC);
-
     if (ecmd->argv[0] == NULL) exit(EXIT_SUCCESS);
-
     execvp(ecmd->argv[0], ecmd->argv);
-
     panic("no se encontró el comando '%s'\n", ecmd->argv[0]);
 }
 
@@ -833,10 +830,20 @@ void run_cwd() {
 int internal_cmd(struct execcmd * cmd) {
     if (cmd->argv[0] == 0) return 0;
     for (int i = 0; i < TAM_LISTA_COMANDOS; ++i) {
-        if (strcmp(cmd->argv[0], lista_comandos_internos[i]) == 0)
-            return 1;
+        if (strcmp(cmd->argv[0], lista_comandos_internos[i]) == 0) {
+            if (strcmp(cmd->argv[0], "exit") == 0)
+                return 1;
+             else
+                return 2;
+
+        }
     }
     return 0;
+}
+
+void run_exit(struct execcmd * ecmd) {
+    free(ecmd);
+    exit(EXIT_SUCCESS);
 }
 
 void exec_internal_cmd(struct execcmd * cmd) {
@@ -852,8 +859,13 @@ void exec_internal_cmd(struct execcmd * cmd) {
         } else {
             cd_home();
         }
+    } else if (strcmp(cmd->argv[0], "exit") == 0) {
+        run_exit(cmd);
     }
 }
+
+///////     EXIT       ////////////////
+
 
 /*****************************************************************************
  * FIN DE LA ZONA PARA COMANDOS INTERNOS
@@ -890,22 +902,46 @@ void run_cmd(struct cmd* cmd)
 
         case REDR:
             rcmd = (struct redrcmd*) cmd;
-            if (fork_or_panic("fork REDR") == 0)
-            {
-                TRY( close(rcmd->fd) );
-                if ((fd = open(rcmd->file, rcmd->flags)) < 0)
-                {
+            int terminal_fd = dup(rcmd->fd);
+            int is_internal_cmd = 0;
+            if (rcmd->cmd->type == EXEC)
+                is_internal_cmd = internal_cmd((struct execcmd*) rcmd->cmd);
+            if (is_internal_cmd > 0) {
+                close(rcmd->fd);
+                if ((fd = open(rcmd->file, rcmd->flags, rcmd->mode)) < 0) {
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
+                if (is_internal_cmd == 1) {
+                    close(fd);
+                    dup2(terminal_fd, fd);
+                    close(terminal_fd);
+                    run_exit((struct execcmd*) rcmd->cmd);
+                } else {
+                    exec_internal_cmd((struct execcmd *) rcmd->cmd);
+                    int error = dup2(terminal_fd, fd);
+                    if (error == -1) {
+                        fprintf(stderr, "dup2 error\n");
+                        exit(EXIT_FAILURE);
+                    }
+                }
+            } else {
+                if (fork_or_panic("fork REDR") == 0) {
+                    TRY(close(rcmd->fd));
+                    if ((fd = open(rcmd->file, rcmd->flags)) < 0) {
+                        perror("open");
+                        exit(EXIT_FAILURE);
+                    }
 
-                if (rcmd->cmd->type == EXEC)
-                    exec_cmd((struct execcmd*) rcmd->cmd);
-                else
-                    run_cmd(rcmd->cmd);
-                exit(EXIT_SUCCESS);
+
+                    if (rcmd->cmd->type == EXEC)
+                        exec_cmd((struct execcmd *) rcmd->cmd);
+                    else
+                        run_cmd(rcmd->cmd);
+                    exit(EXIT_SUCCESS);
+                }
+                TRY(wait(NULL));
             }
-            TRY( wait(NULL) );
             break;
 
         case LIST:
