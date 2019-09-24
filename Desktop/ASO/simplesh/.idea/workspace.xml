@@ -12,13 +12,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2cec989-db5a-4094-bf57-a4fa5555cee9" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/simplesh.c.o" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/simplesh.c.o" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/salida" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/boletin2.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simplesh.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lista" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/listra" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/simplesh.dSYM/Contents/Info.plist" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/simplesh.dSYM/Contents/Resources/DWARF/simplesh" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplesh" afterPath="$PROJECT_DIR$/simplesh" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplesh.o" afterPath="$PROJECT_DIR$/simplesh.o" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/C.includecache" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/C.includecache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/flags.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/flags.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/simplesh.dir/link.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simplesh.c" afterPath="$PROJECT_DIR$/simplesh.c" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -38,12 +44,12 @@
       <file leaf-file-name="simplesh.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simplesh.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1682">
-              <caret line="849" column="22" lean-forward="false" selection-start-line="849" selection-start-column="22" selection-end-line="849" selection-end-column="22" />
+            <state relative-caret-position="18">
+              <caret line="1123" column="29" lean-forward="true" selection-start-line="1123" selection-start-column="29" selection-end-line="1123" selection-end-column="42" />
               <folding>
-                <element signature="e#524#543#0" expanded="true" />
-                <element signature="e#764#794#0" expanded="true" />
-                <element signature="e#2007#2076#0" expanded="true" />
+                <element signature="e#533#552#0" expanded="true" />
+                <element signature="e#855#885#0" expanded="true" />
+                <element signature="e#1979#2048#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -67,6 +73,9 @@
       <find>'&gt;'</find>
       <find>simplesh</find>
       <find>strcmp</find>
+      <find>no se encontr</find>
+      <find>real</find>
+      <find>run_cmd</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -298,12 +307,15 @@
       <workItem from="1568634848339" duration="1643000" />
       <workItem from="1569263162169" duration="101000" />
       <workItem from="1569263269424" duration="7223000" />
-      <workItem from="1569311016328" duration="457000" />
+      <workItem from="1569311016328" duration="4222000" />
+      <workItem from="1569320347723" duration="3000" />
+      <workItem from="1569360391096" duration="521000" />
+      <workItem from="1569360920456" duration="257000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9816000" />
+    <option name="totallyTimeSpent" value="14362000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -320,6 +332,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14224665" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -330,7 +343,6 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -354,9 +366,69 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#764#794#0" expanded="true" />
-            <element signature="e#2007#2076#0" expanded="true" />
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="17" lean-forward="false" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simplesh.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="17" lean-forward="false" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simplesh.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="17" lean-forward="false" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simplesh.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -374,9 +446,9 @@
         <state relative-caret-position="14093">
           <caret line="829" column="35" lean-forward="false" selection-start-line="829" selection-start-column="35" selection-end-line="829" selection-end-column="35" />
           <folding>
-            <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#764#794#0" expanded="true" />
-            <element signature="e#2007#2076#0" expanded="true" />
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -386,9 +458,9 @@
         <state relative-caret-position="16388">
           <caret line="964" column="20" lean-forward="false" selection-start-line="964" selection-start-column="20" selection-end-line="964" selection-end-column="20" />
           <folding>
-            <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#764#794#0" expanded="true" />
-            <element signature="e#2007#2076#0" expanded="true" />
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -398,9 +470,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#764#794#0" expanded="true" />
-            <element signature="e#2007#2076#0" expanded="true" />
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -410,9 +482,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#764#794#0" expanded="true" />
-            <element signature="e#2007#2076#0" expanded="true" />
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -441,12 +513,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/simplesh.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1682">
-          <caret line="849" column="22" lean-forward="false" selection-start-line="849" selection-start-column="22" selection-end-line="849" selection-end-column="22" />
+        <state relative-caret-position="18">
+          <caret line="1123" column="29" lean-forward="true" selection-start-line="1123" selection-start-column="29" selection-end-line="1123" selection-end-column="42" />
           <folding>
-            <element signature="e#524#543#0" expanded="true" />
-            <element signature="e#764#794#0" expanded="true" />
-            <element signature="e#2007#2076#0" expanded="true" />
+            <element signature="e#533#552#0" expanded="true" />
+            <element signature="e#855#885#0" expanded="true" />
+            <element signature="e#1979#2048#0" expanded="true" />
           </folding>
         </state>
       </provider>

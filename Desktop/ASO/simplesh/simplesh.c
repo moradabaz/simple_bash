@@ -821,7 +821,7 @@ int internal_cmd(struct execcmd * cmd) {
         if (strcmp(cmd->argv[0], lista_comandos_internos[i]) == 0) {
             if (strcmp(cmd->argv[0], "exit") == 0)
                 return 1;
-             else
+            else
                 return 2;
 
         }
@@ -919,7 +919,7 @@ void run_cmd(struct cmd* cmd)
                     close(fd);
                     dup2(terminal_fd, fd);
                     close(terminal_fd);
-                    run_exit((struct execcmd*) rcmd->cmd);
+                    exec_internal_cmd((struct execcmd *) rcmd->cmd);
                 } else {
                     exec_internal_cmd((struct execcmd *) rcmd->cmd);
                     int error = dup2(terminal_fd, fd);
