@@ -753,18 +753,6 @@ struct cmd* null_terminate(struct cmd* cmd)
 }
 
 
-/******************************************************************************
- * Funciones para la ejecución de la línea de órdenes
- ******************************************************************************/
-
-
-void exec_cmd(struct execcmd* ecmd)
-{
-    assert(ecmd->type == EXEC);
-    if (ecmd->argv[0] == NULL) exit(EXIT_SUCCESS);
-    execvp(ecmd->argv[0], ecmd->argv);
-    panic("no se encontró el comando '%s'\n", ecmd->argv[0]);
-}
 
 
 /*****************************************************************************
@@ -864,7 +852,22 @@ void exec_internal_cmd(struct execcmd * cmd) {
     }
 }
 
-///////     EXIT       ////////////////
+/******************************************************************************
+ * Funciones para la ejecución de la línea de órdenes
+ ******************************************************************************/
+
+
+void exec_cmd(struct execcmd* ecmd)
+{
+    assert(ecmd->type == EXEC);
+    if (ecmd->argv[0] == 0) exit(EXIT_SUCCESS);
+    if (internal_cmd(ecmd) > 0) {
+        exec_internal_cmd(ecmd);
+    } else {
+        execvp(ecmd->argv[0], ecmd->argv);
+        panic("no se encontró el comando xd '%s'\n", ecmd->argv[0]);
+    }
+}
 
 
 /*****************************************************************************
