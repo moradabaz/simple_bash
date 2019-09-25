@@ -788,18 +788,15 @@ void run_cd(char * path) {
             printf("run_cd: No existe el directorio '%s'\n", path);
         } else {
             char * current_dir = cur_dir();
-            char * whole_dir_path = malloc((PATH_MAX + 1) * sizeof(char *));
-            realpath(path, whole_dir_path);
-            if (strcmp(whole_dir_path, "") == 0) {
+            if (strcmp(current_dir, "") == 0) {
                 perror("run_cd: No existe el directorio\n");
             } else {
-                int success = chdir(whole_dir_path);
+                int success = chdir(current_dir);
                 if (success == 0) {
                     setenv("OLDPWD", current_dir, true);
                 } else {
                     perror("Directory coudn't be changed");
                 }
-                free(whole_dir_path);
             }
         }
     }
@@ -919,7 +916,10 @@ void run_cmd(struct cmd* cmd)
                     close(fd);
                     dup2(terminal_fd, fd);
                     close(terminal_fd);
-                    exec_internal_cmd((struct execcmd *) rcmd->cmd);
+                    free(rcmd->cmd);
+                    free(rcmd);
+                    exit(EXIT_SUCCESS);
+                    //exec_internal_cmd((struct execcmd *) rcmd->cmd);
                 } else {
                     exec_internal_cmd((struct execcmd *) rcmd->cmd);
                     int error = dup2(terminal_fd, fd);
