@@ -47,6 +47,10 @@
  * Constantes, macros y variables globales
  ******************************************************************************/
 
+#define SPLIT_LINES 1
+
+#define FROM_FILE 1
+#define FROM_STDIN 0
 
 static const char* VERSION = "0.18";
 
@@ -103,156 +107,6 @@ static const char SYMBOLS[] = "<|>&;()";
 
 int olddir = 0;
 
-void print_hd_help() {
-    printf("Uso: hd [-l NLINES] [-b NBYTES] [-t BSIZE] [FILE1] [FILE2]...\n"
-                   "\tOpciones:\n"
-                   "\t-l NLINES Numero maximo de lineas a mostrar.\n"
-                   "\t-b NBYTES Numero maximo de bytes a mostrar.\n"
-                   "\t-t BSIZE Tamano en bytes de los bloques leidos de [FILEn] o stdin.\n"
-                   "\t-h help\n");
-}
-
-void print_src_help() {
-    printf("Uso: src [-d DELIM] [FILE1] [FILE2]...\n"
-                   "\tOpciones:\n"
-                   "\t-d DELIM Carácter de inicio de comentarios.\n"
-                   "\t-h help\n");
-}
-
-void read_and_print_lines(int fd, char* buffer, int numLineas) {
-    int counter = 0;
-    ssize_t n = read(fd, buffer, BSIZE);
-    char *linea = strtok(buffer, "\n");
-    if (linea != NULL) {
-        while (n > 0 && counter < numLineas) {
-            printf("%s\n", linea);
-            linea = strtok(NULL, "\n");
-            counter++;
-            if (linea == NULL) {
-                n = read(fd, buffer, BSIZE);
-                linea = strtok(buffer, "\n");
-            }
-        }
-    }
-}
-
-void print_bytes(int fd, char* buffer, int writeBytes) {
-    ssize_t w;
-    ssize_t n = read(fd, buffer, BSIZE);
-    if (writeBytes < n) {
-         w = write(STDOUT_FILENO, buffer, writeBytes);
-        if (w == -1) {
-            perror("Error de escritura\n");
-            return;
-        }
-    }  else {
-        int total = 0;
-        do {
-            w = write(STDOUT_FILENO, buffer, n);
-            if (w) {
-                total += n;
-                n = read(fd, buffer, BSIZE);
-            }
-        } while (total < writeBytes && n > 0);
-    }
-}
-
-void read_file(int fd, int size, int type) {
-    char * buffer = malloc(BSIZE * sizeof(char));
-    ssize_t n;
-    if (type == 1) {
-        read_and_print_lines(fd, buffer, size);
-    } else if (type == 2) {
-        print_bytes(fd, buffer, size);
-    } else if (type == 3) {
-        if (size <= 0) {
-            printf("hd: Opcion no valida\n");
-            return;
-        }
-        n = read(fd, buffer, size);
-        int total = 0;
-        do {                // TODO: FALTA POR HACER
-            ssize_t w = write(STDOUT_FILENO, buffer, 1);
-            if (w != n) {
-                int total = w;
-                do {
-                    w = write(STDOUT_FILENO, total + buffer, n - total);
-                    total += w;
-                } while(total < size);
-            }
-            total += n;
-            n = read(fd, buffer, BSIZE);
-        } while (total < size && n > 0);
-    }
-    free(buffer);
-    close(fd);
-}
-
-void parse_hd_args(int argc, char *argv[]) {
-    int opt, flag;
-    int nl;
-    flag = nl = 0;
-    optind = 1;
-    int hayficheros = 0;
-    while ((opt = getopt(argc, argv, "l:b:t:h")) != -1) {
-        switch (opt) {
-            case 'l':
-                flag = 1;
-                nl = atoi(optarg);
-                break;
-            case 'b':
-                nl = atoi(optarg);
-                flag = 2;
-                break;
-            case 't':
-                nl = atoi(optarg);
-                flag = 3;
-                break;
-            case 'h':
-                print_hd_help();
-                return;
-                break;
-            default:
-                fprintf(stderr, "Usage: %s [-f] [-n NUM]\n", argv[0]);
-                break;
-        }
-    }
-
-    for (int i = optind; i < argc; ++i) {
-        for (int j = 0; j < strlen(argv[i]); ++j) {
-            if (argv[i][j] == '-') {
-                printf("hd: Opciones incompatibles\n");
-                return;
-            }
-        }
-    }
-
-    if (flag == 3 && nl <= 0) {
-        printf("hd: Opcion no valida\n");
-        return;
-    }
-
-    hayficheros = argc - optind;
-    if (hayficheros > 0) {
-        for (int i = optind; i < argc; ++i) {
-            //TODO : Aqui falta un descriptor de fichero
-            int fd = open(argv[i], O_RDONLY);
-            if (fd > 0)
-                read_file(fd, nl, flag);
-            close(fd);
-        }
-    } else {
-       read_file(STDIN_FILENO, nl, flag);
-    }
-
-    // (echo 1; echo 2; echo 3; echo 4; echo 5; echo 6) | hd -l4
-    // for(int i = optind; i < argc; i++) printf("%s\n", argv[i]);
-}
-
-
-
-
-
 // Imprime el mensaje
 void info(const char *fmt, ...)
 {
@@ -295,66 +149,90 @@ void panic(const char *fmt, ...)
 
 
 // `fork()` que muestra un mensaje de error si no se puede crear el hijo
-int fork_or_panic(const char* s)
-{
+int fork_or_panic(const char* s) {
     int pid;
 
     pid = fork();
-    if(pid == -1)
+    if (pid == -1)
         panic("%s failed: errno %d (%s)", s, errno, strerror(errno));
     return pid;
 }
 
-void read_src_file(int fd, char * buffer, int size) {
-    ssize_t n = -1;
-    do {
-        n = read(fd, buffer, 4096);
-        // JODIDO
+void run_psplit_lines(int entrada, char *fichero, int lineas) {
+    if (entrada == FROM_FILE) {
+        int fd = open(fichero, O_RDONLY);
+        size_t bytes_leidos = 0;
+        int numero_lineas = 0;
+        int num_ficheros = 0;
+        ssize_t pos_origen = 0;
+        ssize_t pos_actual = 0;
+        char buffer[4096];
+        bytes_leidos = (size_t) read(fd, buffer, 1024);
+        ssize_t contador = 0;
+        for (contador = 0; contador < bytes_leidos && numero_lineas < lineas; ++contador) {
+            if (buffer[contador] == '\n') {
+                numero_lineas++;
+                if (numero_lineas == lineas) {
+                    pos_actual = contador + 1;
+                    char nombre_fichero[60];
+                    sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+                    int fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+                    ssize_t bytes_escritos = 0;
+                    bytes_escritos = write(fd_file, buffer + pos_origen, (size_t) (pos_actual - pos_origen));
+                    pos_origen = contador + 1;
+                    numero_lineas = 0;
+                    num_ficheros++;
+                }
+            }
+        }
 
-        long tam = lseek(fd, 4096, 0);
-    } while(n != 0);
-    //printf("%ld\n", tam);
-    //printf("%zd\n", n);
+        if (pos_origen < bytes_leidos) {
+            char nombre_fichero[60];
+            sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+            int fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+            ssize_t bytes_escritos = 0;
+            bytes_escritos = write(fd_file, buffer + pos_origen, (size_t) (bytes_leidos - pos_origen));
+        }
+    }
 }
 
-void parse_src_args(int argc, char *argv[]) {
-    int opt, flag;
-    char c;
+void process_psplit_command(int tipo_entrada, char * fichero, int flag, int cantidad) {
+    if (flag == SPLIT_LINES) {
+        run_psplit_lines(tipo_entrada, fichero, cantidad);
+    }
+}
+
+
+
+void parse_psplit_args(int argc, char* argv[]) {
     optind = 1;
-    int hayficheros = 0;
-    while ((opt = getopt(argc, argv, "d:h")) != -1) {
+    int opt, arg, flag;
+    int hay_fichero = 0;
+    while ((opt = getopt(argc, argv, "l:")) != -1) {
         switch (opt) {
-            case 'd':
-                flag = 1;
-                c = optarg[0];
+            case 'l':
+                arg = atoi(optarg);
                 break;
-            case 'h':
-                print_hd_help();
-                return;
-                break;
+
             default:
-                fprintf(stderr, "Usage: %s [-d] [DELIM]\n", argv[0]);
                 break;
         }
     }
-    hayficheros = argc - optind;
-    if (hayficheros > 0 ){
 
+    hay_fichero = argc - optind;
+    if (hay_fichero == 1) {
+        process_psplit_command(FROM_FILE, argv[optind], SPLIT_LINES, arg);
     } else {
-        char * buffer = malloc(BSIZE * sizeof(char));
-        read_src_file(STDIN_FILENO, buffer, 4096);          // TODO: No poner numeros magicos
 
     }
-    //printf("%s\n", argv[optind]);
 
 }
 
 
 
-void run_src(int argc, char* argv[]) {
-    parse_src_args(argc, argv);
-}
+void run_psplit() {
 
+}
 
 void run_cwd() {
     char ruta[PATH_MAX];
@@ -375,10 +253,10 @@ char * get_cur_dir() {
 }
 
 void run_cd_HOME() {
-	 char * dir_actual = get_cur_dir();
+    char * dir_actual = get_cur_dir();
     char * dir_home = getenv("HOME");
     chdir(dir_home);
-	 setenv("OLDPWD", dir_actual, true);
+    setenv("OLDPWD", dir_actual, true);
 }
 
 void run_cd(char* path) {
@@ -388,25 +266,25 @@ void run_cd(char* path) {
             run_cd(dir);
         } else {
             printf("run_cd: Variable OLDPWD no definida\n");
-           // exit(EXIT_FAILURE);
+            // exit(EXIT_FAILURE);
         }
     } else {
         DIR* dir = opendir(path);
-      	if(!dir) {
-      		printf("run_cd: No existe el directorio '%s'\n", path);
-      	} else {
-             char * dir_actual = get_cur_dir();
-        	 if (strcmp(dir_actual, "") == 0) {
-             perror("run_cd: No existe el directorio\n");
-        	 } else {
-        		int succes = chdir(path);
-        		if (succes == 0) {
+        if(!dir) {
+            printf("run_cd: No existe el directorio '%s'\n", path);
+        } else {
+            char * dir_actual = get_cur_dir();
+            if (strcmp(dir_actual, "") == 0) {
+                perror("run_cd: No existe el directorio\n");
+            } else {
+                int succes = chdir(path);
+                if (succes == 0) {
                     setenv("OLDPWD", dir_actual, true);
                     olddir = 1;
-        		} else {
-        			perror("NO se ha podido cambiar de directorio\n");
-        		}
-        	 }
+                } else {
+                    perror("NO se ha podido cambiar de directorio\n");
+                }
+            }
         }
     }
 
@@ -704,7 +582,7 @@ int internal_cmd(struct execcmd * ecmd) {
         return 2;
     } else if (strcmp(ecmd->argv[0], "cd") == 0) {
         return  3;
-    } else  if (strcmp(ecmd->argv[0], "hd") == 0) {
+    } else  if (strcmp(ecmd->argv[0], "psplit") == 0) {
         return 4;
     } else if (strcmp(ecmd->argv[0], "src") == 0) {
         return 5;
@@ -720,18 +598,16 @@ void exec_internal_cmd(struct execcmd * ecmd) {
         run_cwd();
     } else if (strcmp(ecmd->argv[0], "cd") == 0) {
         if (ecmd->argv[1] != NULL) {
-        		if(ecmd->argc > 2) {
-					printf("run_cd: Demasiados argumentos\n");
-        		} else {
-                    run_cd(ecmd->argv[1]);
-				}   
+            if(ecmd->argc > 2) {
+                printf("run_cd: Demasiados argumentos\n");
+            } else {
+                run_cd(ecmd->argv[1]);
+            }
         } else {
             run_cd_HOME();
         }
-    } else if (strcmp(ecmd->argv[0], "hd") == 0) {
-        parse_hd_args(ecmd->argc, ecmd->argv);
-    } else if (strcmp(ecmd->argv[0], "src") == 0) {
-        run_src(ecmd->argc, ecmd->argv);
+    } else if (strcmp(ecmd->argv[0], "psplit") == 0) {
+        parse_psplit_args(ecmd->argc, ecmd->argv);
     }
 }
 
@@ -1113,11 +989,11 @@ void run_cmd(struct cmd* cmd)
             }
             break;
 
-        case REDR:			
+        case REDR:
             rcmd = (struct redrcmd*) cmd;
             int terminal_fd = dup(STDOUT_FILENO);
             //close(rcmd->fd);
-				
+
             int es_cmd_interno = 0;
             if (rcmd->cmd->type == EXEC)
                 es_cmd_interno = internal_cmd((struct execcmd*) rcmd->cmd);
@@ -1128,10 +1004,10 @@ void run_cmd(struct cmd* cmd)
                 }
                 //close(fd);
                 //free(rcmd);
-                exec_internal_cmd((struct execcmd*) rcmd->cmd);	
+                exec_internal_cmd((struct execcmd*) rcmd->cmd);
                 close(fd);
-					 dup2(terminal_fd, STDOUT_FILENO);
-				 	 close(terminal_fd);
+                dup2(terminal_fd, STDOUT_FILENO);
+                close(terminal_fd);
             } else {
                 if (fork_or_panic("fork REDR") == 0) {
                     TRY(close(rcmd->fd));
@@ -1222,7 +1098,7 @@ void run_cmd(struct cmd* cmd)
             break;
 
         case INV:
-			break;
+            break;
         default:
             panic("%s: estructura `cmd` desconocida\n", __func__);
             break;
@@ -1320,7 +1196,7 @@ void free_cmd(struct cmd* cmd)
     switch(cmd->type)
     {
         case EXEC:
-           // free(ecmd);
+            // free(ecmd);
             break;
 
         case REDR:
@@ -1406,8 +1282,8 @@ char* get_cmd()
 
     // Lee la orden tecleada por el usuario
     buf = readline(prompt);
-   
-	free(prompt);
+
+    free(prompt);
     // Si el usuario ha escrito una orden, almacenarla en la historia.
     if(buf)
         add_history(buf);
@@ -1464,7 +1340,7 @@ int main(int argc, char** argv)
     // Bucle de lectura y ejecución de órdenes
     while ((buf = get_cmd()) != NULL)
     {
-        
+
         // Realiza el análisis sintáctico de la línea de órdenes
         cmd = parse_cmd(buf);
 
@@ -1475,11 +1351,11 @@ int main(int argc, char** argv)
             info("%s:%d:%s: print_cmd: ",
                  __FILE__, __LINE__, __func__);
             print_cmd(cmd); printf("\n"); fflush(NULL); } );
-		
+
 
         // Ejecuta la línea de órdenes
         run_cmd(cmd);
-        
+
 
 
         // Libera la memoria de las estructuras `cmd`
@@ -1494,3 +1370,4 @@ int main(int argc, char** argv)
     DPRINTF(DBG_TRACE, "END\n");
     return 0;
 }
+
