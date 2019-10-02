@@ -159,16 +159,24 @@ int fork_or_panic(const char* s) {
 }
 
 void run_psplit_lines(int entrada, char *fichero, int lineas) {
+    int fd;
     if (entrada == FROM_FILE) {
-        int fd = open(fichero, O_RDONLY);
-        size_t bytes_leidos = 0;
+         fd = open(fichero, O_RDONLY);
+    } else {
+        fd = STDIN_FILENO;
+    }
+    size_t bytes_leidos = 0;
+
+    char buffer[4096];
+    bytes_leidos = (size_t) read(fd, buffer, 1024);
+
+    while (bytes_leidos > 0 ) {
         int numero_lineas = 0;
         int num_ficheros = 0;
         ssize_t pos_origen = 0;
         ssize_t pos_actual = 0;
-        char buffer[4096];
-        bytes_leidos = (size_t) read(fd, buffer, 1024);
         ssize_t contador = 0;
+
         for (contador = 0; contador < bytes_leidos && numero_lineas < lineas; ++contador) {
             if (buffer[contador] == '\n') {
                 numero_lineas++;
@@ -178,7 +186,11 @@ void run_psplit_lines(int entrada, char *fichero, int lineas) {
                     sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
                     int fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
                     ssize_t bytes_escritos = 0;
-                    bytes_escritos = write(fd_file, buffer + pos_origen, (size_t) (pos_actual - pos_origen));
+                    ssize_t tam_bytes = (pos_actual - pos_origen);
+                    while(tam_bytes > 0) {
+                        bytes_escritos = write(fd_file, buffer + pos_origen, tam_bytes);
+                        tam_bytes -= bytes_escritos;
+                    }
                     pos_origen = contador + 1;
                     numero_lineas = 0;
                     num_ficheros++;
@@ -191,9 +203,19 @@ void run_psplit_lines(int entrada, char *fichero, int lineas) {
             sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
             int fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
             ssize_t bytes_escritos = 0;
-            bytes_escritos = write(fd_file, buffer + pos_origen, (size_t) (bytes_leidos - pos_origen));
+            ssize_t tam_bytes = (bytes_leidos - pos_origen);
+            while(tam_bytes > 0) {
+                bytes_escritos = write(fd_file, buffer + pos_origen, tam_bytes);
+                tam_bytes -= bytes_escritos;
+            }
         }
+
+        bytes_leidos = (size_t) read(fd, buffer, 1024);
     }
+
+    if (fd > 1)
+        close(fd);
+
 }
 
 void process_psplit_command(int tipo_entrada, char * fichero, int flag, int cantidad) {
