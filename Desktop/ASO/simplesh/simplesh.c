@@ -161,10 +161,11 @@ int fork_or_panic(const char* s) {
 void run_psplit_lines(int entrada, char *fichero, int lineas) {
     int fd;
     if (entrada == FROM_FILE) {
-         fd = open(fichero, O_RDONLY);
+        fd = open(fichero, O_RDONLY);
     } else {
         fd = STDIN_FILENO;
     }
+
     size_t bytes_leidos = 0;
 
     char buffer[4096];
@@ -182,9 +183,16 @@ void run_psplit_lines(int entrada, char *fichero, int lineas) {
                 numero_lineas++;
                 if (numero_lineas == lineas) {
                     pos_actual = contador + 1;
-                    char nombre_fichero[60];
-                    sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-                    int fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+                    int fd_file = -1;
+                    if (fd == STDIN_FILENO) {
+                        char nombre_fichero[30];
+                        sprintf(nombre_fichero, "stdin%d", num_ficheros);
+                        fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+                    } else {
+                        char nombre_fichero[60];
+                        sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+                        fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+                    }
                     ssize_t bytes_escritos = 0;
                     ssize_t tam_bytes = (pos_actual - pos_origen);
                     while(tam_bytes > 0) {
@@ -245,7 +253,7 @@ void parse_psplit_args(int argc, char* argv[]) {
     if (hay_fichero == 1) {
         process_psplit_command(FROM_FILE, argv[optind], SPLIT_LINES, arg);
     } else {
-
+        process_psplit_command(FROM_STDIN, NULL, SPLIT_LINES, arg);
     }
 
 }
@@ -498,8 +506,6 @@ struct cmd* subscmd(struct cmd* subcmd)
 }
 
 void run_exit(struct execcmd * ecmd) {
-
-    // LIMPIAR LA MEMORIA
     free(ecmd);
     exit(EXIT_SUCCESS);
 }
@@ -892,13 +898,13 @@ struct cmd* parse_redr(struct cmd* cmd, char** start_of_str, char* end_of_str)
         switch(delimiter)
         {
             case '<':
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDONLY, 0, 0);
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDONLY, S_IRWXU, STDIN_FILENO);
                 break;
             case '>':
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT|O_TRUNC, S_IRWXU, 1);     //
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT|O_TRUNC, S_IRWXU, STDOUT_FILENO);     //
                 break;
             case '+': // >>
-                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT|O_APPEND, S_IRWXU, 1);
+                cmd = redrcmd(cmd, start_of_token, end_of_token, O_RDWR|O_CREAT|O_APPEND, S_IRWXU, STDOUT_FILENO);
                 break;
         }
     }
