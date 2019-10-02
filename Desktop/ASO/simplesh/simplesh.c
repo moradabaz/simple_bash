@@ -158,16 +158,40 @@ int fork_or_panic(const char* s) {
     return pid;
 }
 
-void run_psplit_lines(int entrada, char *fichero, int lineas) {
-    int fd;
-    if (entrada == FROM_FILE) {
-        fd = open(fichero, O_RDONLY);
-    } else {
-        fd = STDIN_FILENO;
+
+void run_psplit_lines_from_stdin(int lineas) {
+    ssize_t bytes_leidos = 0;
+    int numero_lecturas = 0;
+    char buffer[4096];
+    char nombre_fichero[20];
+    int contador_ficheros = 0;
+    sprintf(nombre_fichero, "stdin%d", contador_ficheros);
+    int fd_file = -1;
+    do {
+        fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+        bytes_leidos = read(STDIN_FILENO, buffer, 1024);
+        ssize_t bytes_escritos = 0;
+        ssize_t tam_escribir = bytes_leidos;
+        do {
+            bytes_escritos = write(fd_file, buffer + bytes_escritos, (size_t) (tam_escribir));
+            tam_escribir -= bytes_escritos;
+        } while (tam_escribir > 0);
+        numero_lecturas++;
+        if (numero_lecturas % lineas == 0) {
+            close(fd_file);
+            contador_ficheros++;
+            sprintf(nombre_fichero, "stdin%d", contador_ficheros);
+        }
+    } while (bytes_leidos != 0);
+}
+
+void run_psplit_lines_from_file(int fd, char *fichero, int lineas) {
+
+    if (fichero == NULL) {
+        perror("Fichero nulo");
+        exit(EXIT_FAILURE);
     }
-
     size_t bytes_leidos = 0;
-
     char buffer[4096];
     bytes_leidos = (size_t) read(fd, buffer, 1024);
 
@@ -184,15 +208,9 @@ void run_psplit_lines(int entrada, char *fichero, int lineas) {
                 if (numero_lineas == lineas) {
                     pos_actual = contador + 1;
                     int fd_file = -1;
-                    if (fd == STDIN_FILENO) {
-                        char nombre_fichero[30];
-                        sprintf(nombre_fichero, "stdin%d", num_ficheros);
-                        fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
-                    } else {
-                        char nombre_fichero[60];
-                        sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-                        fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
-                    }
+                    char nombre_fichero[60];
+                    sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+                    fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
                     ssize_t bytes_escritos = 0;
                     ssize_t tam_bytes = (pos_actual - pos_origen);
                     while(tam_bytes > 0) {
@@ -202,6 +220,7 @@ void run_psplit_lines(int entrada, char *fichero, int lineas) {
                     pos_origen = contador + 1;
                     numero_lineas = 0;
                     num_ficheros++;
+                    close(fd_file);
                 }
             }
         }
@@ -217,18 +236,18 @@ void run_psplit_lines(int entrada, char *fichero, int lineas) {
                 tam_bytes -= bytes_escritos;
             }
         }
-
         bytes_leidos = (size_t) read(fd, buffer, 1024);
+        printf("bytes leidos: %zu\n", bytes_leidos);
     }
-
-    if (fd > 1)
-        close(fd);
 
 }
 
-void process_psplit_command(int tipo_entrada, char * fichero, int flag, int cantidad) {
+void process_psplit_command(int fd, char * fichero, int flag, int cantidad) {
     if (flag == SPLIT_LINES) {
-        run_psplit_lines(tipo_entrada, fichero, cantidad);
+        if (fd == STDIN_FILENO) {
+            run_psplit_lines_from_stdin(cantidad);
+        } else
+            run_psplit_lines_from_file(fd, fichero, cantidad);
     }
 }
 
@@ -250,10 +269,14 @@ void parse_psplit_args(int argc, char* argv[]) {
     }
 
     hay_fichero = argc - optind;
-    if (hay_fichero == 1) {
-        process_psplit_command(FROM_FILE, argv[optind], SPLIT_LINES, arg);
+    if (hay_fichero > 0) {
+        for (int i = optind; i < argc; ++i) {
+            int fd = open(argv[i], O_RDONLY);
+            process_psplit_command(fd, argv[i], SPLIT_LINES, arg);
+            close(fd);
+        }
     } else {
-        process_psplit_command(FROM_STDIN, NULL, SPLIT_LINES, arg);
+        process_psplit_command(STDIN_FILENO, NULL, SPLIT_LINES, arg);
     }
 
 }
@@ -1021,7 +1044,6 @@ void run_cmd(struct cmd* cmd)
             rcmd = (struct redrcmd*) cmd;
             int terminal_fd = dup(STDOUT_FILENO);
             //close(rcmd->fd);
-
             int es_cmd_interno = 0;
             if (rcmd->cmd->type == EXEC)
                 es_cmd_interno = internal_cmd((struct execcmd*) rcmd->cmd);
