@@ -167,9 +167,16 @@ void run_psplit_lines_from_stdin(int lineas) {
     int contador_ficheros = 0;
     sprintf(nombre_fichero, "stdin%d", contador_ficheros);
     int fd_file = -1;
-    do {
-        fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
-        bytes_leidos = read(STDIN_FILENO, buffer, 1024);
+    fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+    bytes_leidos = read(STDIN_FILENO, buffer, 1024);
+
+    while (bytes_leidos > 0) {
+        if (numero_lecturas % lineas == 0 && numero_lecturas != 0) {
+            close(fd_file);
+            contador_ficheros++;
+            sprintf(nombre_fichero, "stdin%d", contador_ficheros);
+            fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+        }
         ssize_t bytes_escritos = 0;
         ssize_t tam_escribir = bytes_leidos;
         do {
@@ -177,12 +184,10 @@ void run_psplit_lines_from_stdin(int lineas) {
             tam_escribir -= bytes_escritos;
         } while (tam_escribir > 0);
         numero_lecturas++;
-        if (numero_lecturas % lineas == 0) {
-            close(fd_file);
-            contador_ficheros++;
-            sprintf(nombre_fichero, "stdin%d", contador_ficheros);
-        }
-    } while (bytes_leidos != 0);
+        bytes_leidos = read(STDIN_FILENO, buffer, 1024);
+    }
+    if (fd_file > 0)
+        close(fd_file);
 }
 
 void run_psplit_lines_from_file(int fd, char *fichero, int lineas) {
