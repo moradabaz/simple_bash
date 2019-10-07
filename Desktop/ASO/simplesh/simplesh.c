@@ -47,7 +47,7 @@
  * Constantes, macros y variables globales
  ******************************************************************************/
 
-#define DEFAULT_BSIZE 12
+#define DEFAULT_BSIZE 1024
 #define SPLIT_LINES 1
 #define SPLIT_BYTES 2
 #define FROM_FILE 1
@@ -268,7 +268,6 @@ void run_split_bytes_from_file(int fd, char *fichero, int num_bytes, ssize_t buf
     ssize_t  bytes_leidos = 0;
     char buffer[4096];
     int num_ficheros = 0;
-    int pos_origen = 0;
     ssize_t bytes_restantes = 0;
     int fd_file = -1;
     if (num_bytes <= buffer_size) {
@@ -309,8 +308,7 @@ void run_split_bytes_from_file(int fd, char *fichero, int num_bytes, ssize_t buf
                         sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
                         fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
                         bytes_escritos = write_bytes(fd_file, buffer, pos_origen, bytes_leidos - pos_origen);
-                        bytes_a_escribir = (int) (num_bytes - bytes_escritos);
-                        pos_origen = 0;
+                        bytes_a_escribir = (num_bytes - bytes_escritos);
                         bytes_escritos = 0;
                     }
                 } else {
@@ -328,13 +326,46 @@ void run_split_bytes_from_file(int fd, char *fichero, int num_bytes, ssize_t buf
                 }
             }
         }
-
-
     }
 }
 
 
-void run_psplit_bytes_from_stdin(int cantidad) {
+void run_psplit_bytes_from_stdin(int num_bytes, ssize_t buffer_size) {
+    int num_ficheros = 0;
+    ssize_t bytes_restantes = 0;
+    int fd_file = -1;
+    ssize_t  bytes_leidos = 0;
+    ssize_t  bytes_total_leidos = 0;
+    char buffer[4096];
+    if (num_bytes <= buffer_size) {
+        do {
+            bytes_total_leidos += bytes_leidos;
+            while ((bytes_leidos = read(STDIN_FILENO, buffer + bytes_total_leidos, (size_t) buffer_size)) > 0 && bytes_total_leidos < buffer_size) {
+                bytes_total_leidos += bytes_leidos;
+            }
+            int bytes_escritos = 0;
+            while (num_bytes < bytes_total_leidos) {
+                char nombre_fichero[60];
+                sprintf(nombre_fichero, "stdin%d", num_ficheros);
+                fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+                bytes_escritos += write_bytes(fd_file, buffer, bytes_escritos, num_bytes - bytes_restantes);
+                bytes_restantes = 0;
+                bytes_total_leidos -= num_bytes;
+                close(fd_file);
+                num_ficheros++;
+            }
+            if (bytes_total_leidos > 0) {
+                bytes_restantes = bytes_total_leidos;
+                char nombre_fichero[60];
+                sprintf(nombre_fichero, "stdin%d", num_ficheros);
+                fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+                write_bytes(fd_file, buffer, bytes_escritos, bytes_restantes);
+                close(fd_file);
+            }
+        } while ((bytes_leidos = read(STDIN_FILENO, buffer, buffer_size)) > 0);
+    } else {
+
+    }
 
 }
 
@@ -351,7 +382,7 @@ void process_psplit_command(int fd, char * fichero, int flag, int cantidad) {
 
         case SPLIT_BYTES:
             if (fd == STDIN_FILENO) {
-                run_psplit_bytes_from_stdin(cantidad);
+                run_psplit_bytes_from_stdin(cantidad, DEFAULT_BSIZE);
             } else {
                 run_split_bytes_from_file(fd, fichero, cantidad, DEFAULT_BSIZE);
             }
