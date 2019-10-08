@@ -47,6 +47,7 @@
  * Constantes, macros y variables globales
  ******************************************************************************/
 
+#define MAX_TAM_BYTES 1048576
 #define DEFAULT_BSIZE 1024
 #define SPLIT_LINES 1
 #define SPLIT_BYTES 2
@@ -160,7 +161,7 @@ int fork_or_panic(const char* s) {
 }
 
 
-void run_psplit_lines_from_stdin(int lineas) {
+void run_psplit_lines_from_stdin(int lineas, size_t tam_bytes) {
     ssize_t bytes_leidos = 0;
     int numero_lecturas = 0;
     char buffer[4096];
@@ -169,7 +170,7 @@ void run_psplit_lines_from_stdin(int lineas) {
     sprintf(nombre_fichero, "stdin%d", contador_ficheros);
     int fd_file = -1;
     fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
-    bytes_leidos = read(STDIN_FILENO, buffer, 1024);
+    bytes_leidos = read(STDIN_FILENO, buffer, tam_bytes);
 
     while (bytes_leidos > 0) {
         if (numero_lecturas % lineas == 0 && numero_lecturas != 0) {
@@ -185,13 +186,13 @@ void run_psplit_lines_from_stdin(int lineas) {
             tam_escribir -= bytes_escritos;
         } while (tam_escribir > 0);
         numero_lecturas++;
-        bytes_leidos = read(STDIN_FILENO, buffer, 1024);
+        bytes_leidos = read(STDIN_FILENO, buffer, tam_bytes);
     }
     if (fd_file > 0)
         close(fd_file);
 }
 
-void run_psplit_lines_from_file(int fd, char *fichero, int lineas) {
+void run_psplit_lines_from_file(int fd, char *fichero, int lineas, size_t tam_bytes) {
 
     if (fichero == NULL) {
         perror("Fichero nulo");
@@ -199,7 +200,7 @@ void run_psplit_lines_from_file(int fd, char *fichero, int lineas) {
     }
     size_t bytes_leidos = 0;
     char buffer[4096];
-    bytes_leidos = (size_t) read(fd, buffer, 1024);
+    bytes_leidos = (size_t) read(fd, buffer, tam_bytes);
 
     while (bytes_leidos > 0 ) {
         int numero_lineas = 0;
@@ -243,7 +244,7 @@ void run_psplit_lines_from_file(int fd, char *fichero, int lineas) {
                 tam_bytes -= bytes_escritos;
             }
         }
-        bytes_leidos = (size_t) read(fd, buffer, 1024);
+        bytes_leidos = (size_t) read(fd, buffer, tam_bytes);
         printf("bytes leidos: %zu\n", bytes_leidos);
     }
 
@@ -340,17 +341,20 @@ void run_psplit_bytes_from_stdin(int num_bytes, ssize_t buffer_size) {
     if (num_bytes <= buffer_size) {
         do {
             bytes_total_leidos += bytes_leidos;
-            while ((bytes_leidos = read(STDIN_FILENO, buffer + bytes_total_leidos, (size_t) buffer_size)) > 0 && bytes_total_leidos < buffer_size) {
+            while ((bytes_leidos = read(STDIN_FILENO, buffer + bytes_total_leidos, (size_t) buffer_size - bytes_total_leidos)) > 0 && bytes_total_leidos < buffer_size) {
                 bytes_total_leidos += bytes_leidos;
             }
             int bytes_escritos = 0;
-            while (num_bytes < bytes_total_leidos) {
+            //printf("¿Es %d < %zu ?\n", num_bytes, bytes_total_leidos);
+            while (num_bytes <= bytes_total_leidos) {
+               // printf("SO FAR SO GOOD\n");
                 char nombre_fichero[60];
                 sprintf(nombre_fichero, "stdin%d", num_ficheros);
                 fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
                 bytes_escritos += write_bytes(fd_file, buffer, bytes_escritos, num_bytes - bytes_restantes);
                 bytes_restantes = 0;
                 bytes_total_leidos -= num_bytes;
+                //printf("he escrito %zu bytes en stdin%d\n", (size_t) bytes_escritos, num_ficheros);
                 close(fd_file);
                 num_ficheros++;
             }
@@ -364,6 +368,7 @@ void run_psplit_bytes_from_stdin(int num_bytes, ssize_t buffer_size) {
             }
         } while ((bytes_leidos = read(STDIN_FILENO, buffer, buffer_size)) > 0);
     } else {
+        // QUE PASA SI EL TAMAÑO A TROCEAR ES MAYOR
 
     }
 
@@ -371,20 +376,20 @@ void run_psplit_bytes_from_stdin(int num_bytes, ssize_t buffer_size) {
 
 
 
-void process_psplit_command(int fd, char * fichero, int flag, int cantidad) {
+void process_psplit_command(int fd, char * fichero, int flag, int cantidad, int tam_bytes) {
     switch (flag) {
         case SPLIT_LINES:
             if (fd == STDIN_FILENO) {
-                run_psplit_lines_from_stdin(cantidad);
+                run_psplit_lines_from_stdin(cantidad, (size_t) tam_bytes);
             } else
-                run_psplit_lines_from_file(fd, fichero, cantidad);
+                run_psplit_lines_from_file(fd, fichero, cantidad, (size_t) tam_bytes);
             break;
 
         case SPLIT_BYTES:
             if (fd == STDIN_FILENO) {
-                run_psplit_bytes_from_stdin(cantidad, DEFAULT_BSIZE);
+                run_psplit_bytes_from_stdin(cantidad, tam_bytes);
             } else {
-                run_split_bytes_from_file(fd, fichero, cantidad, DEFAULT_BSIZE);
+                run_split_bytes_from_file(fd, fichero, tam_bytes, DEFAULT_BSIZE);
             }
             break;
 
@@ -400,31 +405,66 @@ void process_psplit_command(int fd, char * fichero, int flag, int cantidad) {
 void parse_psplit_args(int argc, char* argv[]) {
     optind = 1;
     int opt, arg, flag;
+    int tam_bytes = 0;
     int hay_fichero = 0;
-    while ((opt = getopt(argc, argv, "l:b:")) != -1) {
+    int flags_incompatibles = 0;
+    while ((opt = getopt(argc, argv, "l:b:s:h")) != -1) {
         switch (opt) {
             case 'l':
-                arg = atoi(optarg);
-                flag = SPLIT_LINES;
+                if (flags_incompatibles > 0) {
+                    printf("psplit: Opciones incompatibles\n");
+                    return;
+                } else {
+                    arg = atoi(optarg);
+                    flag = SPLIT_LINES;
+                    flags_incompatibles++;
+                }
                 break;
             case 'b':
-                arg = atoi(optarg);
-                flag = SPLIT_BYTES;
+                if (flags_incompatibles > 0) {
+                    printf("psplit: Opciones incompatibles\n");
+                    return;
+                } else {
+                    arg = atoi(optarg);
+                    flag = SPLIT_BYTES;
+                    flags_incompatibles++;
+                }
+                break;
+
+            case 's':
+                tam_bytes = atoi(optarg);
+                if (tam_bytes < 1 || tam_bytes > MAX_TAM_BYTES) {
+                    printf("psplit: Opción -s no válida\n");
+                    return;
+                }
+                break;
+            case 'h':
+                printf("Uso: psplit [-l NLINES] [-b NBYTES] [-s BSIZE] [-p PROCS] [FILE1] [FILE2]...\n");
+                printf("\t Opciones:\n");
+                printf("\t -l NLINES Número máximo de líneas por fichero.\n");
+                printf("\t -b NBYTES Número máximo de bytes por fichero.\n");
+                printf("\t -s BSIZE  Tamaño en bytes de los bloques leídos de [FILEn] o stdin.\n");
+                printf("\t -p PROCS  Número máximo de procesos simultáneos.\n");
+                printf("\t -h        Ayuda\n");
+
+                return;
             default:
                 break;
         }
     }
 
+    if (tam_bytes == 0)
+        tam_bytes = DEFAULT_BSIZE;
 
     hay_fichero = argc - optind;
     if (hay_fichero > 0) {
         for (int i = optind; i < argc; ++i) {
             int fd = open(argv[i], O_RDONLY);
-            process_psplit_command(fd, argv[i], flag, arg);
+            process_psplit_command(fd, argv[i], flag, arg, tam_bytes);
             close(fd);
         }
     } else {
-        process_psplit_command(STDIN_FILENO, NULL, flag, arg);
+        process_psplit_command(STDIN_FILENO, NULL, flag, arg, tam_bytes);
     }
 
 }
@@ -1195,17 +1235,26 @@ void run_cmd(struct cmd* cmd)
             int es_cmd_interno = 0;
             if (rcmd->cmd->type == EXEC)
                 es_cmd_interno = internal_cmd((struct execcmd*) rcmd->cmd);
+
             if(es_cmd_interno > 0) {
+                close(rcmd->fd);
                 if ((fd = open(rcmd->file, rcmd->flags, rcmd->mode)) < 0) {
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
-                //close(fd);
-                //free(rcmd);
-                exec_internal_cmd((struct execcmd*) rcmd->cmd);
-                close(fd);
-                dup2(terminal_fd, STDOUT_FILENO);
-                close(terminal_fd);
+             if (es_cmd_interno == 1) {
+                 close(fd);
+                 dup2(terminal_fd, fd);
+                 close(terminal_fd);
+                 free(rcmd->cmd);
+                 free(cmd);
+                 exit(EXIT_SUCCESS);
+             }else {
+                 exec_internal_cmd((struct execcmd *) rcmd->cmd);
+                 close(fd);
+                 dup2(terminal_fd, STDOUT_FILENO);
+                 close(terminal_fd);
+             }
             } else {
                 if (fork_or_panic("fork REDR") == 0) {
                     TRY(close(rcmd->fd));
