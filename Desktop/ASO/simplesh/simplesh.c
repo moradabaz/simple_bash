@@ -49,7 +49,7 @@
 
 #define MAX_TAM_BYTES 1048576
 #define DEFAULT_BSIZE 1024
-#define MIN_DEF_BSIZE 50
+#define MIN_DEF_BSIZE 10
 #define SPLIT_LINES 1
 #define SPLIT_BYTES 2
 #define FROM_FILE 1
@@ -214,6 +214,16 @@ int write_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
     return bytes_total_escritos;
 }
 
+ssize_t read_small_chunks(int fd, char* buffer, int tam, int tam_max) {
+ ssize_t total_leidos = 0;
+ ssize_t leidos = 0;
+ do {
+    leidos = read(fd, buffer + total_leidos, tam);
+    total_leidos += leidos;
+ } while (total_leidos != tam_max && leidos > 0);
+ return total_leidos;
+} 
+
 void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes) {
 
     if (fichero == NULL) {
@@ -221,7 +231,7 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
     }
     int fd_file = -1;
     ssize_t bytes_leidos = 0;
-    char buffer[tam_bytes];
+    char  * buffer ;
     int contador_ficheros = 0;
     char nombre_fichero[60];
     sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
@@ -230,9 +240,16 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
     ssize_t pos_origen = 0;
     ssize_t pos_actual = 0;
     int contador_lineas = 0;
+ 
+    if (tam_bytes < MIN_DEF_BSIZE) {
+        buffer = malloc ((tam_bytes * 100) * sizeof(char));
+        bytes_leidos = read_small_chunks(fd, buffer, tam_bytes, tam_bytes * 100);
+    } else {
+        buffer = malloc (tam_bytes * sizeof(char));
+        bytes_leidos = read(fd, buffer, tam_bytes);
+    }
 
-
-        while ((bytes_leidos = read(fd, buffer, tam_bytes)) != 0 ) {
+        while (bytes_leidos != 0 ) {
             ssize_t contador = 0;
             pos_origen = 0;
             pos_actual = 0;
@@ -255,6 +272,13 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
                 contador++;
             }  
             memset(buffer, '\0', tam_bytes);
+
+            if (tam_bytes < MIN_DEF_BSIZE) {
+                bytes_leidos = read_small_chunks(fd, buffer, tam_bytes, tam_bytes * 100);
+            } else {
+                bytes_leidos = read(fd, buffer, tam_bytes);
+            }
+
         }
         if (pos_origen < bytes_leidos) {
             ssize_t bytes_escritos = 0;
@@ -266,6 +290,7 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
 
         }
 
+    free(buffer);
 
 }
 
