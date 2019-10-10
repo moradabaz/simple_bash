@@ -108,6 +108,9 @@ static const char SYMBOLS[] = "<|>&;()";
  ******************************************************************************/
 int olddir = 0;
 int es_exit = 0;
+
+int nuevo_comando = 0;
+
 // Imprime el mensaje
 void info(const char *fmt, ...)
 {
@@ -205,7 +208,7 @@ int write_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
     return bytes_total_escritos;
 }
 
-void run_psplit_lines_from_file(int fd, char * fichero, int num_lineas, size_t tam_bytes) {
+void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes) {
 
     if (fichero == NULL) {
         perror("Fichero nulo");
@@ -221,17 +224,17 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_lineas, size_t t
     ssize_t pos_origen = 0;
     ssize_t pos_actual = 0;
     while ((bytes_leidos = read(fd, buffer, tam_bytes)) != 0 ) {
-        int numero_lineas = 0;
+        int contador_lineas = 0;
         ssize_t contador = 0;
-        for (contador = 0; contador < bytes_leidos && numero_lineas < num_lineas; ++contador) {
+        for (contador = 0; contador < bytes_leidos && contador_lineas < num_max_lineas; ++contador) {
             if (buffer[contador] == '\n') {
-                numero_lineas++;
-                if (numero_lineas == num_lineas) {
+                contador_lineas++;
+                if (contador_lineas == num_max_lineas) {
                     pos_actual = contador + 1;
                     ssize_t tam_bytes = (pos_actual - pos_origen);
                     write_bytes(fd_file, buffer, (int) pos_origen, tam_bytes);
-                    pos_origen = contador + 1;
-                    numero_lineas = 0;
+                    pos_origen = pos_actual;
+                    contador_lineas = 0;
                     contador_ficheros++;
                     close(fd_file);
                     sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
@@ -249,9 +252,6 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_lineas, size_t t
         }
 
     }
-
-
-
 }
 
 
@@ -319,7 +319,16 @@ void run_split_bytes_from_file(int fd, char *fichero, int num_bytes, ssize_t buf
         }
     }
 }
-
+int open_file(char * nombre_fichero) {
+    int fd = -1;
+    if (nuevo_comando == 0) {
+        fd = open(nombre_fichero, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+        nuevo_comando++;
+    } else {
+        fd = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+    }
+    return fd;
+}
 
 void run_psplit_bytes_from_stdin(int bytes_chunk_size, ssize_t buffer_size) {
     int contador_ficheros = 0;
@@ -328,52 +337,71 @@ void run_psplit_bytes_from_stdin(int bytes_chunk_size, ssize_t buffer_size) {
     ssize_t  bytes_leidos = 0;
     ssize_t  bytes_total_leidos = 0;
     char buffer[4096];
-    /*if (bytes_chunk_size <= buffer_size) {
-        do {
-            bytes_total_leidos += bytes_leidos;
-            while ((bytes_leidos = read(STDIN_FILENO, buffer + bytes_total_leidos, (size_t) buffer_size - bytes_total_leidos)) > 0 && bytes_total_leidos < buffer_size) {
-                bytes_total_leidos += bytes_leidos;
-            }
-            int bytes_escritos = 0;
-            //printf("¿Es %d < %zu ?\n", bytes_chunk_size, bytes_total_leidos);
-            while (bytes_chunk_size <= bytes_total_leidos) {
-               // printf("SO FAR SO GOOD\n");
-                char nombre_fichero[60];
-                sprintf(nombre_fichero, "stdin%d", contador_ficheros);
-                fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
-                bytes_escritos += write_bytes(fd_file, buffer, bytes_escritos, bytes_chunk_size - bytes_restantes);
-                bytes_restantes = 0;
-                bytes_total_leidos -= bytes_chunk_size;
-                //printf("he escrito %zu bytes en stdin%d\n", (size_t) bytes_escritos, contador_ficheros);
-                close(fd_file);
-                contador_ficheros++;
-            }
-            if (bytes_total_leidos > 0) {
-                bytes_restantes = bytes_total_leidos;
-                char nombre_fichero[60];
-                sprintf(nombre_fichero, "stdin%d", contador_ficheros);
-                fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
-                write_bytes(fd_file, buffer, bytes_escritos, bytes_restantes);
-                close(fd_file);
-            }
-        } while ((bytes_leidos = read(STDIN_FILENO, buffer, buffer_size)) > 0);
-    } else {
-        // QUE PASA SI EL TAMAÑO A TROCEAR ES MAYOR
-
-    }*/
-
+    ssize_t bytes_total_escritos = 0;
     char nombre_fichero[60];
     sprintf(nombre_fichero, "stdin%d", contador_ficheros);
-    fd_file = open(nombre_fichero, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+    fd_file = open_file(nombre_fichero);
+   // bytes_restantes = bytes_chunk_size - read(fd_file, buffer, buffer_size);
+    memset(buffer, '\0', buffer_size);
     int pos_origen = 0;
     while ((bytes_leidos = read(STDIN_FILENO, buffer, buffer_size)) > 0) {
-        if (bytes_leidos <= bytes_chunk_size) {
-            write_bytes(fd_file, buffer, 0, bytes_leidos);
+        if (bytes_restantes > 0) {
+            printf("Bytes restantes: %zu\n", bytes_restantes);
+            if (bytes_restantes <= buffer_size) {
+                write_bytes(fd_file, buffer, 0, bytes_restantes);
+                close(fd_file);
+                contador_ficheros++;
+                nuevo_comando = 0;
+                sprintf(nombre_fichero,"stdin%d", contador_ficheros);
+                fd_file = open_file(nombre_fichero);
+                bytes_restantes = 0;
+            } else {
+                ssize_t bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_restantes);
+                memset(buffer, '\0', buffer_size);
+                bytes_restantes -= bytes_escritos;
+            }
         } else {
-            int bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_escritos);
-            pos_origen = bytes_escritos + 1;
-        }
+
+            if (bytes_chunk_size >= bytes_leidos) {
+                if (bytes_chunk_size == bytes_leidos) {
+                    ssize_t bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_chunk_size);
+                    contador_ficheros++;
+                    nuevo_comando = 0;
+                    sprintf(nombre_fichero,"stdin%d", contador_ficheros);
+                    fd_file = open_file(nombre_fichero);
+                } else {
+                    ssize_t bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_leidos);
+                }
+                bytes_restantes = bytes_chunk_size - bytes_leidos;
+
+                memset(buffer, '\0', buffer_size);
+            } else {
+                // FALTA ESTO
+                /**
+                    1 - Mientras lo que quede sea mayor que el chunk
+                    1.1 - Escribo el chunk en un fichero nuevo
+                    2 - si queda algo, abro un nuevo fichero y lo meto ahi y lo dejo abierto
+                */
+                int offset = 0;
+                while (bytes_leidos >= bytes_chunk_size) {
+                    ssize_t bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_chunk_size);
+                    offset += bytes_escritos;
+                    bytes_leidos -= bytes_escritos;
+                    close(fd_file);
+                    contador_ficheros++;
+                    nuevo_comando = 0;
+                    sprintf(nombre_fichero,"stdin%d", contador_ficheros);
+                    fd_file = open_file(nombre_fichero);
+                }
+                if (bytes_leidos > 0) {
+                    ssize_t bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
+                    bytes_restantes = bytes_chunk_size - bytes_leidos;
+                }
+
+            }
+        }    
     }
+    close(fd_file);
 }
 
 
@@ -410,7 +438,7 @@ void parse_psplit_args(int argc, char* argv[]) {
     int tam_bytes = 0;
     int hay_fichero = 0;
     int flags_incompatibles = 0;
-    while ((opt = getopt(argc, argv, "l:b:s:h")) != -1) {
+    while ((opt = getopt(argc, argv, "l:b:s:p:h")) != -1) {
         switch (opt) {
             case 'l':
                 if (flags_incompatibles > 0) {
@@ -440,6 +468,9 @@ void parse_psplit_args(int argc, char* argv[]) {
                     return;
                 }
                 break;
+            case 'p':
+                
+                break;   
             case 'h':
                 printf("Uso: psplit [-l NLINES] [-b NBYTES] [-s BSIZE] [-p PROCS] [FILE1] [FILE2]...\n");
                 printf("\t Opciones:\n");
@@ -448,6 +479,7 @@ void parse_psplit_args(int argc, char* argv[]) {
                 printf("\t -s BSIZE  Tamaño en bytes de los bloques leídos de [FILEn] o stdin.\n");
                 printf("\t -p PROCS  Número máximo de procesos simultáneos.\n");
                 printf("\t -h        Ayuda\n");
+                printf("\n");
 
                 return;
             default:
@@ -846,6 +878,7 @@ void exec_internal_cmd(struct execcmd * ecmd) {
         }
     } else if (strcmp(ecmd->argv[0], "psplit") == 0) {
         parse_psplit_args(ecmd->argc, ecmd->argv);
+        nuevo_comando = 0;
     }
 }
 
@@ -1241,19 +1274,19 @@ void run_cmd(struct cmd* cmd)
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
-             if (es_cmd_interno == 1) {
-                 close(fd);
-                 dup2(terminal_fd, fd);
-                 close(terminal_fd);
-                 free(rcmd->cmd);
-                 free(cmd);
-                 exit(EXIT_SUCCESS);
-             }else {
-                 exec_internal_cmd((struct execcmd *) rcmd->cmd);
-                 close(fd);
-                 dup2(terminal_fd, STDOUT_FILENO);
-                 close(terminal_fd);
-             }
+                if (es_cmd_interno == 1) {
+                    close(fd);
+                    dup2(terminal_fd, fd);
+                    close(terminal_fd);
+                    free(rcmd->cmd);
+                    free(cmd);
+                    exit(EXIT_SUCCESS);
+                }else {
+                    exec_internal_cmd((struct execcmd *) rcmd->cmd);
+                    close(fd);
+                    dup2(terminal_fd, STDOUT_FILENO);
+                    close(terminal_fd);
+                }
             } else {
                 if (fork_or_panic("fork REDR") == 0) {
                     TRY(close(rcmd->fd));
