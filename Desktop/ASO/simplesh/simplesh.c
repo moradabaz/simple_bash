@@ -200,18 +200,35 @@ void run_psplit_lines_from_stdin(int lineas, size_t tam_bytes) {
         close(fd_file);
 }
 
-int write_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
+ssize_t write_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
     ssize_t bytes_escritos = 0;
     int bytes_total_escritos = 0;
     ssize_t pos_origen = inicio;
     ssize_t tam_bytes = bytes;
+    printf("OFFSET: %zu\n", pos_origen);
     while (tam_bytes > 0) {
         bytes_escritos = write(fd, buffer + pos_origen, (size_t) tam_bytes);
+        printf("Bytes escritos: %zu\n", bytes_escritos);
+        printf("Tam bites: %zu\n", tam_bytes);
         bytes_total_escritos += bytes_escritos;
         pos_origen += bytes_total_escritos;
         tam_bytes -= bytes_escritos;
     }
     return bytes_total_escritos;
+}
+
+ssize_t read_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
+    ssize_t bytes_leidos = -1;
+    int bytes_total_leidos = 0;
+    ssize_t pos_origen = 0;
+    ssize_t tam_bytes = bytes;
+    while(tam_bytes > 0 && bytes_leidos != 0) {
+        bytes_leidos = read(fd, buffer + pos_origen, (size_t) tam_bytes);
+        bytes_total_leidos += bytes_leidos;
+        pos_origen += bytes_total_leidos;
+        tam_bytes -= bytes_leidos;
+    }
+    return bytes_total_leidos;
 }
 
 ssize_t read_small_chunks(int fd, char* buffer, int tam, int tam_max) {
@@ -340,6 +357,7 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
       close(fd_file);
   }
 
+
 void run_split_bytes_from_file(int fd, char *fichero, int tam_chunk_bytes, ssize_t buffer_size) {
     if (fichero == NULL) {
         fichero = "stdin";
@@ -367,60 +385,55 @@ void run_split_bytes_from_file(int fd, char *fichero, int tam_chunk_bytes, ssize
     } else {
         char nombre_fichero[60];
         sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-        fd_file = open_file(nombre_fichero);
+       // memset(buffer, '\0', buffer_size);
         bytes_leidos = read(fd, buffer, (size_t) buffer_size);
         while (bytes_leidos > 0) {
-            ssize_t bytes_escritos = 0;
-            if (bytes_leidos >= tam_chunk_bytes) {
-                int offset = 0;
-                while (bytes_leidos > 0) {
-                    //printf("bytes leidos: %zu\n", bytes_leidos);
-                    if (bytes_leidos > tam_chunk_bytes) {
-                        bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes);
-                    } else {
-                        bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
-                    }
-                    //printf("bytes escritos: %zu\n", bytes_escritos);
-                    offset += bytes_escritos;
-                    if (bytes_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
-                        //  printf("Abrimos fichero nuegvo\n");
-                        close(fd_file);
-                        num_ficheros++;
-                        sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-                        nuevo_comando = 0;
-                        if (bytes_leidos > 0)
-                            fd_file = open_file(nombre_fichero);
-                    }
-                    bytes_leidos -= bytes_escritos;
-
-                }
-            } /*else {
-            ssize_t bytes_escritos = 0;
-            if (bytes_restantes <= bytes_leidos)
-                bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_restantes);
-            else
-                bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_leidos);
-            bytes_restantes -= bytes_escritos;
-            while (bytes_restantes > 0 && bytes_leidos > 0) {
-                bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-                if (bytes_restantes <= bytes_leidos)
-                    bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_restantes);
-                else
-                    bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_leidos);
-                bytes_restantes -= bytes_escritos;
-
-              //  bytes_restantes -= by
-            }
-            if (bytes_restantes == 0) {
+            if (bytes_leidos == tam_chunk_bytes) {
+                do {
+                    fd_file = open_file(nombre_fichero);
+                    //printf("Escribiré %zu bytes\n", bytes_leidos);
+                    write_bytes(fd_file, buffer, 0, bytes_leidos);
+                    close(fd_file);
+                    num_ficheros++;
+                    sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+                    nuevo_comando = 0;
+                    //memset(buffer, '\0', buffer_size);
+                } while ((bytes_leidos = read_bytes(fd, buffer, 0, (size_t) buffer_size)) > 0);
                 close(fd_file);
-                num_ficheros++;
-                nuevo_comando = 0;
-                sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-                fd_file = open_file(nombre_fichero);
-                bytes_restantes = tam_chunk_bytes;
+            } else if (bytes_leidos > tam_chunk_bytes) {
+                    int offset = 0;
+                    ssize_t bytes_escritos = 0;
+                    while (bytes_leidos > 0) {
+                        //printf("Entramos otra vez\n");
+                        //printf("bytes leidos: %zu\n", bytes_leidos);
+                        if (bytes_leidos > tam_chunk_bytes) {
+                            bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes);
+                            //bytes_escritos = write(fd_file, buffer, 2);
+                        } else {
+                            bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
+                            //bytes_escritos = write(fd_file, buffer, 2);
+                        }
+                       // printf("Salimos\n");
+                       // printf("Escritos: %zu \n", bytes_escritos);
+                        offset += bytes_escritos;
+                        if (bytes_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
+                              printf("Abrimos fichero nuegvo\n");
+                            close(fd_file);
+                            num_ficheros++;
+                            sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+                            nuevo_comando = 0;
+                            if (bytes_leidos > 0)
+                                fd_file = open_file(nombre_fichero);
+                        }
+                        bytes_leidos -= bytes_escritos;
+                    }
+                //printf("Bytes leidos %zu \n", bytes_leidos);
+            } else {
+                write_bytes(fd_file, buffer, 0, bytes_leidos);
+
             }
-        }*/
             bytes_leidos = read(fd, buffer, (size_t) buffer_size);
+            //printf("He leidos %zu bytes\n", bytes_leidos);
         }
     }
 
