@@ -205,11 +205,8 @@ ssize_t write_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
     int bytes_total_escritos = 0;
     ssize_t pos_origen = inicio;
     ssize_t tam_bytes = bytes;
-    printf("OFFSET: %zu\n", pos_origen);
     while (tam_bytes > 0) {
         bytes_escritos = write(fd, buffer + pos_origen, (size_t) tam_bytes);
-        printf("Bytes escritos: %zu\n", bytes_escritos);
-        printf("Tam bites: %zu\n", tam_bytes);
         bytes_total_escritos += bytes_escritos;
         pos_origen += bytes_total_escritos;
         tam_bytes -= bytes_escritos;
@@ -403,21 +400,15 @@ void run_split_bytes_from_file(int fd, char *fichero, int tam_chunk_bytes, ssize
             } else if (bytes_leidos > tam_chunk_bytes) {
                     int offset = 0;
                     ssize_t bytes_escritos = 0;
+                    fd_file = open_file(nombre_fichero);
                     while (bytes_leidos > 0) {
-                        //printf("Entramos otra vez\n");
-                        //printf("bytes leidos: %zu\n", bytes_leidos);
                         if (bytes_leidos > tam_chunk_bytes) {
                             bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes);
-                            //bytes_escritos = write(fd_file, buffer, 2);
                         } else {
                             bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
-                            //bytes_escritos = write(fd_file, buffer, 2);
                         }
-                       // printf("Salimos\n");
-                       // printf("Escritos: %zu \n", bytes_escritos);
                         offset += bytes_escritos;
                         if (bytes_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
-                              printf("Abrimos fichero nuegvo\n");
                             close(fd_file);
                             num_ficheros++;
                             sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
