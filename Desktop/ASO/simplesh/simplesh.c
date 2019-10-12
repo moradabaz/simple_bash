@@ -1,15 +1,15 @@
-  /*
- * Shell `simplesh` (basado en el shell de xv6)
- *
- * Ampliación de Sistemas Operativos
- * Departamento de Ingeniería y Tecnología de Computadores
- * Facultad de Informática de la Universidad de Murcia
- *
- * Alumnos: APELLIDOS, NOMBRE (GX.X)
- *          APELLIDOS, NOMBRE (GX.X)
- *
- * Convocatoria: FEBRERO/JUNIO/JULIO
- */
+/*
+* Shell `simplesh` (basado en el shell de xv6)
+*
+* Ampliación de Sistemas Operativos
+* Departamento de Ingeniería y Tecnología de Computadores
+* Facultad de Informática de la Universidad de Murcia
+*
+* Alumnos: APELLIDOS, NOMBRE (GX.X)
+*          APELLIDOS, NOMBRE (GX.X)
+*
+* Convocatoria: FEBRERO/JUNIO/JULIO
+*/
 
 
 /*
@@ -229,14 +229,14 @@ ssize_t read_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
 }
 
 ssize_t read_small_chunks(int fd, char* buffer, int tam, int tam_max) {
- ssize_t total_leidos = 0;
- ssize_t leidos = 0;
- do {
-    leidos = read(fd, buffer + total_leidos, tam);
-    total_leidos += leidos;
- } while (total_leidos != tam_max && leidos > 0);
- return total_leidos;
-} 
+    ssize_t total_leidos = 0;
+    ssize_t leidos = 0;
+    do {
+        leidos = read(fd, buffer + total_leidos, tam);
+        total_leidos += leidos;
+    } while (total_leidos != tam_max && leidos > 0);
+    return total_leidos;
+}
 
 void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes) {
 
@@ -249,12 +249,12 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
     int contador_ficheros = 0;
     char nombre_fichero[60];
     sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
-    
+
     fd_file = open_file(nombre_fichero);
     ssize_t pos_origen = 0;
     ssize_t pos_actual = 0;
     int contador_lineas = 0;
- 
+
     if (tam_bytes < MIN_DEF_BSIZE) {
         buffer = malloc ((tam_bytes * 100) * sizeof(char));
         bytes_leidos = read_small_chunks(fd, buffer, tam_bytes, tam_bytes * 100);
@@ -263,167 +263,157 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
         bytes_leidos = read(fd, buffer, tam_bytes);
     }
 
-        while (bytes_leidos != 0 ) {
-            ssize_t contador = 0;
-            pos_origen = 0;
-            pos_actual = 0;
-            while(buffer[contador] != '\0' && contador < bytes_leidos) {
-                if (buffer[contador] == '\n') {
-                    contador_lineas++;
-                    pos_actual = contador + 1;
-                    ssize_t bytes_restantes = (pos_actual - pos_origen);
-                    write_bytes(fd_file, buffer, (int) pos_origen, bytes_restantes);
-                    pos_origen = pos_actual;
-                    if (contador_lineas == num_max_lineas) {   
-                        contador_lineas = 0;
-                        contador_ficheros++;
-                        close(fd_file);
-                        sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
-                        nuevo_comando = 0;
-                        fd_file = open_file(nombre_fichero);
-                    }
+    while (bytes_leidos != 0 ) {
+        ssize_t contador = 0;
+        pos_origen = 0;
+        pos_actual = 0;
+        while(buffer[contador] != '\0' && contador < bytes_leidos) {
+            if (buffer[contador] == '\n') {
+                contador_lineas++;
+                pos_actual = contador + 1;
+                ssize_t bytes_restantes = (pos_actual - pos_origen);
+                write_bytes(fd_file, buffer, (int) pos_origen, bytes_restantes);
+                pos_origen = pos_actual;
+                if (contador_lineas == num_max_lineas) {
+                    contador_lineas = 0;
+                    contador_ficheros++;
+                    close(fd_file);
+                    sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
+                    nuevo_comando = 0;
+                    fd_file = open_file(nombre_fichero);
                 }
-                contador++;
-            }  
-            memset(buffer, '\0', tam_bytes);
-
-            if (tam_bytes < MIN_DEF_BSIZE) {
-                bytes_leidos = read_small_chunks(fd, buffer, tam_bytes, tam_bytes * 100);
-            } else {
-                bytes_leidos = read(fd, buffer, tam_bytes);
             }
-
+            contador++;
         }
-        if (pos_origen < bytes_leidos) {
-            ssize_t bytes_escritos = 0;
-            ssize_t bytes_restantes = (bytes_leidos - pos_origen);
-            while(tam_bytes > 0) {
-                bytes_escritos = write(fd_file, buffer + pos_origen, bytes_restantes);
-                bytes_restantes -= bytes_escritos;
-            }
+        memset(buffer, '\0', tam_bytes);
 
+        if (tam_bytes < MIN_DEF_BSIZE) {
+            bytes_leidos = read_small_chunks(fd, buffer, tam_bytes, tam_bytes * 100);
+        } else {
+            bytes_leidos = read(fd, buffer, tam_bytes);
         }
+
+    }
+    if (pos_origen < bytes_leidos) {
+        ssize_t bytes_escritos = 0;
+        ssize_t bytes_restantes = (bytes_leidos - pos_origen);
+        while(tam_bytes > 0) {
+            bytes_escritos = write(fd_file, buffer + pos_origen, bytes_restantes);
+            bytes_restantes -= bytes_escritos;
+        }
+
+    }
 
     free(buffer);
 
 }
 
 
-  void run_split_big_bytes(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t buffer_size) {
-      ssize_t  bytes_leidos = 0;
-      char buffer[buffer_size];
-      int num_ficheros = 0;
-      int fd_file = -1;
-      ssize_t bytes_restantes = tam_chunk_bytes;
-      nuevo_comando = 0;
-      memset(buffer, '\0', buffer_size);
-      char nombre_fichero[60];
-      sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-
-      bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-      ssize_t bytes_escritos = 0;
-      while(bytes_leidos > 0) {
-          fd_file = open_file(nombre_fichero);
-          while (bytes_restantes > bytes_leidos && bytes_leidos > 0) {
-              //printf("Bytes leidos: %zu\n", bytes_leidos);
-              bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_leidos);
-              //printf("Escribo %zu bytes\n", bytes_escritos);
-              bytes_restantes -= bytes_escritos;
-              bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-              //printf("Me quedan %zu bytes\n", bytes_restantes);
-          }
-          if (bytes_restantes > 0 && bytes_leidos > 0) {
-              //printf("Me quedan %zu bytes\n", bytes_escritos);
-              //printf("He leido: %zu bytes\n", bytes_leidos);
-              bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_restantes);
-              bytes_leidos -= bytes_escritos;
-
-          }
-          close(fd_file);
-          bytes_restantes = tam_chunk_bytes;
-          num_ficheros++;
-          nuevo_comando = 0;
-          sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-          if (bytes_leidos > 0) {
-              fd_file = open_file(nombre_fichero);
-              bytes_escritos = write_bytes(fd_file, buffer, (int) bytes_escritos, bytes_leidos);
-              bytes_restantes -= bytes_escritos;
-          }
-          bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-      }
-      close(fd_file);
-  }
-
-
-void run_split_bytes_from_file(int fd, char *fichero, int tam_chunk_bytes, ssize_t buffer_size) {
-    if (fichero == NULL) {
-        fichero = "stdin";
-    }
+void run_split_big_bytes(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t buffer_size) {
     ssize_t  bytes_leidos = 0;
     char buffer[buffer_size];
     int num_ficheros = 0;
     int fd_file = -1;
     ssize_t bytes_restantes = tam_chunk_bytes;
     nuevo_comando = 0;
-
-   /* if (buffer_size < MIN_DEF_BSIZE) {
-        buffer = malloc ((buffer_size * 100) * sizeof(char));
-        bytes_leidos = read_small_chunks(fd, buffer, buffer_size, buffer_size * 100);
-    } else {
-        buffer = malloc (buffer_size * sizeof(char));
-        bytes_leidos = read(fd, buffer, buffer_size);
-    }*/
     memset(buffer, '\0', buffer_size);
+    char nombre_fichero[60];
+    sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
 
-//( echo 0; echo 1) | tee splitme | psplit -b 1 -s 10
+    bytes_leidos = read(fd, buffer, (size_t) buffer_size);
+    ssize_t bytes_escritos = 0;
+    while(bytes_leidos > 0) {
+        fd_file = open_file(nombre_fichero);
+        while (bytes_restantes > bytes_leidos && bytes_leidos > 0) {
+            //printf("Bytes leidos: %zu\n", bytes_leidos);
+            bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_leidos);
+            //printf("Escribo %zu bytes\n", bytes_escritos);
+            bytes_restantes -= bytes_escritos;
+            bytes_leidos = read(fd, buffer, (size_t) buffer_size);
+            //printf("Me quedan %zu bytes\n", bytes_restantes);
+        }
+        if (bytes_restantes > 0 && bytes_leidos > 0) {
+            //printf("Me quedan %zu bytes\n", bytes_escritos);
+            //printf("He leido: %zu bytes\n", bytes_leidos);
+            bytes_escritos = write_bytes(fd_file, buffer, 0, bytes_restantes);
+            bytes_leidos -= bytes_escritos;
 
+        }
+        close(fd_file);
+        bytes_restantes = tam_chunk_bytes;
+        num_ficheros++;
+        nuevo_comando = 0;
+        sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+        if (bytes_leidos > 0) {
+            fd_file = open_file(nombre_fichero);
+            bytes_escritos = write_bytes(fd_file, buffer, (int) bytes_escritos, bytes_leidos);
+            bytes_restantes -= bytes_escritos;
+        }
+        bytes_leidos = read(fd, buffer, (size_t) buffer_size);
+    }
+    close(fd_file);
+}
+
+
+void run_split_bytes_from_file(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t buffer_size) {
+    if (fichero == NULL) {
+        fichero = "stdin";
+    }
+
+    ssize_t  bytes_leidos = 0;
+    char buffer[buffer_size];
+    int num_ficheros = 0;
+    int fd_file = -1;
+    ssize_t bytes_restantes = tam_chunk_bytes;
+    nuevo_comando = 0;
+    memset(buffer, '\0', buffer_size);
     if (tam_chunk_bytes > buffer_size) {
         run_split_big_bytes(fd, fichero, tam_chunk_bytes, buffer_size);
     } else {
         char nombre_fichero[60];
         sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-       // memset(buffer, '\0', buffer_size);
-        bytes_leidos = read(fd, buffer, (size_t) buffer_size);
+        bytes_leidos = read_bytes(fd, buffer, 0, (size_t) buffer_size);
+        //printf("Num bytes leidos: %zu \n", bytes_leidos);
+        //printf("Tam bytes: %zu \n", tam_chunk_bytes);
         while (bytes_leidos > 0) {
-            if (bytes_leidos == tam_chunk_bytes) {
+            if (buffer_size == tam_chunk_bytes) {
                 do {
                     fd_file = open_file(nombre_fichero);
-                    //printf("Escribiré %zu bytes\n", bytes_leidos);
                     write_bytes(fd_file, buffer, 0, bytes_leidos);
                     close(fd_file);
                     num_ficheros++;
                     sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
                     nuevo_comando = 0;
-                    //memset(buffer, '\0', buffer_size);
                 } while ((bytes_leidos = read_bytes(fd, buffer, 0, (size_t) buffer_size)) > 0);
                 close(fd_file);
             } else if (bytes_leidos > tam_chunk_bytes) {
-                    int offset = 0;
-                    ssize_t bytes_escritos = 0;
-                    fd_file = open_file(nombre_fichero);
-                    while (bytes_leidos > 0) {
-                        if (bytes_leidos > tam_chunk_bytes) {
-                            bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes);
-                        } else {
-                            bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
-                        }
-                        offset += bytes_escritos;
-                        if (bytes_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
-                            close(fd_file);
-                            num_ficheros++;
-                            sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-                            nuevo_comando = 0;
-                            if (bytes_leidos > 0)
-                                fd_file = open_file(nombre_fichero);
-                        }
-                        bytes_leidos -= bytes_escritos;
+
+                int offset = 0;
+                ssize_t bytes_escritos = 0;
+                fd_file = open_file(nombre_fichero);
+                while (bytes_leidos > 0) {
+                    if (bytes_leidos > tam_chunk_bytes) {
+                        bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes);
+                    } else {
+                        bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
                     }
+                    offset += bytes_escritos;
+                    if (bytes_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
+                        close(fd_file);
+                        num_ficheros++;
+                        sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
+                        nuevo_comando = 0;
+                        if (bytes_leidos > 0)
+                            fd_file = open_file(nombre_fichero);
+                    }
+                    bytes_leidos -= bytes_escritos;
+                }
                 //printf("Bytes leidos %zu \n", bytes_leidos);
             } else {
                 write_bytes(fd_file, buffer, 0, bytes_leidos);
 
             }
-            bytes_leidos = read(fd, buffer, (size_t) buffer_size);
+            bytes_leidos = read_bytes(fd, buffer, 0, buffer_size);
             //printf("He leidos %zu bytes\n", bytes_leidos);
         }
     }
@@ -438,7 +428,7 @@ void run_split_bytes_from_file(int fd, char *fichero, int tam_chunk_bytes, ssize
 
 
 
-  //psplit -b 32 000 000 -s 768
+//psplit -b 32 000 000 -s 768
 
 void run_psplit_bytes_from_stdin(int bytes_chunk_size, ssize_t buffer_size) {
     int contador_ficheros = 0;
@@ -499,7 +489,7 @@ void run_psplit_bytes_from_stdin(int bytes_chunk_size, ssize_t buffer_size) {
                 }
 
             }
-        }    
+        }
     }
     close(fd_file);
 }
@@ -571,8 +561,8 @@ void parse_psplit_args(int argc, char* argv[]) {
                 }
                 break;
             case 'p':
-                
-                break;   
+
+                break;
             case 'h':
                 printf("Uso: psplit [-l NLINES] [-b NBYTES] [-s BSIZE] [-p PROCS] [FILE1] [FILE2]...\n");
                 printf("\t Opciones:\n");
