@@ -198,7 +198,7 @@ ssize_t read_small_chunks(int fd, char* buffer, int tam, int tam_max) {
     return total_leidos;
 }
 
-void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes) {
+void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes, int procesos) {
     if (fd == STDIN_FILENO) {
         fichero = "stdin";
     }
@@ -235,6 +235,7 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
                 if (contador_lineas == num_max_lineas) {
                     contador_lineas = 0;
                     contador_ficheros++;
+                    fsync(fd_file);
                     close(fd_file);
                     sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
                     nuevo_comando = 0;
@@ -290,6 +291,7 @@ void split_bytes_bt_size(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t
             bytes_leidos -= bytes_escritos;
 
         }
+        fsync(fd_file);
         close(fd_file);
         bytes_restantes = tam_chunk_bytes;
         num_ficheros++;
@@ -302,11 +304,12 @@ void split_bytes_bt_size(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t
         }
         bytes_leidos = read(fd, buffer, (size_t) buffer_size);
     }
+    fsync(fd_file);
     close(fd_file);
 }
 
 
-void run_split_bytes_from_file(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t buffer_size) {
+void run_split_bytes_from_file(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t buffer_size, int procesos) {
     if (fd == STDIN_FILENO) {
         fichero = "stdin";
     }
@@ -341,6 +344,7 @@ void run_split_bytes_from_file(int fd, char *fichero, ssize_t tam_chunk_bytes, s
                     total_escritos += bytes_escritos;
                     if (total_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
                         total_escritos = 0;
+                        fsync(fd_file);
                         close(fd_file);
                         contador_ficheros++;
                         sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
@@ -355,19 +359,22 @@ void run_split_bytes_from_file(int fd, char *fichero, ssize_t tam_chunk_bytes, s
 
     if (bytes_leidos > 0) {
         write_bytes(fd_file, buffer, 0, bytes_leidos);
+        fsync(fd_file);
         close(fd_file);
+
     }
+
 }
 
 
 void process_psplit_command(int fd, char * fichero, int flag, int cantidad, int tam_bytes) {
     switch (flag) {
         case SPLIT_LINES:
-            run_psplit_lines_from_file(fd, fichero, cantidad, (size_t) tam_bytes);
+            run_psplit_lines_from_file(fd, fichero, cantidad, (size_t) tam_bytes, 0);
             break;
 
         case SPLIT_BYTES:
-            run_split_bytes_from_file(fd, fichero, cantidad, tam_bytes);
+            run_split_bytes_from_file(fd, fichero, cantidad, tam_bytes, 0);
             break;
         default:
             break;
