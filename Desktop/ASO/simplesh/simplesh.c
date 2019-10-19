@@ -101,7 +101,7 @@ static const char WHITESPACE[] = " \t\r\n\v";
 static const char SYMBOLS[] = "<|>&;()";
 static sigset_t signal_child;
 int pids_procesos[MAX_PROCS];
-
+pid_t * array_procesos;
 
 /******************************************************************************
  * Funciones auxiliares
@@ -387,6 +387,7 @@ void run_psplit(int argc, char **argv) {
     int tam_bytes = 0;
     int hay_fichero = 0;
     int flags_incompatibles = 0;
+    int procesos_totales = 0;
     while ((opt = getopt(argc, argv, "l:b:s:p:h")) != -1) {
         switch (opt) {
             case 'l':
@@ -418,7 +419,7 @@ void run_psplit(int argc, char **argv) {
                 }
                 break;
             case 'p':
-
+                procesos_totales = atoi(optarg);
                 break;
             case 'h':
                 printf("Uso: psplit [-l NLINES] [-b NBYTES] [-s BSIZE] [-p PROCS] [FILE1] [FILE2]...\n");
@@ -426,7 +427,7 @@ void run_psplit(int argc, char **argv) {
                 printf("\t -l NLINES Número máximo de líneas por fichero.\n");
                 printf("\t -b NBYTES Número máximo de bytes por fichero.\n");
                 printf("\t -s BSIZE  Tamaño en bytes de los bloques leídos de [FILEn] o stdin.\n");
-                printf("\t -p PROCS  Número máximo de procesos simultáneos.\n");
+                printf("\t -p PROCS  Número máximo de procesos_totales simultáneos.\n");
                 printf("\t -h        Ayuda\n");
                 printf("\n");
 
@@ -439,8 +440,56 @@ void run_psplit(int argc, char **argv) {
     if (tam_bytes == 0)
         tam_bytes = DEFAULT_BSIZE;
 
+    int num_procesos = 0;
     hay_fichero = argc - optind;
     if (hay_fichero > 0) {
+        if (procesos_totales > 1) {
+            array_procesos = malloc(procesos_totales * sizeof(int));
+            memset(array_procesos, 0, procesos_totales);
+            for (int i = optind; i < argc; ++i) {
+                int fd = open(argv[i], O_RDONLY);
+                pid_t pid;
+                if (num_procesos < procesos_totales) {
+                   //printf("Hay sitio, aun quedan %d libres\n", procesos_totales - num_procesos);
+                    num_procesos++;
+                    if ((pid = fork_or_panic("")) == 0) {
+                        process_psplit_command(fd, argv[i], flag, arg, tam_bytes);
+                        close(fd);
+                        _exit(0);
+                    }
+                    for (int j = 0; j < procesos_totales; ++j) {
+                        if (array_procesos[i] == 0) {
+                            array_procesos[i] = pid;
+                            break;
+                        }
+                    }
+                    wait(NULL);
+                } else {
+                    pid_t primer_pid_libre = 0;
+                    for (int j = 0; j < procesos_totales; ++j) {
+                        if (array_procesos[i] > 0) {
+                            primer_pid_libre = array_procesos[i];
+                            array_procesos[i] = 0;
+                            break;
+                        }
+                    }
+                    waitpid(primer_pid_libre, NULL, 0);
+                    num_procesos--;
+                }
+            }
+            free(array_procesos);
+        } else {
+            for (int i = optind; i < argc; ++i) {
+                int fd = open(argv[i], O_RDONLY);
+                process_psplit_command(fd, argv[i], flag, arg, tam_bytes);
+                close(fd);
+            }
+        }
+    } else {
+        process_psplit_command(STDIN_FILENO, NULL, flag, arg, tam_bytes);
+    }
+
+    /*if (hay_fichero > 0) {
         for (int i = optind; i < argc; ++i) {
             int fd = open(argv[i], O_RDONLY);
             process_psplit_command(fd, argv[i], flag, arg, tam_bytes);
@@ -448,7 +497,7 @@ void run_psplit(int argc, char **argv) {
         }
     } else {
         process_psplit_command(STDIN_FILENO, NULL, flag, arg, tam_bytes);
-    }
+    }*/
 
 }
 
