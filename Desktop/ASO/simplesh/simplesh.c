@@ -52,8 +52,7 @@
 #define MIN_DEF_BSIZE 10
 #define SPLIT_LINES 1
 #define SPLIT_BYTES 2
-#define FROM_FILE 1
-#define FROM_STDIN 0
+#define MAX_PROCS 8
 
 static const char* VERSION = "0.18";
 
@@ -96,12 +95,12 @@ static int g_dbg_level = 0;
 
 // Número máximo de argumentos de un comando
 #define MAX_ARGS 16
-#define DEFAULT_LINE_HD  3
-#define BSIZE 1024
 // Delimitadores
 static const char WHITESPACE[] = " \t\r\n\v";
 // Caracteres especiales
 static const char SYMBOLS[] = "<|>&;()";
+static sigset_t signal_child;
+int pids_procesos[MAX_PROCS];
 
 
 /******************************************************************************
@@ -327,32 +326,32 @@ void run_split_bytes_from_file(int fd, char *fichero, ssize_t tam_chunk_bytes, s
         sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
         bytes_leidos = read(fd, buffer, (size_t) buffer_size);
         while (bytes_leidos > 0) {
-                int offset = 0;
-                ssize_t bytes_escritos = 0;
-                fd_file = open_file(nombre_fichero);
-                while (bytes_leidos > 0) {
-                    if (total_escritos + bytes_leidos < tam_chunk_bytes) {
-                        bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
-                    } else {
-                        bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes - total_escritos);
-                    }
-                    if (offset + total_escritos >= buffer_size) {
-                        offset = (int) ((offset + total_escritos) - buffer_size);
-                    } else {
-                        offset += bytes_escritos;
-                    }
-                    total_escritos += bytes_escritos;
-                    if (total_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
-                        total_escritos = 0;
-                        fsync(fd_file);
-                        close(fd_file);
-                        contador_ficheros++;
-                        sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
-                        nuevo_comando = 0;
-                        fd_file = open_file(nombre_fichero);
-                    }
-                    bytes_leidos -= bytes_escritos;
+            int offset = 0;
+            ssize_t bytes_escritos = 0;
+            fd_file = open_file(nombre_fichero);
+            while (bytes_leidos > 0) {
+                if (total_escritos + bytes_leidos < tam_chunk_bytes) {
+                    bytes_escritos = write_bytes(fd_file, buffer, offset, bytes_leidos);
+                } else {
+                    bytes_escritos = write_bytes(fd_file, buffer, offset, tam_chunk_bytes - total_escritos);
                 }
+                if (offset + total_escritos >= buffer_size) {
+                    offset = (int) ((offset + total_escritos) - buffer_size);
+                } else {
+                    offset += bytes_escritos;
+                }
+                total_escritos += bytes_escritos;
+                if (total_escritos == tam_chunk_bytes && bytes_leidos > 0) {    // el bytes_leidos sobra
+                    total_escritos = 0;
+                    fsync(fd_file);
+                    close(fd_file);
+                    contador_ficheros++;
+                    sprintf(nombre_fichero, "%s%d", fichero, contador_ficheros);
+                    nuevo_comando = 0;
+                    fd_file = open_file(nombre_fichero);
+                }
+                bytes_leidos -= bytes_escritos;
+            }
             bytes_leidos = read(fd, buffer, buffer_size);
         }
     }
@@ -382,7 +381,7 @@ void process_psplit_command(int fd, char * fichero, int flag, int cantidad, int 
 
 }
 
-void parse_psplit_args(int argc, char* argv[]) {
+void run_psplit(int argc, char **argv) {
     optind = 1;
     int opt, arg, flag;
     int tam_bytes = 0;
@@ -454,10 +453,6 @@ void parse_psplit_args(int argc, char* argv[]) {
 }
 
 
-
-void run_psplit() {
-
-}
 
 void run_cwd() {
     char ruta[PATH_MAX];
@@ -796,6 +791,94 @@ int get_token(char** start_of_str, char* end_of_str,
 //*          FUNCIONES DE LA PRÁCTICA
 //************************************************************************
 
+
+//Funcion auxiliar para darle la vuelva al a una cadena.
+/**
+ * Esta
+ * @param begin
+ * @param end
+ */
+void cadenaInversa(char *begin, char *end)
+{
+    char aux;
+    while(end>begin)
+        aux=*end, *end--=*begin, *begin++=aux;
+}
+
+/**
+ * Esta función se utiliza para convertir un entero a string
+ * @param value El Entero que se quiere transformar
+ * @param str El buffer en el que se inserta el entero
+ */
+void integerToString(int value, char *str)
+{
+    char* wstr=str;
+    int sign;
+    div_t res;
+
+    if ((sign=value) < 0) value = -value;
+
+    do {
+        *wstr++ = (char) ((value % 10) + '0');
+    }while((value=value/10) > 0);
+
+    if(sign<0) *wstr++='-';
+    *wstr='\0';
+
+    cadenaInversa(str, wstr - 1);
+}
+
+
+/**
+ * Comprueba que un proceso está en segundo plano
+ * @param pid  El proceso del que se quiere hacer la comprobación
+ * @return  Devuelve el valor 0 si es el proceso esta en segundo plano. Devuelve 1 si no lo esta
+ */
+int is_back_process(int pid){
+    if (pid < 0) return 1;
+    int i = 0 ;
+    while(i < MAX_PROCS){
+        if(pid == pids_procesos[i]) return 0;
+        i++;
+    }
+    return 1;
+}
+
+
+/**
+ * Esta funcion sirve para calcular el numero de cifras de un valor Integer.
+ * @param numero El numero de tipo Integer
+ * @return Devuelve el numero de cifras que tiene x
+ */
+int longitud_numero(int numero) {
+    int cifras = 0;
+    while (numero > 0) {
+        numero /= 10;
+        cifras++;
+    }
+    return cifras < 1 ? 1 : cifras;
+}
+
+
+//Funcion auxiliar para imprimir el PID que nos pasan como parametro.
+/**
+ * Imprime un proceso en el formato [ PID ]
+ * @param pid Proceso que se quiere imprimir
+ */
+void print_processid(int pid){
+    int longitud = longitud_numero(pid);
+
+    char barra1= '[';
+    write(STDOUT_FILENO, &barra1, 1);
+
+    char pid_str[longitud];
+    integerToString(pid, pid_str);
+    write(STDOUT_FILENO, pid_str, (size_t) longitud);         //TODO: Aqui veo el fallo
+
+    char * barra2 = "]\n";
+    write(STDOUT_FILENO, barra2, 2);
+}
+
 int internal_cmd(struct execcmd * ecmd) {
     if (ecmd->argv[0] == 0) return 0;
     if (strcmp(ecmd->argv[0], "exit") == 0) {
@@ -806,10 +889,14 @@ int internal_cmd(struct execcmd * ecmd) {
         return  3;
     } else  if (strcmp(ecmd->argv[0], "psplit") == 0) {
         return 4;
+    } else if (strcmp(ecmd->argv[0], "bjobs") == 0) {
+        return 5;
     }
     return 0;
 }
 
+
+void run_bjobs(int argc, char *pString[16]);
 
 void exec_internal_cmd(struct execcmd * ecmd) {
     if (strcmp(ecmd->argv[0], "exit") == 0) {
@@ -827,11 +914,63 @@ void exec_internal_cmd(struct execcmd * ecmd) {
             run_cd_HOME();
         }
     } else if (strcmp(ecmd->argv[0], "psplit") == 0) {
-        parse_psplit_args(ecmd->argc, ecmd->argv);
+        run_psplit(ecmd->argc, ecmd->argv);
         nuevo_comando = 0;
+    } else if (strcmp(ecmd->argv[0], "bjobs") == 0) {
+        run_bjobs(ecmd->argc, ecmd->argv);
     }
 }
 
+
+/**
+ *
+ * @param argc
+ * @param argv
+ */
+void run_bjobs(int argc, char* argv[]) {
+    int opt;
+    optind = 1;
+    int hay_flags = 0;
+    while ((opt = getopt(argc, argv, "kh")) != -1) {
+        switch (opt) {
+            case 'k':
+                if (hay_flags > 0) {
+                    perror("bjobs: Opciones incompatibles\n");
+                    return;
+                } else {
+                    hay_flags++;
+                    for (int i = 0; i < MAX_PROCS; ++i) {
+                        if (is_back_process(pids_procesos[i]) == 0) {
+                            kill(pids_procesos[i], SIGKILL);
+                        }
+                    }
+                }
+                break;
+            case 'h':
+                if (hay_flags > 0) {
+                    perror("bjobs: Opciones incompatibles\n");
+                    return;
+                } else {
+                    printf("Uso: bjobs [-k] [-h]\n"
+                                   "\tOpciones:\n"
+                                   "\t-k Mata todos los procesos en segundo plano.\n"
+                                   "\t-h Ayuda\n");
+                    return;
+                }
+        }
+
+
+    }
+
+    if (hay_flags == 0) {
+        for (int i = 0; i < MAX_PROCS; ++i) {               // TODO: Un momento O.o
+            if (pids_procesos[i] != -1)
+                printf("[%d]\n", pids_procesos[i]);
+        }
+    }
+
+
+}
 
 
 
@@ -1183,6 +1322,20 @@ void exec_cmd(struct execcmd* ecmd)
 }
 
 
+void bloquear_sigchild() {
+    if (sigprocmask(SIG_BLOCK, &signal_child, NULL) == -1) {
+        perror(" sigprocmask SIG_BLOCK ");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void release_sigchild() {
+    if (sigprocmask(SIG_UNBLOCK, &signal_child, NULL) == -1) {
+        perror(" sigprocmask SIG_UNBLOCK ");
+        exit(EXIT_FAILURE);
+    }
+}
+
 void run_cmd(struct cmd* cmd)
 {
     struct execcmd* ecmd;
@@ -1193,6 +1346,7 @@ void run_cmd(struct cmd* cmd)
     struct subscmd* scmd;
     int p[2];
     int fd;
+    pid_t pid;
 
     DPRINTF(DBG_TRACE, "STR\n");
     if(cmd == 0) return;
@@ -1204,9 +1358,11 @@ void run_cmd(struct cmd* cmd)
             if (internal_cmd(ecmd) > 0) {
                 exec_internal_cmd(ecmd);
             } else {
-                if (fork_or_panic("fork EXEC") == 0)
+                bloquear_sigchild();
+                if ((pid = fork_or_panic("fork EXEC")) == 0)
                     exec_cmd(ecmd);
-                TRY(wait(NULL));
+                TRY(waitpid(pid, NULL, 0));
+                release_sigchild();
             }
             break;
 
@@ -1238,7 +1394,7 @@ void run_cmd(struct cmd* cmd)
                     close(terminal_fd);
                 }
             } else {
-                if (fork_or_panic("fork REDR") == 0) {
+                if ((pid = fork_or_panic("fork REDR")) == 0) {
                     TRY(close(rcmd->fd));
                     if ((fd = open(rcmd->file, rcmd->flags, rcmd->mode)) < 0) {
                         perror("open");
@@ -1251,7 +1407,12 @@ void run_cmd(struct cmd* cmd)
                         run_cmd(rcmd->cmd);
                     exit(EXIT_SUCCESS);
                 }
-                TRY(wait(NULL));
+                if (is_back_process(pid) != 0) {
+                    bloquear_sigchild();
+                    TRY(waitpid(pid, NULL, 0));
+                    release_sigchild();
+                }
+                //TRY(wait(NULL));
             }
             break;
 
@@ -1269,8 +1430,9 @@ void run_cmd(struct cmd* cmd)
                 exit(EXIT_FAILURE);
             }
 
+            bloquear_sigchild();
             // Ejecución del hijo de la izquierda
-            if (fork_or_panic("fork PIPE left") == 0)
+            if ((pid = fork_or_panic("fork PIPE left")) == 0)
             {
                 TRY( close(1) );
                 TRY( dup(p[1]) );
@@ -1283,8 +1445,10 @@ void run_cmd(struct cmd* cmd)
                 exit(EXIT_SUCCESS);
             }
 
+            pid_t pid2;
+
             // Ejecución del hijo de la derecha
-            if (fork_or_panic("fork PIPE right") == 0)
+            if ((pid2 = fork_or_panic("fork PIPE right")) == 0)
             {
                 TRY( close(0) );
                 TRY( dup(p[0]) );
@@ -1300,13 +1464,15 @@ void run_cmd(struct cmd* cmd)
             TRY( close(p[1]) );
 
             // Esperar a ambos hijos
-            TRY( wait(NULL) );          // TODO FALLA AQUI :S
-            TRY( wait(NULL) );
+            TRY( waitpid(pid, NULL, 0) );          // TODO FALLA AQUI :S
+            TRY( waitpid(pid2, NULL, 0) );
+            release_sigchild();
             break;
 
         case BACK:
             bcmd = (struct backcmd*)cmd;
-            if (fork_or_panic("fork BACK") == 0)
+            bloquear_sigchild();
+            if ((pid = fork_or_panic("fork BACK")) == 0)
             {
                 if (bcmd->cmd->type == EXEC)
                     exec_cmd((struct execcmd*) bcmd->cmd);
@@ -1314,16 +1480,33 @@ void run_cmd(struct cmd* cmd)
                     run_cmd(bcmd->cmd);
                 exit(EXIT_SUCCESS);
             }
+            int contador = 0;
+
+            while ((contador < MAX_PROCS) && (pids_procesos[contador] != -1)) {
+                contador++;
+            }
+
+            if (pids_procesos[contador] == -1) {
+                pids_procesos[contador] = pid;
+            }
+
+            // Imprimir procesos
+            print_processid(pid);
+            release_sigchild();
+
             break;
 
         case SUBS:
             scmd = (struct subscmd*) cmd;
-            if (fork_or_panic("fork SUBS") == 0)
+            bloquear_sigchild();
+            if ((pid = fork_or_panic("fork SUBS")) == 0)
             {
                 run_cmd(scmd->cmd);
                 exit(EXIT_SUCCESS);
             }
-            TRY( wait(NULL) );
+            TRY( waitpid(pid, NULL, 0) );
+            release_sigchild();
+
             break;
 
         case INV:
@@ -1557,12 +1740,75 @@ void parse_args(int argc, char** argv)
 }
 
 
+// MANEJADOR PARA sig_child
+void handle_sig_child(int signal) {
+    int saved_errno = errno;
+    int pid;
+    while ((pid = waitpid((pid_t)(-1), 0, WNOHANG)) > 0) {
+        for (int i = 0; i < MAX_PROCS; ++i) {
+            if (pid == pids_procesos[i]) {
+                pids_procesos[i] = -1;
+                break;
+            }
+        }
+        print_processid(pid);
+    }
+    errno = saved_errno;
+}
+
+
 int main(int argc, char** argv)
 {
     char* buf;
     struct cmd* cmd;
 
+    // AQUI DEBEMOS INICIALIZAR LOS PID
+
+
+    memset(pids_procesos,-1,(sizeof (*pids_procesos)*MAX_PROCS));
+    // memset(secondProcess, -1, MAXBUF);
+    for (int i = 0; i < MAX_PROCS; i++){
+        pids_procesos[i]= -1;
+    }
+
+
+    sigemptyset(&signal_child);
+    sigaddset(&signal_child, SIGCHLD);
+
+
+    // Bloquear la señal SIGINT
+
+    sigset_t  blocked_sigint;
+    sigemptyset(&blocked_sigint);
+    sigaddset(&blocked_sigint, SIGINT);
+    if (sigprocmask(SIG_BLOCK, &blocked_sigint, NULL) == -1) {
+        perror("SIGPROCKMASK: SIGNIT");
+        exit(EXIT_FAILURE);
+    }
+
+    // ignorar la señal
+
+    sigset_t ignored_sigint;
+    sigemptyset(&ignored_sigint);
+    sigaddset(&ignored_sigint, SIGQUIT);
+    if (sigprocmask(SIG_BLOCK, &ignored_sigint, NULL) == -1) {
+        perror("SIGPROCMASK: SIGQUIT");
+        exit(EXIT_FAILURE);
+    }
+
+
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = &handle_sig_child;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
+        perror(0);
+        exit(EXIT_FAILURE);
+    }
+
     parse_args(argc, argv);
+
 
     DPRINTF(DBG_TRACE, "STR\n");
 
