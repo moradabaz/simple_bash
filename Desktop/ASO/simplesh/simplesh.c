@@ -746,8 +746,6 @@ struct cmd* subscmd(struct cmd* subcmd)
 
 void run_exit(struct execcmd * ecmd) {
     es_exit = 1;
-    //free(ecmd);
-    //exit(EXIT_SUCCESS);
 }
 
 /******************************************************************************
@@ -952,6 +950,7 @@ void run_bjobs(int argc, char *pString[16]);
 void exec_internal_cmd(struct execcmd * ecmd) {
     if (strcmp(ecmd->argv[0], "exit") == 0) {
         run_exit(ecmd);
+        return;
     } else if (strcmp(ecmd->argv[0], "cwd") == 0) {
         run_cwd();
     } else if (strcmp(ecmd->argv[0], "cd") == 0) {
@@ -1387,6 +1386,72 @@ void release_sigchild() {
     }
 }
 
+void free_cmd(struct cmd* cmd)
+{
+    struct execcmd* ecmd;
+    struct redrcmd* rcmd;
+    struct listcmd* lcmd;
+    struct pipecmd* pcmd;
+    struct backcmd* bcmd;
+    struct subscmd* scmd;
+
+    if(cmd == 0) return;
+
+    switch(cmd->type)
+    {
+        case EXEC:
+            // free(ecmd);
+            break;
+
+        case REDR:
+            rcmd = (struct redrcmd*) cmd;
+            free_cmd(rcmd->cmd);
+
+            free(rcmd->cmd);
+            break;
+
+        case LIST:
+            lcmd = (struct listcmd*) cmd;
+
+            free_cmd(lcmd->left);
+            free_cmd(lcmd->right);
+
+            free(lcmd->right);
+            free(lcmd->left);
+            break;
+
+        case PIPE:
+            pcmd = (struct pipecmd*) cmd;
+
+            free_cmd(pcmd->left);
+            free_cmd(pcmd->right);
+
+            free(pcmd->right);
+            free(pcmd->left);
+            break;
+
+        case BACK:
+            bcmd = (struct backcmd*) cmd;
+
+            free_cmd(bcmd->cmd);
+
+            free(bcmd->cmd);
+            break;
+
+        case SUBS:
+            scmd = (struct subscmd*) cmd;
+
+            free_cmd(scmd->cmd);
+
+            free(scmd->cmd);
+            break;
+
+        case INV:
+        default:
+            panic("%s: estructura `cmd` desconocida\n", __func__);
+    }
+}
+
 void run_cmd(struct cmd* cmd)
 {
     struct execcmd* ecmd;
@@ -1470,8 +1535,9 @@ void run_cmd(struct cmd* cmd)
         case LIST:
             lcmd = (struct listcmd*) cmd;
             run_cmd(lcmd->left);
-            if (es_exit == 1)
-            	return;
+            if (es_exit == 1) {
+                return;
+            }
             run_cmd(lcmd->right);
             break;
 
@@ -1496,9 +1562,12 @@ void run_cmd(struct cmd* cmd)
                 else
                     run_cmd(pcmd->left);
                 exit(EXIT_SUCCESS);
-            }			
-				
+            }
+            if (es_exit == 1) {
+                return;
+            }
             pid_t pid2;
+
 
             // Ejecución del hijo de la derecha
             if ((pid2 = fork_or_panic("fork PIPE right")) == 0)
@@ -1543,7 +1612,7 @@ void run_cmd(struct cmd* cmd)
                 pids_procesos[contador] = pid;
             }
 
-            // Imprimir procesos
+            
             print_processid(pid);
             release_sigchild();
 
@@ -1647,73 +1716,6 @@ void print_cmd(struct cmd* cmd)
 }
 
 
-void free_cmd(struct cmd* cmd)
-{
-    struct execcmd* ecmd;
-    struct redrcmd* rcmd;
-    struct listcmd* lcmd;
-    struct pipecmd* pcmd;
-    struct backcmd* bcmd;
-    struct subscmd* scmd;
-
-    if(cmd == 0) return;
-
-    switch(cmd->type)
-    {
-        case EXEC:
-            // free(ecmd);
-            break;
-
-        case REDR:
-            rcmd = (struct redrcmd*) cmd;
-            free_cmd(rcmd->cmd);
-
-            free(rcmd->cmd);
-            break;
-
-        case LIST:
-            lcmd = (struct listcmd*) cmd;
-
-            free_cmd(lcmd->left);
-            free_cmd(lcmd->right);
-
-            free(lcmd->right);
-            free(lcmd->left);
-            break;
-
-        case PIPE:
-            pcmd = (struct pipecmd*) cmd;
-
-            free_cmd(pcmd->left);
-            free_cmd(pcmd->right);
-
-            free(pcmd->right);
-            free(pcmd->left);
-            break;
-
-        case BACK:
-            bcmd = (struct backcmd*) cmd;
-
-            free_cmd(bcmd->cmd);
-
-            free(bcmd->cmd);
-            break;
-
-        case SUBS:
-            scmd = (struct subscmd*) cmd;
-
-            free_cmd(scmd->cmd);
-
-            free(scmd->cmd);
-            break;
-
-        case INV:
-        default:
-            panic("%s: estructura `cmd` desconocida\n", __func__);
-    }
-}
-
-
 /******************************************************************************
  * Lectura de la línea de órdenes con la biblioteca libreadline
  ******************************************************************************/
@@ -1800,7 +1802,7 @@ void handle_sig_child(int signal) {
     while ((pid = waitpid((pid_t)(-1), 0, WNOHANG)) > 0) {
         for (int i = 0; i < MAX_PROCS; ++i) {
             if (pid == pids_procesos[i]) {
-            	 bloquear_sigchild();
+                bloquear_sigchild();
                 pids_procesos[i] = -1;
                 release_sigchild();
                 break;
@@ -1843,12 +1845,21 @@ int main(int argc, char** argv)
 
     // ignorar la señal
 
-    sigset_t ignored_sigint;
+    /*sigset_t ignored_sigint;
     sigemptyset(&ignored_sigint);
     sigaddset(&ignored_sigint, SIGQUIT);
-    if (sigprocmask(SIG_BLOCK, &ignored_sigint, NULL) == -1) {
+    if (sigprocmask(SIG_UNBLOCK, &ignored_sigint, NULL) == -1) {
         perror("SIGPROCMASK: SIGQUIT");
         exit(EXIT_FAILURE);
+    }*/
+
+    struct sigaction sa1;
+    sa1.sa_handler = SIG_IGN;
+    sigemptyset(&sa1.sa_mask);
+    sa1.sa_flags = 0;
+    if (sigaction(SIGCHLD, &sa1, 0) == -1) {
+        perror(0);
+        exit(1);
     }
 
 
