@@ -746,6 +746,8 @@ struct cmd* subscmd(struct cmd* subcmd)
 
 void run_exit(struct execcmd * ecmd) {
     es_exit = 1;
+    //free(ecmd);
+    //exit(EXIT_SUCCESS);
 }
 
 /******************************************************************************
@@ -1468,6 +1470,8 @@ void run_cmd(struct cmd* cmd)
         case LIST:
             lcmd = (struct listcmd*) cmd;
             run_cmd(lcmd->left);
+            if (es_exit == 1)
+            	return;
             run_cmd(lcmd->right);
             break;
 
@@ -1492,8 +1496,8 @@ void run_cmd(struct cmd* cmd)
                 else
                     run_cmd(pcmd->left);
                 exit(EXIT_SUCCESS);
-            }
-
+            }			
+				
             pid_t pid2;
 
             // Ejecución del hijo de la derecha
@@ -1796,7 +1800,9 @@ void handle_sig_child(int signal) {
     while ((pid = waitpid((pid_t)(-1), 0, WNOHANG)) > 0) {
         for (int i = 0; i < MAX_PROCS; ++i) {
             if (pid == pids_procesos[i]) {
+            	 bloquear_sigchild();
                 pids_procesos[i] = -1;
+                release_sigchild();
                 break;
             }
         }
