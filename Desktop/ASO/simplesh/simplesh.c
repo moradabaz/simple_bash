@@ -173,15 +173,23 @@ int open_file(char * nombre_fichero) {
     return fd;
 }
 
+/**
+ * Funcio para escrituras parciales
+ * @param fd
+ * @param buffer
+ * @param inicio
+ * @param bytes
+ * @return
+ */
 ssize_t write_bytes(int fd, char * buffer, int inicio, ssize_t bytes) {
     ssize_t bytes_escritos = 0;
     int bytes_total_escritos = 0;
-    ssize_t pos_origen = inicio;
+    ssize_t offset = inicio;
     ssize_t tam_bytes = bytes;
     while (tam_bytes > 0) {
-        bytes_escritos = write(fd, buffer + pos_origen, (size_t) tam_bytes);
+        bytes_escritos = write(fd, buffer + offset, (size_t) tam_bytes);
         bytes_total_escritos += bytes_escritos;
-        pos_origen += bytes_total_escritos;
+        offset += bytes_total_escritos;
         tam_bytes -= bytes_escritos;
     }
     return bytes_total_escritos;
@@ -197,7 +205,7 @@ ssize_t read_small_chunks(int fd, char* buffer, int tam, int tam_max) {
     return total_leidos;
 }
 
-void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes, int procesos) {
+void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size_t tam_bytes) {
     if (fd == STDIN_FILENO) {
         fichero = "stdin";
     }
@@ -213,25 +221,25 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
     ssize_t pos_actual = 0;
     int contador_lineas = 0;
 
-    if (tam_bytes < MIN_DEF_BSIZE) {
-        buffer = malloc ((tam_bytes * 100) * sizeof(char));
+    if (tam_bytes < MIN_DEF_BSIZE) {                                                                                    // si el BSIZE es tan pequeño que su lectura resulta ineficiente
+        buffer = malloc ((tam_bytes * 100) * sizeof(char));                                                             // Lee 100*BSIZE
         bytes_leidos = read_small_chunks(fd, buffer, tam_bytes, tam_bytes * 100);
     } else {
         buffer = malloc (tam_bytes * sizeof(char));
         bytes_leidos = read(fd, buffer, tam_bytes);
     }
 
-    while (bytes_leidos != 0 ) {
+    while (bytes_leidos != 0) {
         ssize_t contador = 0;
         pos_origen = 0;
-        while(buffer[contador] != '\0' && contador < bytes_leidos) {
-            if (buffer[contador] == '\n') {
-                contador_lineas++;
-                pos_actual = contador + 1;
+        while(buffer[contador] != '\0' && contador < bytes_leidos) {                                                    // Mientras recorramos el buffer
+            if (buffer[contador] == '\n') {                                                                             // Si encontramos un \n
+                contador_lineas++;                                                                                      // incrementamos el contador de lineas
+                pos_actual = contador + 1;                                                                              // tomamos la posicion actual
                 ssize_t bytes_restantes = (pos_actual - pos_origen);
-                write_bytes(fd_file, buffer, (int) pos_origen, bytes_restantes);
-                pos_origen = pos_actual;
-                if (contador_lineas == num_max_lineas) {
+                write_bytes(fd_file, buffer, (int) pos_origen, bytes_restantes);                                        // imprimimos los bytes restantes
+                pos_origen = pos_actual;                                                                                //
+                if (contador_lineas == num_max_lineas) {                                                                // Cerramos el fichero cuando el contador de lineas sea igual al numero maximo de lineas establecido
                     contador_lineas = 0;
                     contador_ficheros++;
                     fsync(fd_file);
@@ -255,56 +263,13 @@ void run_psplit_lines_from_file(int fd, char * fichero, int num_max_lineas, size
     if (pos_origen < bytes_leidos) {
         ssize_t bytes_escritos = 0;
         ssize_t bytes_restantes = (bytes_leidos - pos_origen);
-        while(tam_bytes > 0) {
+        while(bytes_escritos > 0) {
             bytes_escritos = write(fd_file, buffer + pos_origen, bytes_restantes);
             bytes_restantes -= bytes_escritos;
         }
-
+        close(fd_file);
     }
     free(buffer);
-}
-
-
-void split_bytes_bt_size(int fd, char *fichero, ssize_t tam_chunk_bytes, ssize_t buffer_size) {
-    ssize_t  bytes_leidos = 0;
-    char buffer[buffer_size];
-    int num_ficheros = 0;
-    int fd_salida = -1;
-    ssize_t bytes_restantes = tam_chunk_bytes;
-    nuevo_comando = 0;
-    memset(buffer, '\0', buffer_size);
-    char nombre_fichero[60];
-    sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-
-    bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-    ssize_t bytes_escritos = 0;
-    while(bytes_leidos > 0) {
-        fd_salida = open_file(nombre_fichero);
-        while (bytes_restantes > bytes_leidos && bytes_leidos > 0) {
-            bytes_escritos = write_bytes(fd_salida, buffer, 0, bytes_leidos);
-            bytes_restantes -= bytes_escritos;
-            bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-        }
-        if (bytes_restantes > 0 && bytes_leidos > 0) {
-            bytes_escritos = write_bytes(fd_salida, buffer, 0, bytes_restantes);
-            bytes_leidos -= bytes_escritos;
-
-        }
-        fsync(fd_salida);
-        close(fd_salida);
-        bytes_restantes = tam_chunk_bytes;
-        num_ficheros++;
-        nuevo_comando = 0;
-        sprintf(nombre_fichero, "%s%d", fichero, num_ficheros);
-        if (bytes_leidos > 0) {
-            fd_salida = open_file(nombre_fichero);
-            bytes_escritos = write_bytes(fd_salida, buffer, (int) bytes_escritos, bytes_leidos);
-            bytes_restantes -= bytes_escritos;
-        }
-        bytes_leidos = read(fd, buffer, (size_t) buffer_size);
-    }
-    fsync(fd_salida);
-    close(fd_salida);
 }
 
 
@@ -313,20 +278,20 @@ void run_split_bytes_from_file(int fd, char *  fichero, ssize_t tam_chunk_bytes,
         fichero = "stdin";
     }
     char buffer[buffer_size];
+    memset(buffer, '\0', buffer_size);
     ssize_t bytes_total_leidos = 0;
     ssize_t bytes_leidos = 0;
     int contador_fichero = 0;
     int pos_origen = 0;
-    nuevo_comando = 0;
-
+    nuevo_comando = 0;                                                                          // Esta variable se utiliza para saber tras un nuevo comando, un fichero de salida de debe ser sobrescrito o concatenado
     char fd_fichero_salida[60];
     sprintf(fd_fichero_salida, "%s%d", fichero , contador_fichero);
     int fd_salida = open_file(fd_fichero_salida);
     int tam_total_escrito = 0;
-    while((bytes_leidos = read(fd, buffer + bytes_total_leidos, (size_t) buffer_size)) > 0){         // leo
-        bytes_total_leidos += bytes_leidos;                                                                                 // lo que he leido, lo añado a lo que he leido en total
-        if(tam_total_escrito == tam_chunk_bytes && bytes_total_leidos > 0){                                                 // si lo que he escrito es igual al tamaño de chunk del flag -b y aun me quedan bytes leidos
-            fsync(fd_salida);                                                                                               // cierro fichero y abro uno nuevo
+    while((bytes_leidos = read(fd, buffer + bytes_total_leidos, (size_t) buffer_size)) > 0){                            // leo
+        bytes_total_leidos += bytes_leidos;                                                                             // lo que he leido, lo añado a lo que he leido en total
+        if(tam_total_escrito == tam_chunk_bytes && bytes_total_leidos > 0){                                             // si lo que he escrito es igual al tamaño de chunk del flag -b y aun me quedan bytes leidos
+            fsync(fd_salida);                                                                                           // cierro fichero y abro uno nuevo
             close(fd_salida);
             contador_fichero++;
             nuevo_comando = 0;
@@ -335,13 +300,8 @@ void run_split_bytes_from_file(int fd, char *  fichero, ssize_t tam_chunk_bytes,
             tam_total_escrito = 0;
         }
         while(tam_total_escrito < tam_chunk_bytes && bytes_total_leidos > 0){                                           // mientras no hemos esccrito hasta el tam del chunk y nos queden bytes leidos
-            ssize_t bytes_restantes = (tam_chunk_bytes - tam_total_escrito);
-            if (bytes_total_leidos <= bytes_restantes) {                                                                // Si lo que he leido es menor que lo que tengo que escribir
-                ssize_t escritos = write_bytes(fd_salida,buffer, pos_origen, (size_t) bytes_total_leidos);              // escribo aquello que he leido
-                bytes_total_leidos -= escritos;                                                                         // decremento los bytes que llevo leidos
-                tam_total_escrito = (int) (tam_total_escrito + escritos);                                               // actualizo el total de bytes escritos
-                pos_origen = 0;                                                                                         // reinicio el mi posicion de ofset
-            } else {                                                                                                    // En caso de lo que he leido es mas de lo que me queda por escribir
+            ssize_t bytes_restantes = (tam_chunk_bytes - tam_total_escrito);                                            // En caso de lo que he leido es mas de lo que me queda por escribir
+            if (bytes_total_leidos > bytes_restantes) {
                 ssize_t escritos = write_bytes(fd_salida,buffer, pos_origen , (size_t) bytes_restantes);                // Escribo lo que me queda por escribir
                 bytes_total_leidos -= bytes_restantes;                                                                  // actualizo los que me queda leido
                 tam_total_escrito += escritos;                                                                          // actualizo lo que he escrito en total
@@ -355,17 +315,29 @@ void run_split_bytes_from_file(int fd, char *  fichero, ssize_t tam_chunk_bytes,
                     fd_salida = open_file(fd_fichero_salida);
                     tam_total_escrito = 0;
                 }
+            } else {                                                                                                    // Si lo que he leido es menor o igual que lo que tengo que escribir
+                ssize_t escritos = write_bytes(fd_salida,buffer, pos_origen, (size_t) bytes_total_leidos);              // escribo aquello que he leido
+                bytes_total_leidos -= escritos;                                                                         // decremento los bytes que llevo leidos
+                tam_total_escrito = (int) (tam_total_escrito + escritos);                                               // actualizo el total de bytes escritos
+                pos_origen = 0;                                                                                         // reinicio el mi posicion de ofset
             }
         }
     }
     close(fd_salida);
 }
 
-
+/**
+ * Comprueba en funcion del flag si es para lineas o bytes
+ * @param fd
+ * @param fichero
+ * @param flag
+ * @param cantidad
+ * @param tam_bytes
+ */
 void process_psplit_command(int fd, char * fichero, int flag, int cantidad, int tam_bytes) {
     switch (flag) {
         case SPLIT_LINES:
-            run_psplit_lines_from_file(fd, fichero, cantidad, (size_t) tam_bytes, 0);
+            run_psplit_lines_from_file(fd, fichero, cantidad, (size_t) tam_bytes);
             break;
 
         case SPLIT_BYTES:
@@ -377,13 +349,32 @@ void process_psplit_command(int fd, char * fichero, int flag, int cantidad, int 
 
 }
 
+void bloquear_sigchild() {
+    if (sigprocmask(SIG_BLOCK, &signal_child, NULL) == -1) {
+        perror(" sigprocmask SIG_BLOCK ");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void release_sigchild() {
+    if (sigprocmask(SIG_UNBLOCK, &signal_child, NULL) == -1) {
+        perror(" sigprocmask SIG_UNBLOCK ");
+        exit(EXIT_FAILURE);
+    }
+}
+
+/**
+ *
+ * @param argc
+ * @param argv
+ */
 void run_psplit(int argc, char **argv) {
     optind = 1;
     int opt, arg, flag;
     int tam_bytes = 0;
     int hay_fichero = 0;
-    int flags_incompatibles = 0;
-    int procesos_totales = 1;
+    int flags_incompatibles = 0;                                                // Esta variable sirve para controlar los flags incompatibles
+    int num_max_procesos = 1;
     while ((opt = getopt(argc, argv, "l:b:s:p:h")) != -1) {
         switch (opt) {
             case 'l':
@@ -415,8 +406,8 @@ void run_psplit(int argc, char **argv) {
                 }
                 break;
             case 'p':
-                procesos_totales = atoi(optarg);
-                if (procesos_totales <= 0) {
+                num_max_procesos = atoi(optarg);
+                if (num_max_procesos <= 0) {
                     printf("psplit: Opción -p no válida\n");
                     return;
                 }
@@ -440,43 +431,41 @@ void run_psplit(int argc, char **argv) {
     if (tam_bytes == 0)
         tam_bytes = DEFAULT_BSIZE;
 
-    int num_procesos = 0;
+    int procesos_envuelo = 0;
     hay_fichero = argc - optind;
+    int primer_pid = 0;
+    int ultimo_pid = 0;
     if (hay_fichero > 0) {
-        if (procesos_totales > 1) {
-            array_procesos = malloc(procesos_totales * sizeof(int));
-            memset(array_procesos, 0, procesos_totales);
+        if (num_max_procesos > 1) {
+            array_procesos = malloc(num_max_procesos * sizeof(int));
+            memset(array_procesos, 0, num_max_procesos);
             for (int i = optind; i < argc; ++i) {
                 int fd = open(argv[i], O_RDONLY);
                 pid_t pid;
-                if (num_procesos < procesos_totales) {
-                    //printf("Hay sitio, aun quedan %d libres\n", procesos_totales - num_procesos);
-                    num_procesos++;
+                if (procesos_envuelo < num_max_procesos) {
+                    procesos_envuelo++;
                     if ((pid = fork_or_panic("")) == 0) {
                         process_psplit_command(fd, argv[i], flag, arg, tam_bytes);
                         close(fd);
-                        _exit(0);
+                        exit(EXIT_SUCCESS);
                     }
-                    for (int j = 0; j < procesos_totales; ++j) {
-                        if (array_procesos[i] == 0) {
-                            array_procesos[i] = pid;
-                            break;
-                        }
-                    }
-                    wait(NULL);
+                    array_procesos[ultimo_pid] = pid;
+                    ultimo_pid = (ultimo_pid + 1) % num_max_procesos;
                 } else {
-                    pid_t primer_pid_libre = 0;
-                    for (int j = 0; j < procesos_totales; ++j) {
-                        if (array_procesos[i] > 0) {
-                            primer_pid_libre = array_procesos[i];
-                            array_procesos[i] = 0;
-                            break;
-                        }
-                    }
-                    waitpid(primer_pid_libre, NULL, 0);
-                    num_procesos--;
+                    waitpid(array_procesos[primer_pid], NULL, 0);
+                    primer_pid = (primer_pid + 1) % num_max_procesos;
+                    i--;
+                    procesos_envuelo--;
                 }
             }
+
+           bloquear_sigchild();
+            while (procesos_envuelo != 0) {
+                waitpid(array_procesos[primer_pid], NULL, 0);
+                primer_pid = (primer_pid + 1) % num_max_procesos;
+                procesos_envuelo--;
+            }
+            release_sigchild();
             free(array_procesos);
         } else {
             for (int i = optind; i < argc; ++i) {
@@ -488,21 +477,12 @@ void run_psplit(int argc, char **argv) {
     } else {
         process_psplit_command(STDIN_FILENO, NULL, flag, arg, tam_bytes);
     }
-
-    /*if (hay_fichero > 0) {
-        for (int i = optind; i < argc; ++i) {
-            int fd = open(argv[i], O_RDONLY);
-            process_psplit_command(fd, argv[i], flag, arg, tam_bytes);
-            close(fd);
-        }
-    } else {
-        process_psplit_command(STDIN_FILENO, NULL, flag, arg, tam_bytes);
-    }*/
-
 }
 
 
-
+/**
+ * Llama a la ruta actual
+ */
 void run_cwd() {
     char ruta[PATH_MAX];
     if (!getcwd(ruta, PATH_MAX)) {
@@ -512,6 +492,10 @@ void run_cwd() {
     printf("cwd: %s\n", ruta);
 }
 
+/**
+ * Devuelve el directorio actual
+ * @return
+ */
 char * get_cur_dir() {
     char * ruta = malloc(PATH_MAX * sizeof(char*));
     if (!getcwd(ruta, PATH_MAX)) {
@@ -521,7 +505,7 @@ char * get_cur_dir() {
     return ruta;
 }
 
-void run_cd_HOME() {
+void cd_home() {
     char * dir_actual = get_cur_dir();
     char * dir_home = getenv("HOME");
     chdir(dir_home);
@@ -535,11 +519,9 @@ void run_cd(char* path) {
             run_cd(dir);
         } else {
             printf("run_cd: Variable OLDPWD no definida\n");
-            // exit(EXIT_FAILURE);
         }
     } else {
-        DIR* dir = opendir(path);
-        if(!dir) {
+        if(!path) {
             printf("run_cd: No existe el directorio '%s'\n", path);
         } else {
             char * dir_actual = get_cur_dir();
@@ -551,7 +533,7 @@ void run_cd(char* path) {
                     setenv("OLDPWD", dir_actual, true);
                     olddir = 1;
                 } else {
-                    perror("NO se ha podido cambiar de directorio\n");
+                    perror("No se ha podido cambiar de directorio\n");
                 }
             }
         }
@@ -847,10 +829,10 @@ int get_token(char** start_of_str, char* end_of_str,
  * @param begin
  * @param end
  */
-void cadenaInversa(char *begin, char *end)
+void reverse_string(char *begin, char *end)
 {
     char aux;
-    while(end>begin)
+    while(end > begin)
         aux=*end, *end--=*begin, *begin++=aux;
 }
 
@@ -859,7 +841,7 @@ void cadenaInversa(char *begin, char *end)
  * @param value El Entero que se quiere transformar
  * @param str El buffer en el que se inserta el entero
  */
-void integerToString(int value, char *str)
+void integer_to_string(int value, char *str)
 {
     char* wstr=str;
     int sign;
@@ -874,7 +856,7 @@ void integerToString(int value, char *str)
     if(sign<0) *wstr++='-';
     *wstr='\0';
 
-    cadenaInversa(str, wstr - 1);
+    reverse_string(str, wstr - 1);
 }
 
 
@@ -921,7 +903,7 @@ void print_processid(int pid){
     write(STDOUT_FILENO, &barra1, 1);
 
     char pid_str[longitud];
-    integerToString(pid, pid_str);
+    integer_to_string(pid, pid_str);
     write(STDOUT_FILENO, pid_str, (size_t) longitud);         //TODO: Aqui veo el fallo
 
     char * barra2 = "]\n";
@@ -961,7 +943,7 @@ void exec_internal_cmd(struct execcmd * ecmd) {
                 run_cd(ecmd->argv[1]);
             }
         } else {
-            run_cd_HOME();
+            cd_home();
         }
     } else if (strcmp(ecmd->argv[0], "psplit") == 0) {
         run_psplit(ecmd->argc, ecmd->argv);
@@ -980,7 +962,7 @@ void exec_internal_cmd(struct execcmd * ecmd) {
 void run_bjobs(int argc, char* argv[]) {
     int opt;
     optind = 1;
-    int hay_flags = 0;
+    int hay_flags = 0;                                          // Esta variable sirve para que no se ejecute el comando con los dos flags -h y -k
     while ((opt = getopt(argc, argv, "kh")) != -1) {
         switch (opt) {
             case 'k':
@@ -1013,7 +995,7 @@ void run_bjobs(int argc, char* argv[]) {
     }
 
     if (hay_flags == 0) {
-        for (int i = 0; i < MAX_PROCS; ++i) {               // TODO: Un momento O.o
+        for (int i = 0; i < MAX_PROCS; ++i) {
             if (pids_procesos[i] != -1)
                 printf("[%d]\n", pids_procesos[i]);
         }
@@ -1371,20 +1353,6 @@ void exec_cmd(struct execcmd* ecmd)
     }
 }
 
-
-void bloquear_sigchild() {
-    if (sigprocmask(SIG_BLOCK, &signal_child, NULL) == -1) {
-        perror(" sigprocmask SIG_BLOCK ");
-        exit(EXIT_FAILURE);
-    }
-}
-
-void release_sigchild() {
-    if (sigprocmask(SIG_UNBLOCK, &signal_child, NULL) == -1) {
-        perror(" sigprocmask SIG_UNBLOCK ");
-        exit(EXIT_FAILURE);
-    }
-}
 
 void free_cmd(struct cmd* cmd)
 {
